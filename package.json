@@ -1,0 +1,14 @@
+{
+  "name": "radeon",
+  "version": "1.0.0",
+  "description": "Radeon is a multi-functional moderation bot with a cross-server anti-raid system!",
+  "main": "radeon.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Devonte#0745",
+  "license": "MIT",
+  "dependencies": {
+    "discord.js": "^12.5.1"
+  }
+}
