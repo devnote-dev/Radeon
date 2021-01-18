@@ -7,7 +7,7 @@ module.exports = async client => {
             if (!command.name) console.log('Failed Command: '+ cmd);
             client.commands.set(command.name, command);
             console.log('Loaded Command: '+ cmd);
-            if (command.aliases && Array.isArray(command.aliases)) client.aliases.forEach(a => client.aliases.set(a, command.name));
+            if (command.aliases && Array.isArray(command.aliases)) command.aliases.forEach(a => client.aliases.set(a, command.name));
         });
     });
 }
