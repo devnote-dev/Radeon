@@ -16,7 +16,7 @@ exports.run = async (client, message) => {
         } else {
             const embed = new MessageEmbed()
             .setAuthor(message.author.tag, message.author.displayAvatarURL({dynamic: true}))
-            .setDescription(`You are missing \`${command.permissions[0]}\` or \`${command.permissions[1]}\` permission.`)
+            .setDescription(`You are missing \`command.permissions.map(p => p).join(', ')\` permission(s).`)
             .setColor(message.member.displayHexColor)
             message.channel.send(embed)
         }
