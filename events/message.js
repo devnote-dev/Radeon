@@ -24,13 +24,4 @@ exports.run = async (client, message) => {
     } else {
         command.run(client, message, args);
     }
-    
-    if (message.channel.type === "dm") {
-    if (message.author.id === client.user.id) return;
-    const Log = new MessageEmbed()
-        .setTitle("📂 DMS LOGS")
-        .addField(`Message Author`, `<@${message.author.id}>\n\`${message.author.id}\``)
-        .addField(`Message`, `${message.content}`)
-        client.channels.cache.get("800776299035361330").send(Log)
-    }
 }
