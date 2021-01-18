@@ -1,3 +1,5 @@
+const { MessageEmbed } = require('discord.js');
+
 exports.run = async (client, message) => {
     if (message.author.bot || !message.guild || !message.content.startsWith(client.config.prefix)) return;
 
@@ -12,7 +14,11 @@ exports.run = async (client, message) => {
         if(message.member.permissions.has(command.permissions)) {
             command.run(client, message, args);
         } else {
-            message.reply('Missing permissions.')
+            const embed = new MessageEmbed()
+            .setAuthor(message.author.tag, message.author.displayAvatarURL({dynamic: true}))
+            .setDescription(`You are missing \`${command.permissions[0]}\` or \`${command.permissions[1]}\` permission.`)
+            .setColor(message.member.displayHexColor)
+            message.channel.send(embed)
         }
     } else {
         command.run(client, message, args);
