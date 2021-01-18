@@ -1,7 +1,10 @@
 # File Types
-
 *.jpg
 *.jpeg
 *.png
 *.mp3
 *.mp4
+
+# Hidden Files
+config.json
+radeon2
