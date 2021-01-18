@@ -11,4 +11,8 @@ readdirSync('./handlers/').forEach(handler => {
     require(`./handlers/${handler}`)(client);
 });
 
+process.on('unhandledRejection', error => {
+console.error('Unhandled Promise Rejection:', error);
+});
+
 client.login(client.config.token);
