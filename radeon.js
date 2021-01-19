@@ -27,8 +27,12 @@ client.errEmb = (msg) => {
 }
 
 process.on('unhandledRejection', error => {
-    console.error('Unhandled Promise Rejection:', error);
-    client.channels.cache.get("800755303477149696").send(`\`\`\`js\n${JSON.stringify(error, null, 2)}\n\`\`\`\n\`\`\`js\n${error.stack}\n\`\`\``);
+    const e = new Discord.MessageEmbed()
+    .setTitle('Error: '+ error.name)
+    .setDescription(error)
+    .addField('Stack Trace', `\`\`\`json\n${error.stack ? error.stack : '< None >'}\n\`\`\``)
+    .setFooter('Code: '+ error.code);
+    return client.channels.cache.get(client.config.logs.error).send(e);
 });
 
 client.mongoose.init();
