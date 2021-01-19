@@ -18,20 +18,20 @@ module.exports = {
             if (message.mentions) {
                 sub = message.mentions.users.first();
                 try {
-                    message.channel.messages.fetch({limit:100}).then(msgs => msgs.map(m => m.author.id === sub.id ? m.delete() : null));
-                    const done = await message.channel.send(client.successEmb(`Deleted ${num} message(s) from \`${sub.tag}\``));
+                    await message.channel.messages.fetch({limit:100}).then(msgs => msgs.map(m => m.author.id === sub.id ? m.delete() : null))
+                    const done = await message.channel.send(client.successEmb(`Deleted ${num} message(s) from \`${sub.tag}\``))
                     done.delete({timeout:4000});
                 } catch (err) {
-                    console.log(err);
+                    message.channel.send(client.errEmb(err.message));
                 }
             }
         } else {
             try {
-                await message.channel.bulkDelete(num);
+                await message.channel.bulkDelete(num,{filterOld:true});
                 const done = await message.channel.send(client.successEmb(`Deleted ${num} message(s)!`));
                 done.delete({timeout:4000});
             } catch (err) {
-                message.channel.send(client.errEmb(err));
+                message.channel.send(client.errEmb(err.message));
             }
         }
     }
