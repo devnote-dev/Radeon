@@ -5,6 +5,7 @@ const {readdirSync} = require('fs');
 client.commands = new Discord.Collection();
 client.aliases = new Discord.Collection();
 client.config = require('./config.json');
+client.mongoose = require('./mongo.js');
 
 readdirSync('./handlers/').forEach(handler => {
     if (!handler.endsWith('.handler.js')) return;
@@ -30,4 +31,5 @@ process.on('unhandledRejection', error => {
     client.channels.cache.get("800755303477149696").send(`\`\`\`js\n${JSON.stringify(error, null, 2)}\n\`\`\`\n\`\`\`js\n${error.stack}\n\`\`\``);
 });
 
+client.mongoose.init();
 client.login(client.config.token);
