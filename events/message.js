@@ -1,9 +1,17 @@
-const { MessageEmbed } = require('discord.js');
+const {MessageEmbed} = require('discord.js');
+const guild = require('../schemas/guild-schema');
 
 exports.run = async (client, message) => {
-    if (message.author.bot || !message.content.startsWith(client.config.prefix)) return;
+    if (message.author.bot) return;
+    const data = await guild.findOne({
+        guildID: message.guild.id
+    });
+    if (/^<@!?762359941121048616>(?:\s+prefix)?$/gi.test(message.content)) {
+        return message.channel.send({embed:{description:`Current Prefix: \`${data.prefix}\`\n\nDefault Prefix: \`r!\``,color:0x1e143b}});
+    }
+    if (!message.content.startsWith(data.prefix)) return;
 
-    const args = message.content.slice(client.config.prefix.length).trim().split(/ +/g);
+    const args = message.content.slice(data.prefix.length).trim().split(/ +/g);
     const cmd = args.shift().toLowerCase();
     if (cmd.length === 0) return;
     
