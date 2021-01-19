@@ -5,7 +5,7 @@ const {readdirSync} = require('fs');
 client.commands = new Discord.Collection();
 client.aliases = new Discord.Collection();
 client.config = require('./config.json');
-client.mongoose = require('./mongo');
+client.mongoose = require('./mongo.js');
 
 readdirSync('./handlers/').forEach(handler => {
     if (!handler.endsWith('.handler.js')) return;
