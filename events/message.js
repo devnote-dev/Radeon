@@ -3,15 +3,30 @@ const guild = require('../schemas/guild-schema');
 
 exports.run = async (client, message) => {
     if (message.author.bot) return;
+    
     const data = await guild.findOne({
         guildID: message.guild.id
-    });
-    if (/^<@!?762359941121048616>(?:\s+prefix)?$/gi.test(message.content)) {
-        return message.channel.send({embed:{description:`Current Prefix: \`${data.prefix}\`\n\nDefault Prefix: \`r!\``,color:0x1e143b}});
-    }
-    if (!message.content.startsWith(data.prefix)) return;
+    }), (err, guild) => {
+        if (err) console.error(err)
+        if (!guild) {
+            const newGuild = new Guild({
+                guildID: message.guild.id,
+                prefix: client.config.prefix,
+                ignoredChannels: [],
+                ignoredCommands: []
+            })
 
-    const args = message.content.slice(data.prefix.length).trim().split(/ +/g);
+            newGuild.save()
+        }});
+    
+    const prefix = data.prefix
+    
+    if (/^<@!?762359941121048616>(?:\s+prefix)?$/gi.test(message.content)) {
+        return message.channel.send({embed:{description:`Current Prefix: \`${prefix}\`\n\nDefault Prefix: \`r!\``,color:0x1e143b}});
+    }
+    if (!message.content.startsWith(prefix)) return;
+
+    const args = message.content.slice(prefix.length).trim().split(/ +/g);
     const cmd = args.shift().toLowerCase();
     if (cmd.length === 0) return;
     
