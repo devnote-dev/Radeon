@@ -10,7 +10,7 @@ module.exports = {
     run: async (client, message, args) => {
         if (args.length > 0) {
             const search = args.join(' ').toLowerCase();
-            let cmd = client.commands.get(search || client.aliases.get(search));
+            let cmd = client.commands.get(search) || client.commands.get(client.aliases.get(search));
             if (!cmd) return message.channel.send({embed:{description:`Could not find the command \`${args.join(' ')}\``,color:0x750000}});
             if (cmd.modOnly && !client.config.botOwners.includes(message.author.id)) return message.channel.send({embed:{title:'Help Error',description:'You do not have permission to view this command.',color:0x750000}});
             const embed = new MessageEmbed().setTitle('Command: '+ cmd.name).setColor(0x1e143b);
@@ -24,13 +24,15 @@ module.exports = {
         } else {
             const embed = new MessageEmbed()
             .setTitle('Radeon Help/Commands')
-            .setDescription('Use `r!help [command name/alias]` for info on a specific command.\nKey: **<>** - required, **[]** - optional')
+            .setDescription('Use `help [command name/alias]` for info on a specific command.\nKey: **<>** - required, **[]** - optional')
             .setColor(0x1e143b);
             let commands = [];
             readdirSync('./commands/').forEach(dir => {
                 readdirSync(`./commands/${dir}/`).forEach(cmd => commands.push(cmd.split('.').shift()));
                 embed.addField(dir, `\`${commands.join('`, `')}\``, false);
+                commands = [];
             });
+            embed.addField('🔗 Links', '[Bot Invite](https://discord.com/api/oauth2/authorize?client_id=762359941121048616&permissions=8&scope=bot) | [Support Server](https://discord.gg/xcZwGhSy4G)', false);
             message.channel.send(embed);
         }
     }
