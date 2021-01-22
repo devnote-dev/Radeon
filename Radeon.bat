@@ -1,3 +1,3 @@
 :a
-node radeon.js
+node index.js
 goto a

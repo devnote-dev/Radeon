@@ -7,12 +7,10 @@ const guildSchema = mongoose.Schema({
     },
     prefix:         String,
     ignoredCommands: {
-        type:       Array,
-        default:    []
+        type:       [String],
     },
     ignoredChannels: {
-        type:       Array,
-        default:    []
+        type:       [String],
     }
 });
 
