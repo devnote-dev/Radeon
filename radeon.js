@@ -5,7 +5,7 @@ const {readdirSync} = require('fs');
 client.commands = new Discord.Collection();
 client.aliases = new Discord.Collection();
 client.config = require('./config.json');
-client.mongoose = require('./mongo.js');
+client.mongoose = require('./mongo');
 
 readdirSync('./handlers/').forEach(handler => {
     if (!handler.endsWith('.handler.js')) return;
@@ -31,8 +31,8 @@ process.on('unhandledRejection', error => {
     .setTitle('Error: '+ error.name)
     .setDescription(error)
     .addField('Stack Trace', `\`\`\`json\n${error.stack ? error.stack : '< None >'}\n\`\`\``)
-    .setFooter('Code: '+ error.code);
-    return client.channels.cache.get(client.config.logs.error).send(e);
+    .setFooter('Code: '+ error.code ? error.code : 'Unknown');
+    client.channels.cache.get(client.config.logs.error).send(e);
 });
 
 client.mongoose.init();
