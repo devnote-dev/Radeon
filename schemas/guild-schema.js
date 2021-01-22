@@ -8,11 +8,11 @@ const guildSchema = mongoose.Schema({
     prefix:         String,
     ignoredCommands: {
         type:       Array,
-        default:    []
+        default:    [String]
     },
     ignoredChannels: {
         type:       Array,
-        default:    []
+        default:    [String]
     }
 });
 
