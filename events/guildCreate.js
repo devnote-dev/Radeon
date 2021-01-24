@@ -11,8 +11,10 @@ exports.run = async (client, guild) => {
         const newGuild = new Guild({
             guildID: guild.id,
             prefix: client.config.prefix,
+            modLogs: '',
+            muteRole: '',
             ignoredChannels: [],
-            ignoredCommands: [],
+            ignoredCommands: []
         });
         newGuild.save();
         console.log(`Mongoose | Guild Added: ${guild.name}`);
