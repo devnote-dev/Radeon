@@ -7,6 +7,7 @@ const guildSchema = mongoose.Schema({
     },
     prefix:         String,
     modLogs:        String,
+    muteRole:       String,
     ignoredCommands: {
         type:       [String],
     },
