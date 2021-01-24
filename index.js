@@ -6,8 +6,8 @@ const manager = new ShardingManager(`./Radeon.js`, {
     token: token
 });
 
-manager.spawn();
-
 manager.on('shardCreate', async shard => {
-    console.log(`Shard ${shard.id} / 1 - Spawned`);
+    console.log(`Shard ${shard.id} / ${shard.totalShards} - Spawned`);
 });
+
+manager.spawn();
