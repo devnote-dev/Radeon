@@ -18,7 +18,7 @@ module.exports = {
             if (cmd.aliases) alias = `**Aliases:** \`${cmd.aliases.join('`, `')}\``;
             if (cmd.description) desc = `\n**Description:** ${cmd.description}`;
             if (cmd.usage) usage = `\n**Usage:**\n\`\`\`\n${cmd.usage}\n\`\`\``;
-            let go = `\n\n**Guild Only:** ${cmd.guildOnly}\n**Required Perms:** \`${cmd.permissions ? cmd.permissions.join(' ').toLowerCase() : 'None'}\``;
+            let go = `\n**Guild Only:** ${cmd.guildOnly}\n**Required Perms:** \`${cmd.permissions ? cmd.permissions.join(' ').toLowerCase() : 'None'}\``;
             embed.setDescription(alias + desc + usage + go);
             message.channel.send(embed);
         } else {
@@ -28,7 +28,10 @@ module.exports = {
             .setColor(0x1e143b);
             let commands = [];
             readdirSync('./commands/').forEach(dir => {
-                readdirSync(`./commands/${dir}/`).forEach(cmd => commands.push(cmd.split('.').shift()));
+                if (dir === 'Admin') return;
+                readdirSync(`./commands/${dir}/`).forEach(cmd => {
+                    commands.push(cmd.split('.').shift());
+                });
                 embed.addField(dir, `\`${commands.join('`, `')}\``, false);
                 commands = [];
             });
