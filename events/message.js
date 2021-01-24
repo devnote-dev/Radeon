@@ -24,14 +24,12 @@ exports.run = async (client, message) => {
         return message.channel.send({embed:{description:`**Current Prefix:** \`${prefix}\`\n\n**Default Prefix:** \`r!\``,color:0x1e143b}});
     }
     if (!message.content.startsWith(prefix)) return;
-
     const args = message.content.slice(prefix.length).trim().split(/ +/g);
     const cmd = args.shift().toLowerCase();
     if (cmd.length === 0) return;
-    
     let command = client.commands.get(cmd) || client.commands.get(client.aliases.get(cmd));
     if (!command) return;
-    if (!message.guild && command.guildOnly) return message.channel.send(client.errEmb('This command cant be used in DMs.'));
+    if (!message.guild && command.guildOnly) return message.author.send(client.errEmb('This command cant be used in DMs.'));
     if(command.modBypass || command.permissions) {
         if(client.config.botOwners.includes(message.author.id) || message.member.permissions.has(command.permissions)) {
             command.run(client, message, args);

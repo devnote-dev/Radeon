@@ -29,10 +29,9 @@ client.errEmb = (msg) => {
 process.on('unhandledRejection', error => {
     const e = new Discord.MessageEmbed()
     .setTitle('Error: '+ error.name)
-    .setDescription(error)
-    .addField('Stack Trace', `\`\`\`json\n${error.stack ? error.stack : '< None >'}\n\`\`\``)
-    .setFooter('Code: '+ error.code ? error.code : 'Unknown');
-    client.channels.cache.get(client.config.logs.error).send(e);
+    .setDescription(error.toString().replace(/C:\\.+\\Bots/gi, '-'))
+    .setFooter(`Code: ${error.code ? error.code : 'Unknown'}`)
+    client.channels.cache.get(client.config.logs.error).send(e).catch(()=>{});
 });
 
 client.mongoose.init();
