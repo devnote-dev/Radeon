@@ -7,8 +7,8 @@ exports.run = async (client, guild) => {
     .setColor(0x00d134)
     .setTimestamp();
     client.channels.cache.get(client.config.logs.guilds).send(e);
-    if (!Guild.findOne({guildID: guild.id})) {
-        const newGuild = new Guild({
+    
+        newGuild = new Guild({
             guildID: guild.id,
             prefix: client.config.prefix,
             modLogs: '',
@@ -19,4 +19,3 @@ exports.run = async (client, guild) => {
         newGuild.save();
         console.log(`Mongoose | Guild Added: ${guild.name}`);
     }
-}
