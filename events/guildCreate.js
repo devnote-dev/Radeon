@@ -8,7 +8,7 @@ exports.run = async (client, guild) => {
     .setTimestamp();
     client.channels.cache.get(client.config.logs.guilds).send(e);
     
-        newGuild = new Guild({
+        let newGuild = new Guild({
             guildID: guild.id,
             prefix: client.config.prefix,
             modLogs: '',
