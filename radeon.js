@@ -31,7 +31,7 @@ process.on('unhandledRejection', error => {
     .setTitle('Error: '+ error.name)
     .setDescription(error.toString().replace(/C:\\.+\\Bots/gi, '-'))
     .setFooter(`Code: ${error.code ? error.code : 'Unknown'}`)
-    client.channels.cache.get(client.config.logs.error).send(e).catch(()=>{});
+    client.channels.cache.get(client.config.logs.error).send(e);
 });
 
 client.mongoose.init();
