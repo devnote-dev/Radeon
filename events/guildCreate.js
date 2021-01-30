@@ -1,5 +1,6 @@
 const {MessageEmbed} = require('discord.js');
 const Guild = require('../schemas/guild-schema');
+const Muted = require('../schemas/muted-schema');
 
 exports.run = async (client, guild) => {
     const e = new MessageEmbed()
@@ -7,15 +8,19 @@ exports.run = async (client, guild) => {
     .setColor(0x00d134)
     .setTimestamp();
     client.channels.cache.get(client.config.logs.guilds).send(e);
-    
-        let newGuild = new Guild({
-            guildID: guild.id,
-            prefix: client.config.prefix,
-            modLogs: '',
-            muteRole: '',
-            ignoredChannels: [],
-            ignoredCommands: []
-        });
-        newGuild.save();
-        console.log(`Mongoose | Guild Added: ${guild.name}`);
-    }
+    let newGuild = new Guild({
+        guildID: guild.id,
+        prefix: client.config.prefix,
+        modLogs: '',
+        muteRole: '',
+        ignoredChannels: [],
+        ignoredCommands: []
+    });
+    newGuild.save();
+    console.log(`Mongoose | Guild Added: ${guild.name}`);
+    const newList = new Muted({
+        guildID: guild.id,
+        mutedList: []
+    });
+    newList.save();
+}
