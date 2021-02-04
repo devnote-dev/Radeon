@@ -5,12 +5,12 @@ module.exports = {
     aliases: ['find-user'],
     description: 'Sets bot\'s status.',
     guildOnly: false,
-    modOnly: true,
+    modOnly: 'warn',
     run: async (client, message, args) => { 
         if(args[0]) {
             const user = message.mentions.users.first() || client.users.cache.get(args[0]) || client.users.cache.find(u => u.username == args.slice(0).join(" "));
             const mutual = client.guilds.cache.filter(g => g.members.cache.get(user.id)).map(g => `${g.name} - ${g.id}`).join('\n')
-            
+
             if(user) {
                 const embed = new Discord.MessageEmbed()
                 .setAuthor(user.tag, user.displayAvatarURL({dynamic: true}))
@@ -20,10 +20,10 @@ module.exports = {
                 )
                 message.channel.send(embed)
             } else {
-                message.channel.send(client.errEmb(`I can't find this user!`))
+                client.errEmb(`I can't find this user!`, message)
             }
         } else {
-            message.channel.send(client.errEmb(`Correct usage: \`-finduser <user : mention | name | id>\``))
+            client.errEmb(`Correct usage: \`-finduser <user : mention | name | id>\``, message)
         }
     }
 }
