@@ -2,17 +2,29 @@ const mongoose = require('mongoose');
 
 const guildSchema = mongoose.Schema({
     guildID: {
-        type:       String,
-        required:   true
+        type:           String,
+        required:       true
     },
-    prefix:         String,
-    modLogs:        String,
-    muteRole:       String,
+    prefix:             String,
+    modLogs:{
+        channel:        String,
+        kicks:{
+            type:       Boolean,
+            default:    false
+        },
+        bans:{
+            type:       Boolean,
+            default:    false
+        }
+    },
+    muteRole:           String,
     ignoredCommands: {
-        type:       [String],
+        type:           [String],
+        default:        []
     },
     ignoredChannels: {
-        type:       [String],
+        type:           [String],
+        default:        []
     }
 });
 

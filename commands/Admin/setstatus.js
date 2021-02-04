@@ -12,7 +12,7 @@ module.exports = {
     aliases: ['setstatus'],
     description: 'Sets bot\'s status.',
     guildOnly: false,
-    modOnly: true,
+    modOnly: 'warn',
     run: async (client, message, args) => { 
         if(args[0]) {
             const activityType = args[0].toUpperCase();
@@ -21,12 +21,12 @@ module.exports = {
                 if(activityType == "CLEAR") activityName = ""
 
                 client.user.setActivity(activityName, {type: activityType})
-                message.channel.send(client.successEmb(`Presence has been succesfully changed!`))
+                client.successEmb(`Presence has been succesfully changed!`, message)
             } else {
-                message.channel.send(client.errEmb(`Activity type provided by you is wrong!\n\n**Current activity types:**\n${activities.map(a => `\`${a}\``).join('\n')}`))
+                client.errEmb(`Activity type provided by you is wrong!\n\n**Current activity types:**\n${activities.map(a => `\`${a}\``).join('\n')}`, message)
             }
         } else {
-            message.channel.send(client.errEmb(`Correct usage: \`r!set-status <type> <name>\``))
+            client.errEmb(`Correct usage: \`r!set-status <type> <name>\``, message)
         }
     }
 }

@@ -30,8 +30,18 @@ exports.run = async (client, message) => {
     let command = client.commands.get(cmd) || client.commands.get(client.aliases.get(cmd));
     if (!command) return;
     if (!message.guild && command.guildOnly) return message.author.send(client.errEmb('This command cant be used in DMs.'));
-    if(command.modBypass || command.permissions) {
-        if(client.config.botOwners.includes(message.author.id) || message.member.permissions.has(command.permissions)) {
+    if (command.modOnly) {
+        if (client.config.botOwners.includes(message.author.id)) {
+            command.run(client, message, args);
+        } else {
+            if (command.modOnly === 'void') return;
+            const embed = new MessageEmbed()
+            .setAuthor(message.author.tag, message.author.displayAvatarURL({dynamic: true}))
+            .setDescription('This command is for Bot Owners Only.');
+            return message.channel.send(embed);
+        }
+    } else if (command.modBypass || command.permissions) {
+        if (client.config.botOwners.includes(message.author.id) || message.member.permissions.has(command.permissions)) {
             command.run(client, message, args);
         } else {
             const embed = new MessageEmbed()

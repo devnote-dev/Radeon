@@ -5,7 +5,10 @@ const mutedSchema = mongoose.Schema({
         type:       String,
         required:   true
     },
-    mutedList:      [String]
+    mutedList:{
+        type:       [String],
+        default:    []
+    }
 });
 
 module.exports = mongoose.model('MutedList', mutedSchema, 'Muted');

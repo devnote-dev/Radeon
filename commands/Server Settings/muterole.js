@@ -5,9 +5,9 @@ module.exports = {
     name: 'muterole',
     aliases: ['set-muterole'],
     description: 'Set\'s the mute role for this server.',
-    usage: 'muterole <Role:Name/Mention/ID>',
+    usage: 'muterole <Role:Name/Mention/ID>\nmuterole reset',
     guildOnly: true,
-    permissions: ['MANAGE_ROLES'],
+    permissions: ['MANAGE_ROLES','MANAGE_GUILD'],
     run: async (client, message, args) => {
         if (args.length < 1) {
             const data = await Guild.findOne({guildID: message.guild.id});
@@ -18,15 +18,25 @@ module.exports = {
             .setDescription(res + '\nTo set a new muted role use the `muterole <Role:Name/Mention/ID>` command.')
             .setColor(0x1e143b)
             .setFooter(`Triggered By ${message.author.tag}`, message.author.avatarURL());
-            return message.channel.send(embed);
+            message.channel.send(embed);
+        } else {
+            if (args[0] === 'reset') {
+                await Guild.findOneAndUpdate(
+                    { guildID: message.guild.id },
+                    { $set:{ muteRole: '' }},
+                    { new: true }
+                );
+                client.checkEmb('Mute role was successfully reset!', message);
+            } else {
+                const role = message.mentions.roles.first() || message.guild.roles.resolve(args[0]) || message.guild.roles.cache.find(r => r.name.toLowerCase() === args[0].toLowerCase());
+                if (!role) return client.errEmb('Argument Specified is an Invalid Role.', message);
+                await Guild.findOneAndUpdate(
+                    { guildID: message.guild.id },
+                    { $set:{ muteRole: role.id }},
+                    { new: true }
+                );
+                client.checkEmb(`Mute role was successfully set to ${role}!`, message);
+            }
         }
-        const role = message.guild.roles.cache.find(r => r.name.toLowerCase() === args[0].toLowerCase()) || message.mentions.roles.first() || message.guild.roles.resolve(args[0]);
-        if (!role) return message.channel.send(client.errEmb('Argument Specified is an Invalid Role.'));
-        await Guild.findOneAndUpdate(
-            { guildID: message.guild.id },
-            { $set:{ muteRole: role.id } },
-            { new: true }
-        );
-        message.channel.send(client.successEmb(`Mute role was successfully set to ${role}!`));
     }
 }
