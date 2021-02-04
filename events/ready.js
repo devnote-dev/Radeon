@@ -1,12 +1,12 @@
-const {MessageEmbed} = require('discord.js');
+require('discord.js');
 
 exports.run = async client => {
-    console.log('Radeon is Ready!');
-    client.user.setActivity('Radeon: Revamped 😎', {type:'PLAYING'});
-    // Removed HOST: <NAME> temporarily
-    const e = new MessageEmbed()
-    .setDescription(`Radeon is Ready!\nHost: Unknown`)
-    .setColor(0x63d01b)
-    .setTimestamp();
-    client.channels.cache.get(client.config.logs.status).send(e);
+    console.log('\x1b[36mRadeon is Ready!\x1b[0m');
+    client.user.setPresence({
+        status: 'online',
+        activity:{
+            name: `${client.guilds.cache.size} servers!`,
+            type: 'WATCHING'
+        }
+    });
 }
