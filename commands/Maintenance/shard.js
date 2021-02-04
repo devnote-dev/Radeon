@@ -8,7 +8,7 @@ module.exports = {
     run: async (client, message, args) => {
         let server = message.guild;
         if (args.length > 0) server = client.guilds.cache.get(args[0]);
-        if (!server) return message.channel.send(client.errEmb('Invalid or Unknown Server ID.'));
+        if (!server) return client.errEmb('Invalid or Unknown Server ID.', message);
         const shard = server.shard;
         switch (shard.status) {
             case 0:
@@ -35,14 +35,21 @@ module.exports = {
             default:
                 sstatus = 'Unknown!';
         }
+        function duration(ms) {
+            const sec = Math.floor((ms / 1000) % 60).toString()
+            const min = Math.floor((ms / (1000 * 60)) % 60).toString()
+            const hrs = Math.floor((ms / (1000 * 60 * 60)) % 24).toString()
+            const days = Math.floor((ms / (1000 * 60 * 60 * 24)) % 60).toString()
+            return `${days.padStart(1, `0`)} days ${hrs.padStart(2, `0`)} hours ${min.padStart(2, `0`)} mins ${sec.padStart(2, `0`)} seconds ago`;
+        }
         const embed = new MessageEmbed()
         .setTitle('Shard Info')
         .addFields(
             {name: 'Guild', value: `${server.name} (ID ${server.id})`, inline: false},
             {name: 'Shard ID', value: shard.id, inline: true},
-            {name: 'Shard Host', value: 'Unknown', inline: true},
-            {name: 'Shard Ping', value: `${shard.ping}ms`, inline: true},
-            {name: 'Shard Status', value: sstatus, inline: true}
+            {name: 'Status', value: sstatus, inline: true},
+            {name: 'Ping', value: `${shard.ping}ms`, inline: true},
+            {name: 'Last Ping', value: duration(shard.lastPingTimestamp), inline: true}
         )
         .setColor(0x1e143b)
         .setFooter(`Triggered by ${message.author.tag}`, message.author.avatarURL());
