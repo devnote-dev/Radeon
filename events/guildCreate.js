@@ -11,7 +11,7 @@ exports.run = async (client, guild) => {
     let newGuild = new Guild({
         guildID: guild.id,
         prefix: client.config.prefix,
-        modLogs: '',
+        modLogs:{channel: ''},
         muteRole: '',
         ignoredChannels: [],
         ignoredCommands: []
