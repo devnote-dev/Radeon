@@ -1,25 +1,45 @@
-require('discord.js');
+const {MessageEmbed} = require('discord.js');
 const Guild = require('../../schemas/guild-schema');
+const Muted = require('../../schemas/muted-schema');
 
 module.exports = {
     name: 'unmute',
     description: 'Unmutes a muted user.',
-    usage: 'unmute <User:Mention/ID>',
+    usage: 'unmute <User:Mention/ID> [Reason:text]',
     guildOnly: true,
     permissions: ['MANAGE_MESSAGES'],
     run: async (client, message, args) => {
-        const {muteRole} = await Guild.findOne({guildID: message.guild.id});
-        if (!muteRole) return message.channel.send(client.errEmb('Mute role not found/set. You can set one using the `muterole` command.'));
-        if (args.length < 1) return message.channel.send(client.errEmb('Insufficient Arguments.\n```\nunmute <User:Mention/ID>\n```'));
+        const {muteRole, modLogs} = await Guild.findOne({guildID: message.guild.id});
+        if (!muteRole) return client.errEmb('Mute role not found/set. You can set one using the `muterole` command.', message);
+        if (args.length < 1) return client.errEmb('Insufficient Arguments.\n```\nunmute <User:Mention/ID> [Reason:text]\n```', message);
         const target = message.mentions.members.first() || message.guild.member(args[0]);
-        if (!target) return message.channel.send(client.errEmb(`\`${args[0]}\` is not a valid member.`));
-        if (!target.roles.cache.has(muteRole)) return message.channel.send(client.errEmb(`\`${target.user.tag}\` is not muted.`));
+        if (!target) return client.errEmb(`\`${args[0]}\` is not a valid member.`, message);
+        if (!target.roles.cache.has(muteRole)) return client.errEmb(`\`${target.user.tag}\` is not muted.`, message);
+        let reason = '(No Reason Specified)';
+        if (args.length > 1) reason = args.slice(1).join(' ');
         try {
             await target.roles.remove(muteRole);
-            target.user.send({embed:{title:'You have been Unmuted!',color:0x1e143b,footer:{text:`Sent from ${message.guild.name}`, icon_url:message.guild.iconURL({dynamic:true})}}}).catch(()=>{});
-            message.channel.send(client.successEmb(`\`${target.user.tag}\` was unmuted!`));
+            await Muted.findOneAndUpdate(
+                { guildID: message.guild.id },
+                { $pull: target.user.id }
+            );
+            target.user.send({embed:{title:'You have been Unmuted!',description:`**Reason:** ${reason}`,color:0x1e143b,footer:{text:`Sent from ${message.guild.name}`, icon_url:message.guild.iconURL({dynamic:true})}}}).catch(()=>{});
+            client.checkEmb(`\`${target.user.tag}\` was unmuted!`, message);
+            if (modLogs) {
+                const embed = new MessageEmbed()
+                .setTitle('Member Unmuted')
+                .setThumbnail(target.user.displayAvatarURL({dynamic: true}))
+                .addFields(
+                    {name: 'User', value: `• ${target.user.tag}\n• ID: ${target.user.id}`, inline: true},
+                    {name: 'Moderator', value: `• ${message.author.tag}\n• ID: ${message.author.id}`, inline: true},
+                    {name: 'Reason', value: reason, inline: false}
+                )
+                .setColor('BLUE').setTimestamp();
+                message.guild.channels.cache.get(modLogs).send(embed).catch(()=>{});
+            }
         } catch (err) {
-            message.channel.send(client.errEmb(`Unknown: Failed Unmuting Member \`${target.user.tag}\``));
+            console.log(err);
+            client.errEmb(`Unknown: Failed Unmuting Member \`${target.user.tag}\``, message);
         }
     }
 }
