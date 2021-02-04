@@ -1,12 +1,19 @@
 const mongoose = require('mongoose');
 
 module.exports = {
-    init: async () => {
+    init: () => {
         const dbOptions = {
             useNewUrlParser: true,
             useUnifiedTopology: true,
-            useFindAndModify: false
+            autoIndex: false,
+            poolSize: 5,
+            connectTimeoutMS: 10000,
+            family:4
         };
+
+        mongoose.connect('mongodb+srv://Owners:Admin@radeon.xecdu.mongodb.net/Radeon?retryWrites=true&w=majority', dbOptions);
+        mongoose.set('useFindAndModify', false);
+        mongoose.Promise = global.Promise;
 
         mongoose.connection.on('connected', () => {
             console.log('Mongoose | \x1b[32mSuccessfully Connected\x1b[0m');
@@ -19,7 +26,5 @@ module.exports = {
         mongoose.connection.on('disconnected', () => {
             console.warn('Mongoose | \x1b[31mConnection Lost\x1b[0m');
         });
-
-        await mongoose.connect('mongodb+srv://Admins:Admins@radeon.xecdu.mongodb.net/Radeon?retryWrites=true&w=majority', dbOptions);
     }
 }
