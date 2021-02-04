@@ -11,7 +11,7 @@ module.exports = {
             family:4
         };
 
-        mongoose.connect('mongodb+srv://Owners:Admin@radeon.xecdu.mongodb.net/Radeon?retryWrites=true&w=majority', dbOptions);
+        mongoose.connect('YOUR-MONGO-PASSWORD-GOES-HERE!', dbOptions);
         mongoose.set('useFindAndModify', false);
         mongoose.Promise = global.Promise;
 
