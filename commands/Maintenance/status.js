@@ -22,7 +22,6 @@ module.exports = {
         .addField('Version', version, true)
         .addField('DiscordJS', Discord.version, true)
         .addField('NodeJS', process.version, true)
-        .addField('Hosts', '1', true)
         .addField('Shards', client.shard.count, true)
         .addField('Servers', client.guilds.cache.size, true)
         .addField('Channels', client.channels.cache.size, true)
