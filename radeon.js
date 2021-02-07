@@ -4,6 +4,7 @@ const {readdirSync} = require('fs');
 
 client.commands = new Discord.Collection();
 client.aliases = new Discord.Collection();
+client.cmdlogs = new Set();
 client.config = require('./config.json');
 client.mongoose = require('./mongo');
 
