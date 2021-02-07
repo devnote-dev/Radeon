@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const {MongoPath} = require('./config.json');
 
 module.exports = {
     init: () => {
@@ -11,7 +12,7 @@ module.exports = {
             family:4
         };
 
-        mongoose.connect('YOUR-MONGO-PASSWORD-GOES-HERE!', dbOptions);
+        mongoose.connect(MongoPath, dbOptions);
         mongoose.set('useFindAndModify', false);
         mongoose.Promise = global.Promise;
 
