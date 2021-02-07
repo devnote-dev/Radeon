@@ -6,7 +6,7 @@ module.exports = {
     guildOnly: true,
     modOnly: 'void',
     run: async (client, message, args) => {
-        if (args.length < 1) return message.channel.send('<:wtf_dude:789567331495968818>');
+        if (args.length < 1) return client.errEmb('No Code Provided.', message);
         const code = args.join(' ');
         if (/token|(client)?\.config/gi.test(code)) return client.errEmb('You Can\'t Do That.', message);
         try {
@@ -20,6 +20,6 @@ module.exports = {
         } catch (error) {
             message.channel.send(`\`\`\`js\n${error}\n\`\`\``);
         }
-        console.log(`\n${message.guild.id}/${message.author.id}: Eval:\n${code}`);
+        console.log(`\n${message.guild.id}/${message.author.id}: Eval:\n${code}\n`);
     }
 }
