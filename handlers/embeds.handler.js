@@ -14,4 +14,11 @@ module.exports = async client => {
         .setColor(0xd10000);
         return message.channel.send(e);
     }
+
+    client.infoEmb = (msg, message) => {
+        const e = new MessageEmbed()
+        .setDescription('ℹ️ '+ msg)
+        .setColor(0x0054d1);
+        return message.channel.send(e);
+    }
 }
