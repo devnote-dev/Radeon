@@ -4,7 +4,6 @@ const {version} = require('../../package.json');
 module.exports = {
     name: 'status',
     description: 'Sends the bot\'s status for that guild. For the whole bot status use the `` command.',
-    guildOnly: true,
     run: async (client, message) => {
         function duration(ms) {
             const sec = Math.floor((ms / 1000) % 60).toString()
