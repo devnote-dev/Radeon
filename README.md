@@ -6,7 +6,7 @@ If you want to contribute via suggestions, join Radeon's [**Support Server**](ht
 
 Contributions via pull-requests should be made to the **dev** or **updates** branch, not the main branch. This is so that we can test the code first before pushing, and makes reverting files easier. :)
 
-**config.json File Format:**
+**config File Format:**
 ```json
 {
     "prefix":"PREFIX",
