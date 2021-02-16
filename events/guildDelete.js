@@ -7,7 +7,7 @@ exports.run = async (client, guild) => {
     .setDescription(`<:crossred:796925441490681889> Left **${guild.name}** - Active in ${client.guilds.cache.size} Servers!`)
     .setColor(0xd10000)
     .setTimestamp();
-    client.channels.cache.get(client.config.logs.guilds).send(e);
+    client.channels.cache.get(client.config.logs.joins).send(e).catch(()=>{});
     Guild.findOneAndDelete({guildID: guild.id}).catch(()=>{});
     console.log(`Mongoose | Guild Removed: ${guild.name}`);
     Muted.findOneAndDelete({guildID: guild.id}).catch(()=>{});
