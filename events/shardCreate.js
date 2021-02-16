@@ -5,5 +5,5 @@ exports.run = async (client, shard) => {
     .setTitle('Radeon')
     .setDescription(`Shard ${shard} / ${client.shard.count} - Ready`)
     .setColor('PURPLE');
-    client.channels.cache.get(client.config.logs.event).send(e);
+    client.channels.cache.get(client.config.logs.event).send(e).catch(()=>{});
 }
