@@ -7,20 +7,19 @@ exports.run = async (client, guild) => {
     .setDescription(`<:checkgreen:796925441771438080> Joined **${guild.name}** - Active in ${client.guilds.cache.size} Servers!`)
     .setColor(0x00d134)
     .setTimestamp();
-    client.channels.cache.get(client.config.logs.guilds).send(e);
-    let newGuild = new Guild({
+    client.channels.cache.get(client.config.logs.joins).send(e).catch(()=>{});
+    new Guild({
         guildID: guild.id,
         prefix: client.config.prefix,
-        modLogs:{channel: ''},
+        modLogs:{channel:''},
         muteRole: '',
         ignoredChannels: [],
-        ignoredCommands: []
-    });
-    newGuild.save();
+        ignoredCommands: [],
+        automod:{active:false, channel:'', invites:false, rateLimit:false, massMention:{active:false},badWords:{active:false}}
+    }).save();
     console.log(`Mongoose | Guild Added: ${guild.name}`);
-    const newList = new Muted({
+    new Muted({
         guildID: guild.id,
         mutedList: []
-    });
-    newList.save();
+    }).save();
 }
