@@ -18,7 +18,7 @@ module.exports = {
         if (duration > 31557600000) duration = 'inf';
         let reason = args.slice(2).join(' ');
         if (!target) return client.errEmb(`\`${args[0]}\` is not a valid member.`, message);
-        if (target.user.id === message.author.id) return client.errEmb('You cant mute yourself. <:wtf_dude:789567331495968818>', message);
+        if (target.user.id === message.author.id) return client.errEmb('You cant mute yourself. <:meguface:738862132493287474>', message);
         if (isNaN(duration) && duration != 'inf') return client.errEmb(`Invalid duration format: \`${args[1]}\``, message);
         if (!reason) reason = '(No Reason Specified)';
         if (target.permissions.has('ADMINISTRATOR')) return client.errEmb('Unable to Mute: That user is an Administrator.', message);
@@ -68,6 +68,7 @@ module.exports = {
                 }
             }, duration);
         } catch (err) {
+            console.error(err.message);
             client.errEmb(`Unknown: Failed Muting Member \`${target.user.tag}\``, message);
         }
     }
