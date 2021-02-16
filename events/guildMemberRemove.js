@@ -16,5 +16,5 @@ exports.run = async (client, member) => {
     )
     .setColor('GREY')
     .setTimestamp();
-    guild.channels.cache.get(modLogs.channel).send(embed);
+    guild.channels.cache.get(modLogs.channel).send(embed).catch(()=>{});
 }

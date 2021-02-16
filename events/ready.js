@@ -5,8 +5,13 @@ exports.run = async client => {
     client.user.setPresence({
         status: 'online',
         activity:{
-            name: `${client.guilds.cache.size} servers!`,
-            type: 'WATCHING'
+            name: 'with logging!',
+            type: 'PLAYING'
         }
     });
+    const {guilds, users} = client.config.logs;
+    if (!guilds) return;
+    client.channels.cache.get(guilds).setName(`│🌐» ${client.guilds.cache.size}`).catch(()=>{});
+    if (!users) return;
+    client.channels.cache.get(users).setName(`│👥» ${client.users.cache.size}`).catch(()=>{});
 }

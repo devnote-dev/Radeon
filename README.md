@@ -17,7 +17,9 @@ Contributions via pull-requests should be made to the **dev** or **updates** bra
     "logs":{
         "event":"EVENT CHANNEL ID",
         "error":"ERROR CHANNEL ID",
-        "guilds":"BOT-JOINS CHANNEL ID"
+        "joins":"BOT-JOINS CHANNEL ID",
+        "guilds":"GUILDS STATS CHANNEL ID",
+        "users":"USERS STATS CHANNEL ID"
     },
     "MongoPath":"MONGODB PASSWORD KEY"
 }
