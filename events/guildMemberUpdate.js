@@ -4,11 +4,11 @@ const Muted = require('../schemas/muted-schema');
 
 exports.run = async (client, oldMem, newMem) => {
     const {guild} = oldMem;
-    const {muteRole} = await Guild.findOne({guildID: guild.id});
-    if (!muteRole) return;
-    const {mutedList} = await Muted.findOne({guildID: guild.id});
-    if (mutedList.length < 1) return;
-    if (oldMem.roles.cache.has(muteRole) && !newMem.roles.cache.has(muteRole) && mutedList.includes(newMem.user.id)) {
-        newMem.roles.add(muteRole).catch(()=>{});
+    const gData = await Guild.findOne({guildID: guild.id}).catch(()=>{});
+    if (!gData.muteRole) return;
+    const mData = await Muted.findOne({guildID: guild.id}).catch(()=>{});
+    if (mData.mutedList.length < 1) return;
+    if (oldMem.roles.cache.has(gData.muteRole) && !newMem.roles.cache.has(gData.muteRole) && mData.mutedList.includes(newMem.user.id)) {
+        newMem.roles.add(gData.muteRole).catch(()=>{});
     }
 }
