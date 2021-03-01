@@ -5,7 +5,7 @@ module.exports = {
     description: 'Kicks a member from the server.',
     usage: 'kick <User:Mention/ID> [Reason:text]',
     guildOnly: true,
-    permissions: ['KICK_MEMBERS'],
+    permissions: 2,
     run: async (client, message, args) => {
         if (args.length < 1) return client.errEmb('No User Specified.\n```\nkick <User:Mention/ID> [Reason:text]\n```', message);
         const target = message.mentions.members.first() || message.guild.member(args[0]);

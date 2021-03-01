@@ -6,20 +6,19 @@ const Muted = require('../../schemas/muted-schema');
 module.exports = {
     name: 'mute',
     description: 'Mutes a specified user for a certain time.',
-    usage: 'mute <User:Mention/ID> <Time:duration> [Reason:text]',
+    usage: 'mute <User:Mention/ID> [Time:Duration] <Reason:Text>',
     guildOnly: true,
-    permissions: ["MANAGE_MESSAGES"],
+    permissions: 8192,
     run: async (client, message, args) => { 
         const {muteRole, modLogs} = await Guild.findOne({guildID: message.guild.id});
         if (!muteRole) return client.errEmb('Mute role not found/set. You can set one using the `muterole` command.', message);
-        if (args.length < 2) return client.errEmb('Insufficient Arguments.\n```\nmute <User:Mention/ID> <Time:duration> [Reason:text]\n```', message);
+        if (args.length < 2) return client.errEmb('Insufficient Arguments.\n```\nmute <User:Mention/ID> [Time:Duration] <Reason:Text>\n```', message);
         const target = message.mentions.members.first() || message.guild.member(args[0]);
         let duration = ms(args[1]);
-        if (duration > 31557600000) duration = 'inf';
+        if (isNaN(duration) || duration > 31557600000) duration = 'inf';
         let reason = args.slice(2).join(' ');
         if (!target) return client.errEmb(`\`${args[0]}\` is not a valid member.`, message);
         if (target.user.id === message.author.id) return client.errEmb('You cant mute yourself. <:meguface:738862132493287474>', message);
-        if (isNaN(duration) && duration != 'inf') return client.errEmb(`Invalid duration format: \`${args[1]}\``, message);
         if (!reason) reason = '(No Reason Specified)';
         if (target.permissions.has('ADMINISTRATOR')) return client.errEmb('Unable to Mute: That user is an Administrator.', message);
         const radeon = message.guild.member(client.user.id);
@@ -34,7 +33,7 @@ module.exports = {
                 { $addToSet:{ mutedList: target.user.id }},
                 { new: true }
             );
-            if (modLogs) {
+            if (modLogs.channel) {
                 const embed = new MessageEmbed()
                 .setTitle('Member Muted')
                 .setThumbnail(target.user.displayAvatarURL({dynamic: true}))
@@ -45,7 +44,7 @@ module.exports = {
                 )
                 .setFooter(`Duration: ${ms(duration, {long: true})}`)
                 .setColor('GREY').setTimestamp();
-                message.guild.channels.cache.get(modLogs).send(embed).catch(()=>{});
+                message.guild.channels.cache.get(modLogs.channel).send(embed).catch(()=>{});
             }
             if (duration === 'inf') return;
             setTimeout(async () => {
@@ -54,7 +53,7 @@ module.exports = {
                     { guildID: message.guild.id },
                     { $pull: target.user.id }
                 )
-                if (modLogs) {
+                if (modLogs.channel) {
                     const embed = new MessageEmbed()
                     .setTitle('Member Unmuted')
                     .setThumbnail(target.user.displayAvatarURL({dynamic: true}))
@@ -64,7 +63,7 @@ module.exports = {
                         {name: 'Reason', value: 'Auto: Mute Expired', inline: false}
                     )
                     .setColor('BLUE').setTimestamp();
-                    message.guild.channels.cache.get(modLogs).send(embed).catch(()=>{});
+                    message.guild.channels.cache.get(modLogs.channel).send(embed).catch(()=>{});
                 }
             }, duration);
         } catch (err) {

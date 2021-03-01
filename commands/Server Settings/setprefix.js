@@ -7,10 +7,10 @@ module.exports = {
     description: 'Changes Radeon\s prefix to the one specified. If you want to reset to the default prefix use `reset`. The list of charaters below are what can be used as the new prefix. You can use letters but not numbers. The prefix cannot be more than 5 characters in length.\n\n``! ? + - ~ \' \^ * ` ; , : . < > @ & % \ / $ ( ) £ #``',
     usage: 'setprefix <new-prefix>\nsetprefix reset',
     guildOnly: true,
-    permissions: ['MANAGE_GUILD'],
+    permissions: 32,
     modBypass: true,
     run: async (client, message, args) => {
-        if (args.length < 1) return client.errEmb('No Prefix Specified.\n```\nsetprefix <new-prefix>\n```', message);
+        if (!args.length) return client.errEmb('No Prefix Specified.\n```\nsetprefix <new-prefix>\n```', message);
         let newPrefix = args.join(' ').toLowerCase();
         const blocked = new RegExp(/[^a-zA-Z!\?+-~'\^*`;,:.<>@&%\\/$()£#]+/gi);
         if (blocked.test(newPrefix)) return client.errEmb('The new prefix contains an invalid charater(s).\n(see `help setprefix` for more info).', message);

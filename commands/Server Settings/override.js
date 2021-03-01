@@ -8,7 +8,7 @@ module.exports = {
     usage: 'override add-channels <...Channel:Mention/ID>\noverride del-channels <...Channel:Mention/ID>\noverride add-commands <...Command:Name>\noverride del-commands <...Command:Name>',
     guildOnly: true,
     modBypass: true,
-    permissions: ['MANAGE_GUILD'],
+    permissions: 32,
     run: async (client, message, args) => {
         const data = await Guild.findOne({guildID: message.guild.id});
         if (!args.length) {

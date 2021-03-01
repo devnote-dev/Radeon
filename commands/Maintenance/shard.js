@@ -9,6 +9,7 @@ module.exports = {
         let server = message.guild;
         if (args.length > 0) server = client.guilds.cache.get(args[0]);
         if (!server) return client.errEmb('Invalid or Unknown Server ID.', message);
+        if (!server.available) return client.errEmb('This Guild is Unavailable at this time.', message);
         const shard = server.shard;
         switch (shard.status) {
             case 0:
@@ -52,7 +53,7 @@ module.exports = {
             {name: 'Last Ping', value: duration(shard.lastPingTimestamp), inline: true}
         )
         .setColor(0x1e143b)
-        .setFooter(`Triggered by ${message.author.tag}`, message.author.avatarURL());
+        .setFooter(`Triggered by ${message.author.tag}`, message.author.displayAvatarURL());
         message.channel.send(embed);
     }
 }
