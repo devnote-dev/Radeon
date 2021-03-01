@@ -13,38 +13,22 @@ exports.run = async (client, message) => {
         if (!command) return;
         if (command.guildOnly) {
             const embed = new MessageEmbed()
-            .setAuthor(author.tag, author.avatarURL({dynamic:true}))
+            .setAuthor(author.tag, author.displayAvatarURL({dynamic:true}))
             .setDescription('This command cannot be used in DMs.');
             return message.channel.send(embed);
         } else if (command.modOnly) {
             if (botOwners.includes(author.id)) {
                 command.run(client, message, args);
-                client.cmdlogs.add({
-                    user:       author.id,
-                    command:    command.name,
-                    channel:{
-                        id:     message.channel.id,
-                        type:   message.channel.type
-                    },
-                    time:       new Date().toLocaleString()
-                });
+                cmdlog(client, author, command, message.channel);
             } else if (command.modOnly === 'warn') {
                 const embed = new MessageEmbed()
-                .setAuthor(author.tag, author.avatarURL({dynamic:true}))
+                .setAuthor(author.tag, author.displayAvatarURL({dynamic:true}))
                 .setDescription('This command is for Bot Owners only.');
                 return message.channel.send(embed);
             } else if (command.modOnly === 'void') return;
         } else {
             command.run(client, message, args);
-            client.cmdlogs.add({
-                user:       author.id,
-                command:    command.name,
-                channel:{
-                    id:     message.channel.id,
-                    type:   message.channel.type
-                },
-                time:       new Date().toLocaleString()
-            });
+            cmdlog(client, author, command, message.channel);
         }
         return;
     }
@@ -83,85 +67,60 @@ exports.run = async (client, message) => {
         if (command.modOnly) {
             if (botOwners.includes(author.id)) {
                 command.run(client, message, args);
-                client.cmdlogs.add({
-                    user:       author.id,
-                    command:    command.name,
-                    channel:{
-                        id:     message.channel.id,
-                        type:   message.channel.type
-                    },
-                    time:       new Date().toLocaleString()
-                });
+                cmdlog(client, author, command, message.channel);
             } else if (command.modOnly === 'warn') {
                 const embed = new MessageEmbed()
-                .setAuthor(author.tag, author.avatarURL({dynamic:true}))
+                .setAuthor(author.tag, author.displayAvatarURL({dynamic:true}))
                 .setDescription('This command is for Bot Owners only.');
                 return message.channel.send(embed);
             } else if (command.modOnly === 'void') return;
         } else if (command.modBypass || command.permissions) {
             if (botOwners.includes(author.id) || message.member.permissions.has(command.permissions)) {
                 if (command.botPerms) {
-                    if (!message.guild.member(client.user.id).permissions.has(command.botPerms)) {
-                        const embed = new MessageEmbed()
-                        .setAuthor(author.tag, author.avatarURL({dynamic:true}))
-                        .setDescription(`I am missing the \`${command.botPerms.map(p => p.replace(/_/g,' ')).join('`, `')}\` permissions for this command.`);
-                        return message.channel.send(embed);
+                    if (message.guild.me.permissions.has(command.botPerms)) {
+                        command.run(client, message, args);
+                        cmdlog(client, author, command, message.channel);
+                    } else {
+                        return message.channel.send(`I am missing the \`${command.botPerms.join('`, `')}\` permissions to run this command.`);
                     }
                 } else {
                     command.run(client, message, args);
-                    client.cmdlogs.add({
-                        user:       author.id,
-                        command:    command.name,
-                        channel:{
-                            id:     message.channel.id,
-                            type:   message.channel.type
-                        },
-                        time:       new Date().toLocaleString()
-                    });
+                    cmdlog(client, author, command, message.channel);
                 }
             } else {
-                const embed = new MessageEmbed()
-                .setAuthor(author.tag, author.avatarURL({dynamic:true}))
-                .setDescription(`You are missing the \`${command.permissions.map(p => p.replace(/_/g,' ')).join('`, `')}\` permissions.`);
-                return message.channel.send(embed);
+                return message.channel.send(`You am missing the \`${command.botPerms.join('`, `')}\` permissions to run this command.`);
             }
         } else {
             if (command.botPerms) {
-                if (!message.guild.member(client.user.id).permissions.has(command.botPerms)) {
-                    const embed = new MessageEmbed()
-                    .setAuthor(author.tag, author.avatarURL({dynamic:true}))
-                    .setDescription(`I am missing the \`${command.botPerms.map(p => p.replace(/_/g,' ')).join('`, `')}\` permissions for this command.`);
-                    return message.channel.send(embed);
-                } else {
+                if (message.guild.me.permissions.has(command.botPerms)) {
                     command.run(client, message, args);
-                    client.cmdlogs.add({
-                        user:       author.id,
-                        command:    command.name,
-                        channel:{
-                            id:     message.channel.id,
-                            type:   message.channel.type
-                        },
-                        time:       new Date().toLocaleString()
-                    });
+                    cmdlog(client, author, command, message.channel);
+                } else {
+                    return message.channel.send(`I am missing the \`${command.botPerms.join('`, `')}\` permissions to run this command.`);
                 }
             } else {
                 command.run(client, message, args);
-                client.cmdlogs.add({
-                    user:       author.id,
-                    command:    command.name,
-                    channel:{
-                        id:     message.channel.id,
-                        type:   message.channel.type
-                    },
-                    time:       new Date().toLocaleString()
-                });
+                cmdlog(client, author, command, message.channel);
             }
         }
     } else {
         if (automod.active) {
             if (automod.invites || automod.massMention.active) {
-                require('../automod/messageCheck').run(client, message, automod);
+                require('../functions/messageCheck').run(client, message, automod);
             }
         }
     }
+}
+
+function cmdlog(client, user, command, channel) {
+    client.cmdlogs.add({
+        user:       user.id,
+        command:    command.name,
+        channel:{
+            id:     channel.id,
+            type:   channel.type
+        },
+        time:       new Date().toLocaleString()
+    });
+    return;
 }
