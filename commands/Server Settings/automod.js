@@ -7,7 +7,7 @@ module.exports = {
     usage: 'automod <enable|disable> <all|invites|anti-spam|mass-mention|badwords>\nautomod logchannel <Channel:Mention/ID>\nautomod logchannel remove\nautomod mention-limit <Number>\nautomod mention-limit reset\nautomod badwords list\nautomod badwords <add|remove> [...words]',
     guildOnly: true,
     modBypass: true,
-    permissions: ['MANAGE_GUILD'],
+    permissions: 32,
     run: async (client, message, args) => {
         const data = await Guild.findOne({guildID: message.guild.id});
         const {automod} = data;
@@ -50,7 +50,7 @@ module.exports = {
                 {name: 'Swear Filter', value: `${badwords}\nType \`automod badwords list\` to view current ones.`, inline: true}
             )
             .setColor(0x1e143b)
-            .setFooter(`Triggered By ${message.author.tag}`, message.author.avatarURL());
+            .setFooter(`Triggered By ${message.author.tag}`, message.author.displayAvatarURL());
             message.channel.send(embed);
         } else {
             if (args[0] === 'enable') {
@@ -286,7 +286,7 @@ module.exports = {
                         .setTitle('Automod: Badwords List')
                         .setDescription(`Please view this list with discression.\n\`\`\`\n${automod.badWords.list.forEach(i => i).join(', ')}\n\`\`\``)
                         .setColor(0x1e143b)
-                        .setFooter(`Triggered By ${message.author.tag}`, message.author.avatarURL());
+                        .setFooter(`Triggered By ${message.author.tag}`, message.author.displayAvatarURL());
                         message.channel.send(emb);
                         break;
                     case 'add':
