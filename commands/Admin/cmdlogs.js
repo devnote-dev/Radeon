@@ -17,9 +17,9 @@ module.exports = {
         try {
             message.author.send('Radeon Command Logs',att);
             const msg = await client.infoEmb(`${message.author} I have DMed you the file.\nThis message will autodelete in 5 seconds.`, message);
-            msg.delete({timeout:5000});
+            setTimeout(() => msg.delete(), 5000);
         } catch (err) {
-            client.errEmb(err.message);
+            client.errEmb(err.message,message);
         }
         message.delete();
     }
