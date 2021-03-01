@@ -7,10 +7,10 @@ module.exports = {
     description: 'Shows the current modlogs settings and allows for editing using the specified settings/options below (in usage). "log-kicks" and "log-bans" will update the logging to the opposite of what it was. "reset" will reset all modlogs settings.',
     usage: 'modlogs setchannel <Channel:Mention/ID>\nmodlogs log-kicks\nmodlogs log-bans\nmodlogs reset',
     guildOnly: true,
-    permissions: ['MANAGE_GUILD'],
+    permissions: 32,
     run: async (client, message, args) => {
         const data = await Guild.findOne({guildID: message.guild.id});
-        if (args.length < 1) {
+        if (!args.length) {
             switch (data.modLogs.kicks) {
                 case true: kicks = '<:checkgreen:796925441771438080>'; break;
                 case false: kicks = '<:crossred:796925441490681889>'; break;
