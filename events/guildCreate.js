@@ -8,7 +8,7 @@ exports.run = async (client, guild) => {
     .setColor(0x00d134)
     .setTimestamp();
     client.channels.cache.get(client.config.logs.joins).send(e).catch(()=>{});
-    new Guild({
+    await new Guild({
         guildID: guild.id,
         prefix: client.config.prefix,
         modLogs:{channel:''},
@@ -18,7 +18,7 @@ exports.run = async (client, guild) => {
         automod:{active:false, channel:'', invites:false, rateLimit:false, massMention:{active:false},badWords:{active:false}}
     }).save();
     console.log(`Mongoose | Guild Added: ${guild.name}`);
-    new Muted({
+    await new Muted({
         guildID: guild.id,
         mutedList: []
     }).save();
