@@ -27,8 +27,7 @@ module.exports = {
         .addField('Users', client.users.cache.size, true)
         .addField('Uptime', duration(client.uptime), false)
         .addField('Memory', `${Math.floor(heapUsed / 1024)}/${Math.floor(heapTotal / 1024)} MB (${Math.floor((heapUsed / heapTotal) * 100)}%)`)
-        .setFooter(`Triggered By ${message.author.tag}`, message.author.displayAvatarURL())
-        .setTimestamp();
+        .setFooter(`Triggered By ${message.author.tag}`, message.author.displayAvatarURL());
         message.channel.send(embed);
     }
 }
