@@ -5,7 +5,7 @@ exports.run = async client => {
     client.user.setPresence({
         status: 'online',
         activity:{
-            name: 'with logging!',
+            name: 'r!invite to invite!',
             type: 'PLAYING'
         }
     });
