@@ -1,79 +1,44 @@
 require('discord.js');
+const cleanCheck = require('../../functions/cleanCheck');
 
 module.exports = {
     name: 'clean',
     aliases: ['cl','clear','purge'],
-    description: 'Deletes a number of messages in a channel (min 1, max 100).\n**Options:**\n`User:Mention/ID` - Deletes from a target user\n`-users` - Deletes only user messages\n`-bots` - Deletes only bot messages',
-    usage: 'clean <number>\nclean <number> [User:Mention/ID]\nclean <number> [-users]\nclean <number> [-bots]',
+    description: 'Deletes a number of messages in a channel (min 1, max 100).\n\n**Flags:**\n`User:Mention/ID` - Deletes from a target user\n`-users` - Deletes only user messages\n`-bots` - Deletes only bot messages',
+    usage: 'clean <Amount:Number>\nclean <Amount:Number> [User:Mention/ID]\nclean <Amount:Number> [...Flags]',
     guildOnly: true,
-    permissions: ['MANAGE_MESSAGES'],
+    permissions: 8192,
+    botPerms: 8192,
     run: async (client, message, args) => {
-        if (args.length < 1) return client.errEmb('No Number Specified\n```\nclean <number>\nclean <number> [User:Mention/ID]\nclean <number> [-users]\nclean <number> [-bots]\n```', message);
-        let num, sub;
-        num = parseInt(args[0]);
-        if (isNaN(num)) return client.errEmb('No Number Specified.', message);
-        if (num < 1 || num > 100) return client.errEmb('Number must be more than 1 and less than 100.', message);
-        if (num < 100) num += 1;
+        if (!args.length) return client.errEmb('No Amount Specified.\n```\nclean <Amount:Number>\nclean <Amount:Number> [User:Mention/ID]\nclean <Amount:Number> [...Flags]\n```\n**Flags:**\n`-users` - Users only\n`-bots` - Bots Only\n`-r <Regex>` - Messages that match a certain regex.', message);
+        let amount = parseInt(args[0]);
+        if (isNaN(amount) || amount < 1 || amount > 100) return client.errEmb('Invalid Amount Specified. Amount must be a number between 1 and 100.', message);
         if (args.length > 1) {
-            if (args[1] === '-users') {
-                try {
-                    const mess = await message.channel.messages.fetch({limit:100});
-                    let count = 0;
-                    await mess.forEach(msg => {
-                        if (count > num) return;
-                        if (msg.author.bot) return;
-                        msg.delete();
-                        count++;
-                    })
-                    const done = await client.checkEmb(`Deleted ${num} user message(s)!`, message)
-                    done.delete({timeout:3000});
-                } catch (err) {
-                    console.log(err);
-                    client.errEmb(err.message, message);
+            var flagArgs = args.splice(1);
+            let target = '', flagUsers = false, flagBots = false, flagRegex = '';
+            for (const arg of flagArgs) {
+                if (/(<@!?)?\d{17,19}>?/g.test(arg)) target = /(?:<@!?)?(\d{17,19})>?/g.exec(arg)[1];
+                if (arg.toLowerCase() === '-users') flagUsers = true;
+                if (arg.toLowerCase() === '-bots') flagBots = true;
+                if (arg.toLowerCase() === '-r') {
+                    const index = flagArgs.indexOf(arg);
+                    if (index < flagArgs.length) {
+                        flagRegex = flagArgs[index+1].trim();
+                    }
                 }
-            } else if (args[1] === '-bots') {
-                try {
-                    const mess = await message.channel.messages.fetch({limit:100});
-                    let count = 0;
-                    await mess.forEach(msg => {
-                        if (count > num) return;
-                        if (!msg.author.bot) return;
-                        msg.delete();
-                        count++;
-                    })
-                    const done = await client.checkEmb(`Deleted ${num} bot message(s)!`, message)
-                    done.delete({timeout:3000});
-                } catch (err) {
-                    console.log(err);
-                    client.errEmb(err.message, message);
-                }
-            } else if (message.mentions.users.size > 0 || /^\d{17,19}$/g.test(args[1])) {
-                sub = message.mentions.users.first() || message.guild.member(args[1]) || args[1];
-                const tag = sub.user ? sub.user.tag : sub;
-                if (sub.id) sub = sub.id;
-                try {
-                    const mess = await message.channel.messages.fetch({limit:100});
-                    let count = 0;
-                    await mess.forEach(msg => {
-                        if (count > num) return;
-                        if (msg.author.id === sub) {
-                            msg.delete();
-                            count++;
-                        }
-                    })
-                    const done = await client.checkEmb(`Deleted ${num} message(s) from \`${tag}\``, message)
-                    done.delete({timeout:3000});
-                } catch (err) {
-                    console.log(err);
-                    client.errEmb(err.message, message);
-                }
-            } else {
-                return client.errEmb('Unknown UserResolvable or Flag Specified.', message);
+            }
+            if (flagUsers && flagBots) return client.errEmb('Both Users & Bots Flags Specified, pick one.', message);
+            try {
+                const res = await cleanCheck.run(message, amount, {target:target, flagUsers:flagUsers, flagBots:flagBots, flagRegex:flagRegex});
+                await client.checkEmb(`Deleted \`${res.size}\` Messages!`, message).then(m => m.delete({timeout:3000}));
+            } catch (err) {
+                client.errEmb(err.message, message);
             }
         } else {
+            if (amount < 100) amount += 1;
             try {
-                await message.channel.bulkDelete(num,{filterOld:true});
-                await client.checkEmb(`Deleted ${num} message(s)!`, message).then(m => m.delete({timeout:3000}));
+                const res = await message.channel.bulkDelete(amount,true);
+                await client.checkEmb(`Deleted \`${res.size}\` Messages!`, message).then(m => m.delete({timeout:3000}));
             } catch (err) {
                 client.errEmb(err.message, message);
             }
