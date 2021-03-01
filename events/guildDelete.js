@@ -8,7 +8,7 @@ exports.run = async (client, guild) => {
     .setColor(0xd10000)
     .setTimestamp();
     client.channels.cache.get(client.config.logs.joins).send(e).catch(()=>{});
-    Guild.findOneAndDelete({guildID: guild.id}).catch(()=>{});
+    await Guild.findOneAndDelete({guildID: guild.id}).catch(()=>{});
     console.log(`Mongoose | Guild Removed: ${guild.name}`);
-    Muted.findOneAndDelete({guildID: guild.id}).catch(()=>{});
+    await Muted.findOneAndDelete({guildID: guild.id}).catch(()=>{});
 }
