@@ -1,10 +1,10 @@
-const {MessageEmbed} = require('discord.js');
+const { MessageEmbed } = require('discord.js');
 const Guild = require('../schemas/guild-schema');
 
 exports.run = async (client, guild, user) => {
-    const {modLogs} = await Guild.findOne({guildID: guild.id});
+    const { modLogs } = await Guild.findOne({guildID: guild.id});
     if (!modLogs.channel || !modLogs.bans) return;
-    let entry = await guild.fetchAuditLogs({limit:1, user:user, type:'MEMBER_BAN_REMOVE'});
+    let entry = await guild.fetchAuditLogs({user:user, type:'MEMBER_BAN_REMOVE'});
     entry = entry.entries.first();
     let executor, reason;
     if (entry) {
