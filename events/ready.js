@@ -9,7 +9,7 @@ exports.run = async client => {
             type: 'PLAYING'
         }
     });
-    const {guilds, users} = client.config.logs;
+    const { guilds, users } = client.config.logs;
     if (!guilds) return;
     client.channels.cache.get(guilds).setName(`│🌐» ${client.guilds.cache.size}`).catch(()=>{});
     if (!users) return;
