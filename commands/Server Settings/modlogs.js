@@ -1,4 +1,4 @@
-const {MessageEmbed} = require('discord.js');
+const { MessageEmbed } = require('discord.js');
 const Guild = require('../../schemas/guild-schema');
 
 module.exports = {
@@ -6,8 +6,8 @@ module.exports = {
     aliases: ['set-modlogs'],
     description: 'Shows the current modlogs settings and allows for editing using the specified settings/options below (in usage). "log-kicks" and "log-bans" will update the logging to the opposite of what it was. "reset" will reset all modlogs settings.',
     usage: 'modlogs setchannel <Channel:Mention/ID>\nmodlogs log-kicks\nmodlogs log-bans\nmodlogs reset',
-    guildOnly: true,
     permissions: 32,
+    guildOnly: true,
     run: async (client, message, args) => {
         const data = await Guild.findOne({guildID: message.guild.id});
         if (!args.length) {
