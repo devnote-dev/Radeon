@@ -1,13 +1,14 @@
-const {MessageEmbed} = require('discord.js');
+const { MessageEmbed } = require('discord.js');
 
 module.exports = {
     name: 'serverinfo',
     description: 'Sends information about the server.',
+    cooldown: 6,
     guildOnly: true,
     run: async (client, message) => {
         message.channel.startTyping();
         const server = message.guild;
-        const owner = server.owner;
+        const owner = server.member(server.ownerID);
         const tc = server.channels.cache.filter(c => c.type === 'text');
         const vc = server.channels.cache.filter(c => c.type === 'voice');
         const roles = server.roles.cache.size;
@@ -29,7 +30,7 @@ module.exports = {
             case 3: tier = 'Tier 3 (Max)'; break;
             default: tier = 'Unknown'; break;
         }
-        function duration(ms) {
+        function toDefaultDuration(ms) {
             const sec = Math.floor((ms / 1000) % 60).toString()
             const min = Math.floor((ms / (1000 * 60)) % 60).toString()
             const hrs = Math.floor((ms / (1000 * 60 * 60)) % 24).toString()
@@ -41,13 +42,13 @@ module.exports = {
         .setThumbnail(server.iconURL({dynamic: true}))
         .addField('Owner', `${owner}`, true)
         .addField('Members', `${server.memberCount} Total Members\n${server.memberCount - bots.size} Users\n${bots.size} Bots`, true)
-        .addField('Created At', `${duration(server.createdAt)}`, true)
+        .addField('Created At', `${toDefaultDuration(server.createdTimestamp)}`, true)
         .addField('Acknowledgements', `${acc ?? 'None'}`, true)
         .addField('Info', `Region: ${server.region}\nMFA: ${server.mfaLevel}\nContent Filter: ${ecfl}`, true)
         .addField('General', `${tc.size} Text Channels\n${vc.size} Voice Channels\n${roles} Roles`, true)
         .addField('Emojis', `${server.emojis.cache.size} Total Emojis\n${server.emojis.cache.size - an.size} Default\n ${an.size} Animated`, true)
         .addField('Premium (Boosts)', tier, true)
-        .setColor(message.member.roles.highest.hexColor)
+        .setColor(0x1e143b)
         .setFooter(`Triggered By ${message.author.tag}`, message.author.displayAvatarURL());
         setTimeout(async () => {
             await message.channel.stopTyping()
