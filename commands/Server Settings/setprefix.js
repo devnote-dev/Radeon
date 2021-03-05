@@ -6,8 +6,8 @@ module.exports = {
     aliases: ['set-prefix'],
     description: 'Changes Radeon\s prefix to the one specified. If you want to reset to the default prefix use `reset`. The list of charaters below are what can be used as the new prefix. You can use letters but not numbers. The prefix cannot be more than 5 characters in length.\n\n``! ? + - ~ \' \^ * ` ; , : . < > @ & % \ / $ ( ) £ #``',
     usage: 'setprefix <new-prefix>\nsetprefix reset',
-    guildOnly: true,
     permissions: 32,
+    guildOnly: true,
     modBypass: true,
     run: async (client, message, args) => {
         if (!args.length) return client.errEmb('No Prefix Specified.\n```\nsetprefix <new-prefix>\n```', message);
