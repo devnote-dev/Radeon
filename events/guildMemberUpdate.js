@@ -3,7 +3,7 @@ const Guild = require('../schemas/guild-schema');
 const Muted = require('../schemas/muted-schema');
 
 exports.run = async (client, oldMem, newMem) => {
-    const {guild} = oldMem;
+    const { guild } = oldMem;
     const gData = await Guild.findOne({guildID: guild.id}).catch(()=>{});
     if (!gData) return;
     if (!gData.muteRole) return;
