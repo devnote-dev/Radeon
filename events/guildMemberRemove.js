@@ -1,13 +1,13 @@
-const {MessageEmbed} = require('discord.js');
+const { MessageEmbed } = require('discord.js');
 const Guild = require('../schemas/guild-schema');
 
 exports.run = async (client, member) => {
-    const {modLogs} = await Guild.findOne({guildID: member.guild.id});
+    const { modLogs } = await Guild.findOne({guildID: member.guild.id});
     if (!modLogs.channel || !modLogs.kicks) return;
     let entry = await member.guild.fetchAuditLogs({user:member.user, type:'MEMBER_KICK'});
     entry = entry.entries.first();
     if (!entry) return;
-    const {executor, reason} = entry;
+    const { executor, reason } = entry;
     const embed = new MessageEmbed()
     .setTitle('Member Kicked')
     .setThumbnail(member.user.displayAvatarURL({dynamic: true}))
