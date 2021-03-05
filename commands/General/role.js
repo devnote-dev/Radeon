@@ -1,12 +1,13 @@
-const {Permissions} = require('discord.js');
+const { Permissions } = require('discord.js');
 
 module.exports = {
     name: 'role',
     aliases: ['r'],
     description: 'Role Tools: Allows for creating, updating, deleting, and assigning roles using the subcommands below.',
     usage: 'role <User:Mention/ID> <Role:Name/Mention/ID>\nrole c/create <Name> [Color:Hex/Decimal] [Permissions:Bitfield] [Hoisted:True/False]\nrole d/delete <Role:Name/Mention/ID>',
-    guildOnly: true,
+    cooldown: 4,
     permissions: 268435456,
+    guildOnly: true,
     run: async (client, message, args) => {
         if (!args.length) return client.errEmb('No Subcommand Specified. See `help role` for more information.', message);
         const sub = args[0].toLowerCase();
