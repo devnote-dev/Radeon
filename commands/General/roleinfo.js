@@ -1,9 +1,10 @@
-const {MessageEmbed} = require('discord.js');
+const { MessageEmbed } = require('discord.js');
 
 module.exports = {
     name: 'roleinfo',
     description: 'Sends information about a specified role.',
     usage: 'roleinfo <Role:Name/Mention/ID>',
+    cooldown: 4,
     guildOnly: true,
     run: async (client, message, args) => {
         if (!args.length) return client.errEmb('No Role Specified.\n```\nroleinfo <Role:Name/Mention/ID>\n```', message);
@@ -20,7 +21,7 @@ module.exports = {
         const embed = new MessageEmbed()
         .setTitle(`Role: ${role.name}`)
         .addField('ID', `${role.id}`, false)
-        .addField('Color', `${role.hexColor ? role.hexColor : 'None'}`, true)
+        .addField('Color', role.hexColor, true)
         .addField('Position', `${role.position}`, true)
         .addField('Hoisted', `${role.hoist}`, true)
         .addField('Created At', duration(role.createdTimestamp), false)
