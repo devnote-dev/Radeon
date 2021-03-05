@@ -14,6 +14,9 @@ Contributions via pull-requests should be made to the **dev** or **updates** bra
     "botOwners":[
         "OWNER IDS"
     ],
+    "botAdmins":[
+        "ADMIN IDS"
+    ],
     "logs":{
         "event":"EVENT CHANNEL ID",
         "error":"ERROR CHANNEL ID",
