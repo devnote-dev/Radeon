@@ -4,10 +4,13 @@
   "description": "Radeon is a multi-functional moderation bot with a cross-server anti-raid system!",
   "main": "index.js",
   "scripts": {
-    "test": "npm run web"
+    "test": "node web.js"
   },
   "author": "Devonte#0745",
-  "contributors": ["Piter#2105","tryharddeveloper#0001"],
+  "contributors": [
+    "Piter#2105",
+    "tryharddeveloper#0001"
+  ],
   "repository": {
     "type": "git",
     "url": "github:NaruDevnote/Radeon"
@@ -19,6 +22,8 @@
     "discord.js": "^12.5.1",
     "mongoose": "^5.11.14",
     "ms": "^2.1.3",
-    "node-superfetch": "^0.1.10"
+    "node-superfetch": "^0.1.10",
+    "ts-node": "^9.1.1",
+    "typescript": "^4.2.3"
   }
 }
