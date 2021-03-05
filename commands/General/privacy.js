@@ -1,8 +1,9 @@
-const {MessageEmbed} = require('discord.js');
+const { MessageEmbed } = require('discord.js');
 
 module.exports = {
     name: 'privacy',
     description: 'Sends Radeon\'s privacy policy and information on data collected.',
+    cooldown: 2,
     run: async (client, message) => {
         const embed = new MessageEmbed()
         .setTitle('Radeon Privacy Policy')
