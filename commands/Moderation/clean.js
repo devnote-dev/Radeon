@@ -6,9 +6,9 @@ module.exports = {
     aliases: ['cl','clear','purge'],
     description: 'Deletes a number of messages in a channel (min 1, max 100).\n\n**Flags:**\n`User:Mention/ID` - Deletes from a target user\n`-users` - Deletes only user messages\n`-bots` - Deletes only bot messages',
     usage: 'clean <Amount:Number>\nclean <Amount:Number> [User:Mention/ID]\nclean <Amount:Number> [...Flags]',
-    guildOnly: true,
+    cooldown: 3,
     permissions: 8192,
-    botPerms: 8192,
+    guildOnly: true,
     run: async (client, message, args) => {
         if (!args.length) return client.errEmb('No Amount Specified.\n```\nclean <Amount:Number>\nclean <Amount:Number> [User:Mention/ID]\nclean <Amount:Number> [...Flags]\n```\n**Flags:**\n`-users` - Users only\n`-bots` - Bots Only\n`-r <Regex>` - Messages that match a certain regex.', message);
         let amount = parseInt(args[0]);

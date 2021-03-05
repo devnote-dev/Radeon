@@ -1,10 +1,10 @@
-const {MessageEmbed} = require('discord.js');
+const { MessageEmbed } = require('discord.js');
 const Guild = require('../schemas/guild-schema');
 
 exports.run = async (client, guild, user) => {
-    const {modLogs} = await Guild.findOne({guildID: guild.id});
+    const { modLogs } = await Guild.findOne({guildID: guild.id});
     if (!modLogs.channel || !modLogs.bans) return;
-    const {reason} = await guild.fetchBan(user);
+    const { reason } = await guild.fetchBan(user);
     let mod = 'Unknown';
     if (/^.+#\d{4}:/gi.test(reason)) mod = reason.split(' ').shift().replace(':','');
     const embed = new MessageEmbed()

@@ -6,8 +6,9 @@ module.exports = {
     aliases: ['sm'],
     description: 'Set\'s the slowmode time for the triggering channel. To disable slowmode put `0` or `off`.',
     usage: 'slowmode <Time:duration> [Reason:text]\nslowmode off',
-    guildOnly: true,
+    cooldown: 2,
     permissions: 16,
+    guildOnly: true,
     run: async (client, message, args) => {
         if (args.length < 1) return client.errEmb('No Duration Specified.\n```\nslowmode <Time:duration> [Reason:text]\nslowmode off\n```', message);
         let time, reason = '(No Reason Specified)';

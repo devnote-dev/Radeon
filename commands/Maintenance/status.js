@@ -1,9 +1,9 @@
 const Discord = require('discord.js');
-const {version} = require('../../package.json');
+const { version } = require('../../package.json');
 
 module.exports = {
     name: 'status',
-    description: 'Sends the bot\'s status for that guild. For the whole bot status use the `` command.',
+    description: 'Sends the bot\'s status for that guild.',
     run: async (client, message) => {
         function duration(ms) {
             const sec = Math.floor((ms / 1000) % 60).toString()
@@ -12,7 +12,7 @@ module.exports = {
             const days = Math.floor((ms / (1000 * 60 * 60 * 24)) % 60).toString()
             return `${days.padStart(1, `0`)} days, ${hrs.padStart(2, `0`)} hours, ${min.padStart(2, `0`)} mins, ${sec.padStart(2, `0`)} secs`;
         }
-        const {heapUsed, heapTotal} = process.memoryUsage();
+        const { heapUsed, heapTotal } = process.memoryUsage();
         const embed = new Discord.MessageEmbed()
         .setTitle('Radeon Status (Total)')
         .setThumbnail(client.user.displayAvatarURL())

@@ -5,6 +5,11 @@
 *.mp3
 *.mp4
 
-# Hidden Files
+# Hidden Directories
+images/
+node_modules/
+other files/
+web/
+
+# Secret Files
 config.json
-radeon2

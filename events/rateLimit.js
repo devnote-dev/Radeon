@@ -1,4 +1,4 @@
-const {MessageEmbed} = require('discord.js');
+const { MessageEmbed } = require('discord.js');
 
 exports.run = async (client, rateLimitInfo) => {
     const e = new MessageEmbed()
@@ -11,5 +11,5 @@ exports.run = async (client, rateLimitInfo) => {
         {name: 'Source (Route)', value: `\`\`\`\n${rateLimitInfo.route}\n\`\`\``, inline: false}
     )
     .setTimestamp();
-    client.channels.cache.get(client.config.logs.error).send(e).catch(()=>{console.log});
+    client.channels.cache.get(client.config.logs.error).send(e).catch(console.error);
 }

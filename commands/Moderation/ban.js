@@ -4,10 +4,11 @@ module.exports = {
     name: 'ban',
     description: 'Bans a member from the server. `-dd <number>` flag is for the number of days the user\'s messages should be deleted (max 7).',
     usage: 'ban <User:Mention/ID> <Reason:text> [-dd <number>]',
-    guildOnly: true,
+    cooldown: 2,
     permissions: 4,
+    guildOnly: true,
     run: async (client, message, args) => {
-        if (args.length < 1) return client.errEmb('No User Specified.\n```\nban <User:Mention/ID> <Reason:text> [-dd <number>]\n```', message);
+        if (!args.length) return client.errEmb('No User Specified.\n```\nban <User:Mention/ID> <Reason:text> [-dd <number>]\n```', message);
         let target = message.mentions.users.first() || client.users.cache.get(args[0]) || args[0];
         let tag;
         if (target.tag) tag = target.tag; else tag = target;

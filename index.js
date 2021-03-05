@@ -1,5 +1,5 @@
-const {token} = require('./config.json');
-const {ShardingManager} = require('discord.js');
+const { token } = require('./config.json');
+const { ShardingManager } = require('discord.js');
 const manager = new ShardingManager(`./Radeon.js`, {
     totalShards: 'auto',
     respawn: true,
@@ -7,7 +7,7 @@ const manager = new ShardingManager(`./Radeon.js`, {
 });
 
 manager.on('shardCreate', async shard => {
-    console.log(`Shard ${shard.id} / ${shard.totalShards} - Spawned`);
+    console.log(`\nShard ${shard.id} / ${shard.manager.totalShards} - Spawned`);
 });
 
 manager.spawn();

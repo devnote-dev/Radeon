@@ -1,5 +1,5 @@
-const {Permissions, MessageEmbed} = require('discord.js');
-const {readdirSync} = require('fs');
+const { Permissions, MessageEmbed } = require('discord.js');
+const { readdirSync } = require('fs');
 
 module.exports = {
     name: 'help',
