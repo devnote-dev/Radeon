@@ -1,13 +1,14 @@
-const {MessageEmbed} = require('discord.js');
+const { MessageEmbed } = require('discord.js');
 
 module.exports = {
     name: 'shard',
     description: 'Sends information on a shard of a specified server, or the shard it was triggered in.',
     usage: 'shard [Guild:ID]',
+    cooldown: 2,
     guildOnly: true,
     run: async (client, message, args) => {
         let server = message.guild;
-        if (args.length > 0) server = client.guilds.cache.get(args[0]);
+        if (args.length) server = client.guilds.cache.get(args[0]);
         if (!server) return client.errEmb('Invalid or Unknown Server ID.', message);
         if (!server.available) return client.errEmb('This Guild is Unavailable at this time.', message);
         const shard = server.shard;
