@@ -1,7 +1,7 @@
 require('discord.js');
 
 module.exports.run = async (message, amount, options) => {
-    let {target, flagUsers, flagBots, flagRegex} = options;
+    let { target, flagUsers, flagBots, flagRegex } = options;
     let deleted = new Array;
     let re, onlyRegex = false, count = 0;
     const messages = await message.channel.messages.fetch({limit:100});
