@@ -1,4 +1,4 @@
-const {MessageEmbed} = require('discord.js');
+const { MessageEmbed } = require('discord.js');
 const ms = require('ms');
 const Guild = require('../../schemas/guild-schema');
 const Muted = require('../../schemas/muted-schema');
@@ -7,8 +7,8 @@ module.exports = {
     name: 'mute',
     description: 'Mutes a specified user for a certain time.',
     usage: 'mute <User:Mention/ID> [Time:Duration] <Reason:Text>',
-    guildOnly: true,
     permissions: 8192,
+    guildOnly: true,
     run: async (client, message, args) => { 
         const {muteRole, modLogs} = await Guild.findOne({guildID: message.guild.id});
         if (!muteRole) return client.errEmb('Mute role not found/set. You can set one using the `muterole` command.', message);
