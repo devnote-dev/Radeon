@@ -11,9 +11,9 @@ module.exports = {
         if (!args.length) return client.errEmb('No JSON Provided.\n```\njsonembed <JSON:Text>\n```', message);
         try {
             const embed = JSON.parse(args.join(' '));
-            message.channel.send({embed:embed});
+            return message.channel.send({embed:embed});
         } catch (err) {
-            client.errEmb(err.message, message);
+            return client.errEmb(err.message, message);
         }
     }
 }

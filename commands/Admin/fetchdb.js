@@ -1,4 +1,4 @@
-const {MessageEmbed} = require('discord.js');
+const { MessageEmbed } = require('discord.js');
 const Guild = require('../../schemas/guild-schema');
 
 module.exports = {
@@ -17,6 +17,6 @@ module.exports = {
         .setTitle(`Guild: ${server.name}`)
         .setDescription(`\`\`\`js\n${data}\n\`\`\``)
         .setColor(0x1e143b);
-        message.channel.send(embed);
+        return message.channel.send(embed);
     }
 }

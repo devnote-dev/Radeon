@@ -18,7 +18,7 @@ module.exports = {
             await msg.edit({embed:embed});
             await message.react(':checkgreen:796925441771438080').catch(()=>{});
         } catch (err) {
-            client.errEmb(err.message, message);
+            return client.errEmb(err.message, message);
         }
     }
 }

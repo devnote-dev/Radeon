@@ -12,4 +12,5 @@ other files/
 web/
 
 # Secret Files
+.vscode
 config.json

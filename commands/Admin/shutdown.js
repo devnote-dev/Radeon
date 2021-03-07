@@ -8,6 +8,6 @@ module.exports = {
     modOnly: 'void',
     run: async (client, message) => {
         await message.react('a:loading:786661451385274368').catch(()=>{});
-        process.exit(0);
+        return process.exit(0);
     }
 }

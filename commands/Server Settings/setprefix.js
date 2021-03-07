@@ -21,6 +21,6 @@ module.exports = {
             { $set:{ prefix: newPrefix }},
             { new: true }
         );
-        client.checkEmb(`Prefix for this server was updated to \`${newPrefix}\``, message);
+        return client.checkEmb(`Prefix for this server was updated to \`${newPrefix}\``, message);
     }
 }

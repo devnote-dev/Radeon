@@ -11,6 +11,6 @@ module.exports = {
         .setDescription('• [Bot Invite](https://discord.com/api/oauth2/authorize?client_id=762359941121048616&permissions=8&scope=bot)\n• [Support Server](https://discord.gg/xcZwGhSy4G)')
         .setColor(0x1e143b)
         .setFooter(`Triggered By ${message.author.tag}`, message.author.displayAvatarURL());
-        message.channel.send(e);
+        return message.channel.send(e);
     }
 }
