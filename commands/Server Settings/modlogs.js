@@ -31,7 +31,7 @@ module.exports = {
             )
             .setColor(0x1e143b)
             .setFooter(`Triggered By ${message.author.tag}`, message.author.avatarURL());
-            message.channel.send(embed);
+            return message.channel.send(embed);
         } else {
             switch (args[0]) {
                 case 'setchannel':

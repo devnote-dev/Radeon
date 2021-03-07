@@ -4,16 +4,16 @@ module.exports.run = async (client, message, automod) => {
     let chan;
     if (automod.channel) chan = message.guild.channels.cache.get(automod.channel);
     if (automod.invites) {
-        const regex = /(?:https?)?(?:di?sc(?:ord(?:app)?)?|top)\.(?:gg|com|inv(?:ite)?)\/([\w]+)/gmi;
+        const regex = new RegExp(/(?:https?)?(?:di?sc(?:ord(?:app)?)?|top)?\.(?:gg|com|inv(?:ite)?)\/([\w]+)/, 'gmi');
         if (regex.test(message.content)) {
             const matches = regex.exec(message.content);
             if (!matches) return console.log(`${message.guild.id}: messageCheck action cancelled.`);
             const invites = await message.guild.fetchInvites();
             let notFromGuild = false;
             if (invites.size) {
-                for (const inv of invites) {
-                    if (inv.code == matches[1]) notFromGuild = true;
-                }
+                invites.array().forEach(i => {
+                    if (i.code == matches[1]) notFromGuild = true
+                });
             }
             if (notFromGuild) {
                 try {

@@ -104,10 +104,10 @@ exports.run = async (client, message) => {
                         }
                     }
                 } else {
-                    return channel.send(`You are missing the \`${(new Permissions(command.permissions)).toArray().join('`, `')}\` permission(s) to use this command.`);
+                    return channel.send(`You are missing the \`${humanize(new Permissions(command.permissions))}\` permission(s) to use this command.`);
                 }
             } else {
-                return channel.send(`I am missing the \`${(new Permissions(command.permissions)).toArray().join('`, `')}\` permission(s) for this command.`);
+                return channel.send(`I am missing the \`${humanize(new Permissions(command.permissions))}\` permission(s) for this command.`);
             }
 
         } else if (command.cooldown) {
@@ -179,4 +179,16 @@ function checkRateLimit(client) {
     } else {
         client.rlcount++;
     }
+}
+
+function humanize(permissions) {
+    let permStr = [];
+    permissions.toArray().forEach(p => {
+        let r = '';
+        p.replace(/_/g,' ').split(' ').forEach(w => {
+            r += w.split('')[0] + w.slice(1).toLowerCase() + ' ';
+        })
+        permStr.push(r.trim());
+    });
+    return permStr.join('`, `');
 }

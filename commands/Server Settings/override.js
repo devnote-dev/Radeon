@@ -23,7 +23,7 @@ module.exports = {
             )
             .setColor(0x1e143b).setTimestamp()
             .setFooter(`Triggered By ${message.author.tag}`, message.author.avatarURL());
-            message.channel.send(embed);
+            return message.channel.send(embed);
         } else {
             let channels = [], commands = [], count = 0, rawIDs, res;
             switch (args[0]) {

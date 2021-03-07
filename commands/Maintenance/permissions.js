@@ -23,7 +23,7 @@ module.exports = {
                 .setDescription(`Generated Permission Bitfield: **\`${newPerms.bitfield}\`**`)
                 .setColor(0x1e143b)
                 .setFooter(`Triggered By ${message.author.tag}`, message.author.displayAvatarURL());
-                message.channel.send(embed);
+                return message.channel.send(embed);
             } else if (args[0].toLowerCase() === 'resolve') {
                 if (!args[1]) return client.errEmb('No Permission Bitfield Provided.\n```\npermissions resolve <Bitfield:Number>\n```', message);
                 const bit = parseInt(args[1]);
@@ -31,37 +31,49 @@ module.exports = {
                 const res = new Permissions(bit);
                 const embed = new MessageEmbed()
                 .setTitle('Permissions')
-                .setDescription(`Resovled from Bitfield **\`${bit}\`**\n\`\`\`\n${res.toArray().join('\n')}\n\`\`\``)
+                .setDescription(`Resovled from Bitfield **\`${bit}\`**\n\`\`\`\n${humanize(res)}\n\`\`\``)
                 .setColor(0x1e143b)
                 .setFooter(`Triggered By ${message.author.tag}`, message.author.displayAvatarURL());
-                message.channel.send(embed);
+                return message.channel.send(embed);
             } else if (args[0].toLowerCase() === 'in') {
                 if (!args[1]) return client.errEmb('No Channel Specified.\n```\npermissions in <Channel:Mention/ID>\n```', message);
                 const chan = message.mentions.channels.first() || message.guild.channels.cache.get(args[0]);
                 if (!chan) return client.errEmb('Unknown Channel Specified.', message);
                 const embed = new MessageEmbed()
                 .setTitle(`Permissions in ${chan.name}`)
-                .setDescription(`\`\`\`\n${chan.permissionsFor(message.author).toArray().join('\n')}\n\`\`\``)
+                .setDescription(`\`\`\`\n${humanize(chan.permissionsFor(message.author))}\n\`\`\``)
                 .setColor(0x1e143b)
                 .setFooter(`Triggered By ${message.author.tag}`, message.author.displayAvatarURL());
-                message.channel.send(embed);
+                return message.channel.send(embed);
             } else {
                 const target = message.mentions.members.first() || message.guild.member(args[0]);
                 if (!target) return client.errEmb('Invalid Member Specified.', message);
                 const embed = new MessageEmbed()
                 .setAuthor(`Permissions of ${target.user.tag}`, target.user.displayAvatarURL())
-                .setDescription(`\`\`\`\n${target.permissions.toArray().join('\n')}\n\`\`\``)
+                .setDescription(`\`\`\`\n${humanize(target.permissions)}\n\`\`\``)
                 .setColor(0x1e143b)
                 .setFooter(`Triggered By ${message.author.tag}`, message.author.displayAvatarURL());
-                message.channel.send(embed);
+                return message.channel.send(embed);
             }
         } else {
             const embed = new MessageEmbed()
             .setAuthor(`Permissions of ${message.author.tag}`, message.author.displayAvatarURL())
-            .setDescription(`\`\`\`\n${message.member.permissions.toArray().join('\n')}\n\`\`\``)
+            .setDescription(`\`\`\`\n${humanize(message.member.permissions)}\n\`\`\``)
             .setColor(0x1e143b)
             .setFooter(`Triggered By ${message.author.tag}`, message.author.displayAvatarURL());
             message.channel.send(embed);
         }
     }
+}
+
+function humanize(permissions) {
+    let permStr = [];
+    permissions.toArray().forEach(p => {
+        let r = '';
+        p.replace(/_/g,' ').split(' ').forEach(w => {
+            r += w.split('')[0] + w.slice(1).toLowerCase() + ' ';
+        })
+        permStr.push(r.trim());
+    });
+    return permStr.join('\n');
 }

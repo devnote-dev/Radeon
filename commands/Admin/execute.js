@@ -8,7 +8,7 @@ module.exports = {
     guildOnly: true,
     modOnly: 'warn',
     run: async (client, message, args) => {
-        if (args.length < 1) return client.errEmb('No Command Specified.', message);
+        if (!args.length) return client.errEmb('No Command Specified.', message);
         const cmd = args[0].toLowerCase();
         const Args = args.splice(1);
         if (cmd === 'execute' || cmd === 'exec') return message.react('❌').catch(()=>{});

@@ -1,4 +1,5 @@
 const { MessageEmbed } = require('discord.js');
+const { toDurationDefault } = require('../../functions/functions');
 
 module.exports = {
     name: 'serverinfo',
@@ -30,19 +31,12 @@ module.exports = {
             case 3: tier = 'Tier 3 (Max)'; break;
             default: tier = 'Unknown'; break;
         }
-        function toDefaultDuration(ms) {
-            const sec = Math.floor((ms / 1000) % 60).toString()
-            const min = Math.floor((ms / (1000 * 60)) % 60).toString()
-            const hrs = Math.floor((ms / (1000 * 60 * 60)) % 24).toString()
-            const days = Math.floor((ms / (1000 * 60 * 60 * 24)) % 60).toString()
-            return `${days.padStart(1, `0`)} days ${hrs.padStart(2, `0`)} hours ${min.padStart(2, `0`)} mins and ${sec.padStart(2, `0`)} seconds ago`;
-        }
         const embed = new MessageEmbed()
         .setTitle(`Server: ${server.name}`)
         .setThumbnail(server.iconURL({dynamic: true}))
         .addField('Owner', `${owner}`, true)
         .addField('Members', `${server.memberCount} Total Members\n${server.memberCount - bots.size} Users\n${bots.size} Bots`, true)
-        .addField('Created At', `${toDefaultDuration(server.createdTimestamp)}`, true)
+        .addField('Created At', `${toDurationDefault(server.createdTimestamp)}`, true)
         .addField('Acknowledgements', `${acc ?? 'None'}`, true)
         .addField('Info', `Region: ${server.region}\nMFA: ${server.mfaLevel}\nContent Filter: ${ecfl}`, true)
         .addField('General', `${tc.size} Text Channels\n${vc.size} Voice Channels\n${roles} Roles`, true)
@@ -50,9 +44,9 @@ module.exports = {
         .addField('Premium (Boosts)', tier, true)
         .setColor(0x1e143b)
         .setFooter(`Triggered By ${message.author.tag}`, message.author.displayAvatarURL());
-        setTimeout(async () => {
-            await message.channel.stopTyping()
-            message.channel.send(embed)
+        setTimeout(() => {
+            message.channel.stopTyping()
+            return message.channel.send(embed)
         }, 2000);
     }
 }
