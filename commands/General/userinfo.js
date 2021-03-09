@@ -49,7 +49,9 @@ module.exports = {
             'HOUSE_BRAVERY': '<:hypesquad_bravery:815679606656204831>',
             'HOUSE_BRILLIANCE': '<:hypesquad_brilliance:815679606404546621>',
             'HOUSE_BALANCE': '<:hypesquad_balance:815679606702735420>',
-            'HYPESQUAD_EVENTS': '<:hypesquad_events:815697633141981235>'
+            'HYPESQUAD_EVENTS': '<:hypesquad_events:815697633141981235>',
+            'BUGHUNTER_LEVEL_1': '<:BugHunter:818818522506461205>',
+            'PARTNERED_SERVER_OWNER': '<:Partner:818818053206835230>'
         }
         if (target.flags) target.flags.toArray().forEach(f => { if (flags[f]) totalf += flags[f] +' ' });
         if (member.premiumSince) totalf += ' <:boost_tier:789702536730509333>';

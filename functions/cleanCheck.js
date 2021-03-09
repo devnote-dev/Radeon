@@ -1,6 +1,6 @@
 require('discord.js');
 
-module.exports.run = async (message, amount, options) => {
+module.exports = async (message, amount, options) => {
     let { target, flagUsers, flagBots, flagRegex } = options;
     let deleted = new Array;
     let re, onlyRegex = false, count = 0;
@@ -36,7 +36,7 @@ module.exports.run = async (message, amount, options) => {
     if (!onlyRegex) {
         if (flagRegex) {
             messages.forEach(m => {
-                if (!re.test(msg.content)) deleted.splice(deleted.indexOf(msg))
+                if (!re.test(m.content)) deleted.splice(deleted.indexOf(m))
             });
         }
         if (deleted.length) {

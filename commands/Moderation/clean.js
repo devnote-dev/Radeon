@@ -29,7 +29,7 @@ module.exports = {
             }
             if (flagUsers && flagBots) return client.errEmb('Both Users & Bots Flags Specified, pick one.', message);
             try {
-                const res = await cleanCheck.run(message, amount, {target:target, flagUsers:flagUsers, flagBots:flagBots, flagRegex:flagRegex});
+                const res = await cleanCheck(message, amount, {target:target, flagUsers:flagUsers, flagBots:flagBots, flagRegex:flagRegex});
                 return client.checkEmb(`Deleted \`${res.size}\` Messages!`, message).then(m => m.delete({timeout:3000}));
             } catch (err) {
                 return client.errEmb(err.message, message);

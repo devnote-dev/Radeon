@@ -1,6 +1,6 @@
 {
   "name": "radeon",
-  "version": "1.2.0",
+  "version": "2.4.7",
   "description": "Radeon is a multi-functional moderation bot with a cross-server anti-raid system!",
   "main": "index.js",
   "scripts": {

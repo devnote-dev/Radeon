@@ -5,8 +5,8 @@ exports.run = async client => {
     client.user.setPresence({
         status: 'online',
         activity:{
-            name: 'r!invite to invite!',
-            type: 'PLAYING'
+            name: '@Radeon help',
+            type: 'WATCHING'
         }
     });
     const { guilds, users } = client.config.logs;
