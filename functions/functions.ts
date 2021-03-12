@@ -29,9 +29,9 @@ function isBotStaff(id: string) {
 }
 
 function humanize(permissions: Permissions) {
-    let permStr: string[];
+    let permStr = [];
     permissions.toArray().forEach(p => {
-        let r: string;
+        let r = '';
         p.replace(/_/g, ' ').split(' ').forEach(w => {
             r += w.split('')[0] + w.slice(1).toLowerCase() + ' ';
         });

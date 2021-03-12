@@ -33,7 +33,7 @@ exports.isBotStaff = isBotStaff;
 function humanize(permissions) {
     var permStr = [];
     permissions.toArray().forEach(function (p) {
-        var r;
+        var r = '';
         p.replace(/_/g, ' ').split(' ').forEach(function (w) {
             r += w.split('')[0] + w.slice(1).toLowerCase() + ' ';
         });
