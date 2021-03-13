@@ -1,7 +1,8 @@
 require('discord.js');
+const { botReady } = require('../console/consoleR');
 
 exports.run = async client => {
-    console.log('\x1b[36mRadeon is Ready!\x1b[0m');
+    botReady(client);
     client.user.setPresence({
         status: 'online',
         activity:{

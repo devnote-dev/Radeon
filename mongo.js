@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const { MongoPath } = require('./config.json');
+const { logDB } = require('./console/consoleR');
 
 module.exports = {
     init: () => {
@@ -17,15 +18,15 @@ module.exports = {
         mongoose.Promise = global.Promise;
 
         mongoose.connection.on('connected', () => {
-            console.log('Mongoose | \x1b[32mSuccessfully Connected\x1b[0m');
+            logDB('connected');
         });
 
         mongoose.connection.on('err', err => {
-            console.error(`Mongoose | \x1b[33mConnection Error:\x1b[0m\n${err.stack}`);
+            logDB('error', err);
         });
 
         mongoose.connection.on('disconnected', () => {
-            console.warn('Mongoose | \x1b[31mConnection Lost\x1b[0m');
+            logDB('disconnected');
         });
     }
 }
