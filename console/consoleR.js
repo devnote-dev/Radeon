@@ -36,7 +36,7 @@ function logDB(type, data) {
         case 'error':
             log = "\u001B[33mMONGO\u001B[0m | Error\n" + (data ? data : 'Data Unavailable');
             break;
-        case 'disconnect':
+        case 'disconnected':
             log = "\u001B[31mMONGO\u001B[0m | Disconnected\nServers may be temporarily unavailable.";
             break;
     }
