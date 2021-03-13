@@ -10,10 +10,10 @@ module.exports = {
     permissions: 8192,
     guildOnly: true,
     run: async (client, message, args) => { 
-        const {muteRole, modLogs} = await Guild.findOne({guildID: message.guild.id});
+        const { muteRole, modLogs } = await Guild.findOne({guildID: message.guild.id});
         if (!muteRole) return client.errEmb('Mute role not found/set. You can set one using the `muterole` command.', message);
         if (args.length < 2) return client.errEmb('Insufficient Arguments.\n```\nmute <User:Mention/ID> [Time:Duration] <Reason:Text>\n```', message);
-        const target = message.mentions.members.first() || message.guild.member(args[0]);
+        const target = message.mentions.members.first() || message.guild.members.cache.get(args[0]);
         let duration = ms(args[1]);
         if (isNaN(duration) || duration > 31557600000) duration = 'inf';
         let reason = args.slice(2).join(' ');
@@ -21,12 +21,15 @@ module.exports = {
         if (target.user.id === message.author.id) return client.errEmb('You cant mute yourself. <:meguface:738862132493287474>', message);
         if (!reason) reason = '(No Reason Specified)';
         if (target.permissions.has('ADMINISTRATOR')) return client.errEmb('Unable to Mute: That user is an Administrator.', message);
-        const radeon = message.guild.member(client.user.id);
-        if (!radeon.permissions.has('MANAGE_ROLES')) return client.errEmb('Unable to Mute: Missing Permission `MANAGE ROLES`', message);
-        if (radeon.roles.highest.position <= target.roles.highest.position) return client.errEmb('Unable to Mute: That user\'s role is above mine.', message);
+        if (message.guild.me.roles.highest.comparePositionTo(muteRole) <= 0) return client.errEmb('Unable to Mute: Cannot Manage Roles Higher or Equal to Radeon', message);
         try {
             await target.roles.add(muteRole);
-            target.user.send({embed:{title:'You have been Muted!',description:`**Reason:** ${reason}\n**Duration:** ${ms(duration, {long:true})}`,color:0x1e143b,footer:{text:`Sent from ${message.guild.name}`, icon_url:message.guild.iconURL({dynamic:true})}}}).catch(()=>{});
+            const dmEmb = new MessageEmbed()
+            .setTitle('You have been Muted!')
+            .addField('Reason', reason, false).addField('Duration', `${ms(duration, {long: true})}`, false)
+            .setColor(0x1e143b).setFooter(`Sent from ${message.guild.name}`, message.guild.iconURL({dynamic: true}))
+            .setTimestamp();
+            target.user.send(dmEmb).catch(()=>{});
             client.checkEmb(`\`${target.user.tag}\` was muted!`, message);
             await Muted.findOneAndUpdate(
                 { guildID: message.guild.id },
@@ -48,11 +51,12 @@ module.exports = {
             }
             if (duration === 'inf') return;
             setTimeout(async () => {
-                await target.roles.remove(muteRole)
                 await Muted.findOneAndUpdate(
                     { guildID: message.guild.id },
-                    { $pull: target.user.id }
+                    { $pull: { mutedList: target.user.id }},
+                    { new: true }
                 )
+                await target.roles.remove(muteRole)
                 if (modLogs.channel) {
                     const embed = new MessageEmbed()
                     .setTitle('Member Unmuted')
@@ -63,12 +67,12 @@ module.exports = {
                         {name: 'Reason', value: 'Auto: Mute Expired', inline: false}
                     )
                     .setColor('BLUE').setTimestamp();
-                    message.guild.channels.cache.get(modLogs.channel).send(embed).catch(()=>{});
+                    return message.guild.channels.cache.get(modLogs.channel).send(embed).catch(()=>{});
                 }
             }, duration);
         } catch (err) {
             console.error(err.message);
-            client.errEmb(`Unknown: Failed Muting Member \`${target.user.tag}\``, message);
+            return client.errEmb(`Unknown: Failed Muting Member \`${target.user.tag}\``, message);
         }
     }
 }

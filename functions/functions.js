@@ -1,6 +1,6 @@
 "use strict";
 exports.__esModule = true;
-exports.isBotStaff = exports.toDurationDays = exports.toDurationLong = exports.toDurationDefault = void 0;
+exports.humanize = exports.isBotStaff = exports.toDurationDays = exports.toDurationLong = exports.toDurationDefault = void 0;
 var config_json_1 = require("../config.json");
 function toDurationDefault(ms) {
     var secs = Math.floor((ms / 1000) % 60).toString();
@@ -30,3 +30,15 @@ function isBotStaff(id) {
     return false;
 }
 exports.isBotStaff = isBotStaff;
+function humanize(permissions) {
+    var permStr = [];
+    permissions.toArray().forEach(function (p) {
+        var r = '';
+        p.replace(/_/g, ' ').split(' ').forEach(function (w) {
+            r += w.split('')[0] + w.slice(1).toLowerCase() + ' ';
+        });
+        permStr.push(r.trim());
+    });
+    return permStr.join('`, `');
+}
+exports.humanize = humanize;

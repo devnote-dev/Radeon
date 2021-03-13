@@ -20,10 +20,10 @@ module.exports = {
         if (!radeon.permissionsIn(message.channel).has('MANAGE_CHANNELS')) return client.errEmb('Unable to Edit: Missing Permission `MANAGE CHANNELS`', message);
         try {
             await message.channel.setRateLimitPerUser(time, message.author.tag +': '+ reason);
-            if (time === 0 || 'off') client.checkEmb('Slowmode Successfully Disabled!', message);
-            else client.checkEmb(`Slowmode Successfully Set to ${ms(time * 1000, {long: true})}!`);
+            if (time === 0 || 'off') return client.checkEmb('Slowmode Successfully Disabled!', message);
+            else return client.checkEmb(`Slowmode Successfully Set to ${ms(time * 1000, {long: true})}!`);
         } catch (err) {
-            client.errEmb('Unknown: Failed Setting Slowmode.', message);
+            return client.errEmb('Unknown: Failed Setting Slowmode.', message);
         }
     }
 }

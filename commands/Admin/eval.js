@@ -1,14 +1,14 @@
 require('discord.js');
-const {inspect} = require('util');
+const { inspect } = require('util');
 
 module.exports = {
     name: 'eval',
     guildOnly: true,
     modOnly: 'void',
     run: async (client, message, args) => {
-        if (args.length < 1) return client.errEmb('No Code Provided.', message);
+        if (!args.length) return client.errEmb('No Code Provided.', message);
         let code = args.join(' ');
-        if (/token|(client)?\.config/gi.test(code)) return client.errEmb('You Can\'t Do That.', message);
+        if (/token|(client)?\.config|while\s*\(\s*true\s*\)\s*\{\s*\}/gi.test(code)) return client.errEmb('You Can\'t Do That.', message);
         if (/^`{3}(?:.+)?\n*?[\s\S]+\n*`{3}$/gmi.test(code)) code = code.replace(/^`{3}(?:.+)?\n|\n?`{3}$/gmi, '');
         try {
             const evaled = await eval(code);
@@ -21,6 +21,6 @@ module.exports = {
         } catch (error) {
             message.channel.send(`\`\`\`js\n${error}\n\`\`\``);
         }
-        console.log(`\n${message.guild.id}/${message.author.id}: Eval:\n${code}\n`);
+        return console.log(`\n${message.guild.id}/${message.author.id}: Eval:\n${code}\n`);
     }
 }

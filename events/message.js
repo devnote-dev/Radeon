@@ -1,5 +1,5 @@
 const { Permissions, MessageEmbed } = require('discord.js');
-const { isBotStaff } = require('../functions/functions')
+const { isBotStaff, humanize } = require('../functions/functions')
 const Guild = require('../schemas/guild-schema');
 
 exports.run = async (client, message) => {
@@ -53,7 +53,7 @@ exports.run = async (client, message) => {
     const { prefix, ignoredChannels, ignoredCommands, automod } = data;
 
     if (ignoredChannels.includes(channel.id)) return;
-    if (message.content.startsWith(prefix) || /^<@!?762359941121048616>\s+/gi.test(message.content)) {
+    if (message.content.toLowerCase().startsWith(prefix) || /^<@!?762359941121048616>\s+/gi.test(message.content)) {
         let args;
         if (message.mentions.users.size) {
             let user = message.mentions.users.first();
@@ -79,7 +79,7 @@ exports.run = async (client, message) => {
                     cmdlog(client, author, command, channel);
                 } catch (err) {
                     client.channels.cache.get(client.config.logs.error).send({embed:{description:err}}).catch(console.error);
-                    message.channel.send(`Command \`${command.name}\` Failed Executing, Contact Support.`);
+                    return message.channel.send(`Command \`${command.name}\` Failed Executing, Contact Support.`);
                 }
             } else if (command.modOnly === 'warn') {
                 const embed = new MessageEmbed()
@@ -100,14 +100,14 @@ exports.run = async (client, message) => {
                             cmdlog(client, author, command, channel);
                         } catch (err) {
                             client.channels.cache.get(client.config.logs.error).send({embed:{description:err}}).catch(console.error);
-                            message.channel.send(`Command \`${command.name}\` Failed Executing, Contact Support.`);
+                            return message.channel.send(`Command \`${command.name}\` Failed Executing, Contact Support.`);
                         }
                     }
                 } else {
-                    return channel.send(`You are missing the \`${(new Permissions(command.permissions)).toArray().join('`, `')}\` permission(s) to use this command.`);
+                    return channel.send(`You are missing the \`${humanize(new Permissions(command.permissions))}\` permission(s) to use this command.`);
                 }
             } else {
-                return channel.send(`I am missing the \`${(new Permissions(command.permissions)).toArray().join('`, `')}\` permission(s) for this command.`);
+                return channel.send(`I am missing the \`${humanize(new Permissions(command.permissions))}\` permission(s) for this command.`);
             }
 
         } else if (command.cooldown) {
@@ -120,7 +120,7 @@ exports.run = async (client, message) => {
                     cmdlog(client, author, command, channel);
                 } catch (err) {
                     client.channels.cache.get(client.config.logs.error).send({embed:{description:err}}).catch(console.error);
-                    message.channel.send(`Command \`${command.name}\` Failed Executing, Contact Support.`);
+                    return message.channel.send(`Command \`${command.name}\` Failed Executing, Contact Support.`);
                 }
             }
 
@@ -130,14 +130,14 @@ exports.run = async (client, message) => {
                 cmdlog(client, author, command, channel);
             } catch (err) {
                 client.channels.cache.get(client.config.logs.error).send({embed:{description:err}}).catch(console.error);
-                message.channel.send(`Command \`${command.name}\` Failed Executing, Contact Support.`);
+                return message.channel.send(`Command \`${command.name}\` Failed Executing, Contact Support.`);
             }
         }
 
     } else {
         if (automod.active) {
             if (automod.invites || automod.massMention.active) {
-                require('../functions/messageCheck').run(client, message, automod);
+                require('../functions/messageCheck')(client, message, automod);
             }
         }
     }

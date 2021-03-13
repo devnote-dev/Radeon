@@ -1,4 +1,5 @@
 const { MessageEmbed } = require('discord.js');
+const { toDurationDefault } = require('../../functions/functions');
 
 module.exports = {
     name: 'userinfo',
@@ -48,7 +49,9 @@ module.exports = {
             'HOUSE_BRAVERY': '<:hypesquad_bravery:815679606656204831>',
             'HOUSE_BRILLIANCE': '<:hypesquad_brilliance:815679606404546621>',
             'HOUSE_BALANCE': '<:hypesquad_balance:815679606702735420>',
-            'HYPESQUAD_EVENTS': '<:hypesquad_events:815697633141981235>'
+            'HYPESQUAD_EVENTS': '<:hypesquad_events:815697633141981235>',
+            'BUGHUNTER_LEVEL_1': '<:BugHunter:818818522506461205>',
+            'PARTNERED_SERVER_OWNER': '<:Partner:818818053206835230>'
         }
         if (target.flags) target.flags.toArray().forEach(f => { if (flags[f]) totalf += flags[f] +' ' });
         if (member.premiumSince) totalf += ' <:boost_tier:789702536730509333>';
@@ -60,22 +63,14 @@ module.exports = {
             }
         }
 
-        function duration(ms) {
-            const sec = Math.floor((ms / 1000) % 60).toString()
-            const min = Math.floor((ms / (1000 * 60)) % 60).toString()
-            const hrs = Math.floor((ms / (1000 * 60 * 60)) % 24).toString()
-            const days = Math.floor((ms / (1000 * 60 * 60 * 24)) % 60).toString()
-            return `${days.padStart(1, `0`)} days ${hrs.padStart(2, `0`)} hours ${min.padStart(2, `0`)} mins and ${sec.padStart(2, `0`)} seconds ago`;
-        }
-
         const embed = new MessageEmbed()
         .setTitle(target.tag)
         .setDescription(totalf)
         .addField('ID', `${target.id}`, true)
         .addField('Status', status, true)
-        .addField('Avatar', `[Download Link 📥](${target.avatarURL({dynamic: true})})`, true)
-        .addField('Account Age', `${(new Date(target.createdTimestamp)).toDateString()}\n${duration(target.createdTimestamp)}`, false)
-        .addField('Server Member Age', `${(new Date(member.joinedTimestamp)).toDateString()}\n${duration(member.joinedTimestamp)}`, false)
+        .addField('Avatar', `[Download Link 📥](${target.displayAvatarURL({dynamic: true})})`, true)
+        .addField('Account Age', `${target.createdAt.toDateString()}\n${toDurationDefault(target.createdTimestamp)}`, false)
+        .addField('Server Member Age', `${member.joinedAt.toDateString()}\n${toDurationDefault(member.joinedTimestamp)}`, false)
         .addField('Presence', presence, true)
         .setColor(color)
         .setThumbnail(target.displayAvatarURL({dynamic: true}))

@@ -3,7 +3,6 @@ const activities = [
 "STREAMING",
 "LISTENING",
 "WATCHING",
-"CUSTOM_STATUS",
 "CLEAR",
 ]
 
@@ -21,12 +20,12 @@ module.exports = {
                 if(activityType == "CLEAR") activityName = ""
 
                 client.user.setActivity(activityName, {type: activityType})
-                client.successEmb(`Presence has been succesfully changed!`, message)
+                return client.checkEmb(`Presence has been succesfully changed!`, message)
             } else {
-                client.errEmb(`Activity type provided by you is wrong!\n\n**Current activity types:**\n${activities.map(a => `\`${a}\``).join('\n')}`, message)
+                return client.errEmb(`Activity type provided by you is wrong!\n\n**Current activity types:**\n${activities.map(a => `\`${a}\``).join('\n')}`, message)
             }
         } else {
-            client.errEmb(`Correct usage: \`r!set-status <type> <name>\``, message)
+            return client.errEmb(`Correct usage: \`r!set-status <type> <name>\``, message)
         }
     }
 }

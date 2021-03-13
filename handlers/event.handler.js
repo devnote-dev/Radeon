@@ -1,4 +1,4 @@
-const {readdirSync} = require('fs');
+const { readdirSync } = require('fs');
 
 module.exports = async client => {
     let loaded = 0;
@@ -8,9 +8,9 @@ module.exports = async client => {
         client.on(e.split('.').shift(), (...args) => event.run(client, ...args));
     });
     if (!loaded) {
-        console.log(`\x1b[35mRadeon\x1b[0m | \x1b[31m${failed}\x1b[0m Events Loaded.\nInsufficient Events To Run Radeon. Terminating...`);
+        console.log(`\x1b[35mRadeon\x1b[0m | \x1b[31m0\x1b[0m Events Loaded.\nInsufficient Events To Run Radeon. Terminating...`);
         process.exit();
     } else {
-        console.log(`\x1b[35mRadeon\x1b[0m | \x1b[32m${loaded}\x1b[0m Events Loaded`);
+        client.commands.set('_events', loaded);
     }
 }
