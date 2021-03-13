@@ -20,7 +20,7 @@ module.exports = {
                 if(activityType == "CLEAR") activityName = ""
 
                 client.user.setActivity(activityName, {type: activityType})
-                return client.successEmb(`Presence has been succesfully changed!`, message)
+                return client.checkEmb(`Presence has been succesfully changed!`, message)
             } else {
                 return client.errEmb(`Activity type provided by you is wrong!\n\n**Current activity types:**\n${activities.map(a => `\`${a}\``).join('\n')}`, message)
             }

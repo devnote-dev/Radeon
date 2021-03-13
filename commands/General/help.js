@@ -1,5 +1,5 @@
 const { Permissions, MessageEmbed } = require('discord.js');
-const { isBotStaff } = require('../../functions/functions');
+const { isBotStaff, humanize } = require('../../functions/functions');
 const { readdirSync } = require('fs');
 
 module.exports = {
@@ -15,6 +15,9 @@ module.exports = {
             let search = args.join(' ').toLowerCase();
             const embed = new MessageEmbed().setColor(0x1e143b);
             switch (search) {
+                case 'admin':
+                    search = 'admin';
+                    break;
                 case 'general':
                     search = 'general';
                     break;
@@ -34,18 +37,8 @@ module.exports = {
             }
 
             readdirSync('./commands/').forEach(dir => {
-                if (dir === 'Admin') {
-                    if (!isBotStaff(message.author.id)) return;
-                    embed.setTitle(`Category: ${dir}`);
-                    let desc = [];
-                    readdirSync(`./commands/${dir}/`).forEach(f => {
-                        if (!f.endsWith('.js')) return;
-                        desc.push(f.split('.').shift());
-                    });
-                    embed.setDescription(`\`${desc.join('`, `')}\``).setFooter('Use "help [Command]" to get info on a specific command.');
-                    valid = true;
-                }
                 if (search === dir.toLowerCase()) {
+                    if (dir == 'Admin' && !isBotStaff(message.author.id)) return;
                     embed.setTitle(`Category: ${dir}`);
                     let desc = [];
                     readdirSync(`./commands/${dir}/`).forEach(f => {
@@ -67,7 +60,7 @@ module.exports = {
                     if (cmd.aliases) alias = `**Aliases:** \`${cmd.aliases.join('`, `')}\`\n\n`;
                     if (cmd.description) desc = `**Description:** ${cmd.description}\n\n`;
                     if (cmd.usage) use = `**Usage:**\n\`\`\`\n${cmd.usage}\n\`\`\`\n`;
-                    let go = `**Guild-Only:** \`${cmd.guildOnly}\`\n**Required Perms:** \`${cmd.permissions ? (new Permissions(cmd.permissions)).toArray().join('`, `') : 'None'}\``;
+                    let go = `**Guild-Only:** \`${cmd.guildOnly}\`\n**Required Perms:** \`${cmd.permissions ? humanize(new Permissions(cmd.permissions)) : 'None'}\``;
                     embed.setTitle(`Command: ${cmd.name}`)
                     .setDescription(alias+desc+use+go)
                     .setFooter('<> - Required, [] - Optional, a|b - Pick one');

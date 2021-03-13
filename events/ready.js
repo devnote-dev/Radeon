@@ -1,12 +1,13 @@
 require('discord.js');
+const { botReady } = require('../console/consoleR');
 
 exports.run = async client => {
-    console.log('\x1b[36mRadeon is Ready!\x1b[0m');
+    botReady(client);
     client.user.setPresence({
         status: 'online',
         activity:{
-            name: 'r!invite to invite!',
-            type: 'PLAYING'
+            name: '@Radeon help',
+            type: 'WATCHING'
         }
     });
     const { guilds, users } = client.config.logs;

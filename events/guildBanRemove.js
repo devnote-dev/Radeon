@@ -15,7 +15,7 @@ exports.run = async (client, guild, user) => {
     .setTitle('Member Unbanned')
     .setThumbnail(member.user.displayAvatarURL({dynamic: true}))
     .addFields(
-        {name: 'User', value: `• ${member.user.tag}\n• ${member.user.id}`, inline: true},
+        {name: 'User', value: `• ${user.tag}\n• ${user.id}`, inline: true},
         {name: 'Moderator', value: executor ? executor.tag : 'Unknown', inline: true},
         {name: 'Reason', value: reason ?? '(No Reason Specified)', inline: false}
     )

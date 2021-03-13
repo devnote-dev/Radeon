@@ -9,7 +9,7 @@
 images/
 node_modules/
 other files/
-web/
+web/*.*
 
 # Secret Files
 .vscode

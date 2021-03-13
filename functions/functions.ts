@@ -1,4 +1,5 @@
 import { botOwners, botAdmins } from "../config.json";
+import { Permissions } from "discord.js";
 
 function toDurationDefault(ms: number) {
     const secs:  string = Math.floor((ms / 1000) % 60).toString()
@@ -27,4 +28,22 @@ function isBotStaff(id: string) {
     return false;
 }
 
-export { toDurationDefault, toDurationLong, toDurationDays, isBotStaff }
+function humanize(permissions: Permissions) {
+    let permStr = [];
+    permissions.toArray().forEach(p => {
+        let r = '';
+        p.replace(/_/g, ' ').split(' ').forEach(w => {
+            r += w.split('')[0] + w.slice(1).toLowerCase() + ' ';
+        });
+        permStr.push(r.trim());
+    });
+    return permStr.join('`, `');
+}
+
+export {
+    toDurationDefault,
+    toDurationLong,
+    toDurationDays,
+    isBotStaff,
+    humanize
+}

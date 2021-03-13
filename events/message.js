@@ -1,5 +1,5 @@
 const { Permissions, MessageEmbed } = require('discord.js');
-const { isBotStaff } = require('../functions/functions')
+const { isBotStaff, humanize } = require('../functions/functions')
 const Guild = require('../schemas/guild-schema');
 
 exports.run = async (client, message) => {
@@ -53,7 +53,7 @@ exports.run = async (client, message) => {
     const { prefix, ignoredChannels, ignoredCommands, automod } = data;
 
     if (ignoredChannels.includes(channel.id)) return;
-    if (message.content.startsWith(prefix) || /^<@!?762359941121048616>\s+/gi.test(message.content)) {
+    if (message.content.toLowerCase().startsWith(prefix) || /^<@!?762359941121048616>\s+/gi.test(message.content)) {
         let args;
         if (message.mentions.users.size) {
             let user = message.mentions.users.first();
@@ -79,7 +79,7 @@ exports.run = async (client, message) => {
                     cmdlog(client, author, command, channel);
                 } catch (err) {
                     client.channels.cache.get(client.config.logs.error).send({embed:{description:err}}).catch(console.error);
-                    message.channel.send(`Command \`${command.name}\` Failed Executing, Contact Support.`);
+                    return message.channel.send(`Command \`${command.name}\` Failed Executing, Contact Support.`);
                 }
             } else if (command.modOnly === 'warn') {
                 const embed = new MessageEmbed()
@@ -100,7 +100,7 @@ exports.run = async (client, message) => {
                             cmdlog(client, author, command, channel);
                         } catch (err) {
                             client.channels.cache.get(client.config.logs.error).send({embed:{description:err}}).catch(console.error);
-                            message.channel.send(`Command \`${command.name}\` Failed Executing, Contact Support.`);
+                            return message.channel.send(`Command \`${command.name}\` Failed Executing, Contact Support.`);
                         }
                     }
                 } else {
@@ -120,7 +120,7 @@ exports.run = async (client, message) => {
                     cmdlog(client, author, command, channel);
                 } catch (err) {
                     client.channels.cache.get(client.config.logs.error).send({embed:{description:err}}).catch(console.error);
-                    message.channel.send(`Command \`${command.name}\` Failed Executing, Contact Support.`);
+                    return message.channel.send(`Command \`${command.name}\` Failed Executing, Contact Support.`);
                 }
             }
 
@@ -130,14 +130,14 @@ exports.run = async (client, message) => {
                 cmdlog(client, author, command, channel);
             } catch (err) {
                 client.channels.cache.get(client.config.logs.error).send({embed:{description:err}}).catch(console.error);
-                message.channel.send(`Command \`${command.name}\` Failed Executing, Contact Support.`);
+                return message.channel.send(`Command \`${command.name}\` Failed Executing, Contact Support.`);
             }
         }
 
     } else {
         if (automod.active) {
             if (automod.invites || automod.massMention.active) {
-                require('../functions/messageCheck').run(client, message, automod);
+                require('../functions/messageCheck')(client, message, automod);
             }
         }
     }
@@ -179,16 +179,4 @@ function checkRateLimit(client) {
     } else {
         client.rlcount++;
     }
-}
-
-function humanize(permissions) {
-    let permStr = [];
-    permissions.toArray().forEach(p => {
-        let r = '';
-        p.replace(/_/g,' ').split(' ').forEach(w => {
-            r += w.split('')[0] + w.slice(1).toLowerCase() + ' ';
-        })
-        permStr.push(r.trim());
-    });
-    return permStr.join('`, `');
 }

@@ -5,12 +5,16 @@ module.exports = {
     name: 'automod',
     description: 'Shows the current automod config and allows for them to be edited using the subcommands below.',
     usage: 'automod <enable|disable> <all|invites|anti-spam|mass-mention|badwords>\nautomod logchannel <Channel:Mention/ID>\nautomod logchannel remove\nautomod mention-limit <Number>\nautomod mention-limit reset\nautomod badwords list\nautomod badwords <add|remove> [...words]',
+    cooldown: 3,
     permissions: 32,
     guildOnly: true,
     modBypass: true,
     run: async (client, message, args) => {
-        const data = await Guild.findOne({guildID: message.guild.id});
-        const {automod} = data;
+        const data = await Guild.findOne({guildID: message.guild.id})
+        .catch(console.error);
+        if (!data) return client.errEmb('Unknown: Failed Connecting to `Automod`. Try contacting support.', message);
+        const { automod } = data;
+
         if (!args.length) {
             switch (automod.active) {
                 case true: active = 'enabled'; break;
@@ -39,6 +43,7 @@ module.exports = {
                 case false: badwords = '<:crossred:796925441490681889> disabled'; break;
                 default: badwords = '⚠'; break;
             }
+
             const embed = new MessageEmbed()
             .setTitle('Automod Settings')
             .setDescription(`The automod for this server is currently ${active}. You can toggle it using the \`automod <enable|disable>\` command.`)
@@ -51,284 +56,162 @@ module.exports = {
             )
             .setColor(0x1e143b)
             .setFooter(`Triggered By ${message.author.tag}`, message.author.displayAvatarURL());
-            message.channel.send(embed);
+            return message.channel.send(embed);
         } else {
-            if (args[0] === 'enable') {
+            const sub = args[0].toLowerCase();
+            const Active   = automod.active,
+                Channel    = automod.channel,
+                Invites    = automod.invites,
+                Ratelimit  = automod.rateLimit,
+                Mentions   = automod.massMention,
+                Badwords   = automod.badWords;
+            let _active    = automod.active,
+                _channel   = automod.channel,
+                _invites   = automod.invites,
+                _ratelimit = automod.rateLimit,
+                _mentions  = automod.massMention,
+                _badwords  = automod.badWords;
+
+            if (sub === 'enable') {
                 if (!args[1]) return client.errEmb('No Plugin Specified.\n```\nautomod enable <plugin>\n```', message);
-                switch (args[1]) {
-                    case 'all':
-                        await Guild.findOneAndUpdate(
-                            { guildID: message.guild.id },
-                            { $set:{ automod:{
-                                active:true,
-                                channel:automod.channel,
-                                invites:automod.invites,
-                                rateLimit:automod.rateLimit,
-                                massMention:{active:automod.massMention.active,thres:automod.massMention.thres},
-                                badWords:{active:automod.badWords.active,list:automod.badWords.list}}}},
-                            { new: true }
-                        );
-                        client.checkEmb('Successfully Enabled the Main module!', message);
-                        break;
-                    case 'invites':
-                        await Guild.findOneAndUpdate(
-                            { guildID: message.guild.id },
-                            { $set:{ automod:{
-                                active:automod.active,
-                                channel:automod.channel,
-                                invites:true,
-                                rateLimit:automod.rateLimit,
-                                massMention:{active:automod.massMention.active,thres:automod.massMention.thres},
-                                badWords:{active:automod.badWords.active,list:automod.badWords.list}}}},
-                            { new: true }
-                        );
-                        client.checkEmb('Successfully Enabled the Invites plugin!', message);
-                        break;
-                    case 'antispam':
-                    case 'anti-spam':
-                        await Guild.findOneAndUpdate(
-                            { guildID: message.guild.id },
-                            { $set:{ automod:{
-                                active:automod.active,
-                                channel:automod.channel,
-                                invites:automod.invites,
-                                rateLimit:true,
-                                massMention:{active:automod.massMention.active,thres:automod.massMention.thres},
-                                badWords:{active:automod.badWords.active,list:automod.badWords.list}}}},
-                            { new: true }
-                        );
-                        client.checkEmb('Successfully Enabled the Anti-Spam plugin!', message);
-                        break;
-                    case 'massmention':
-                    case 'mass-mention':
-                        await Guild.findOneAndUpdate(
-                            { guildID: message.guild.id },
-                            { $set:{ automod:{
-                                active:automod.active,
-                                channel:automod.channel,
-                                invites:automod.invites,
-                                rateLimit:automod.rateLimit,
-                                massMention:{active:true,thres:automod.massMention.thres},
-                                badWords:{active:automod.badWords.active,list:automod.badWords.list}}}},
-                            { new: true }
-                        );
-                        client.checkEmb('Successfully Enabled the Mass-Mention plugin!', message);
-                        break;
-                    case 'badwords':
-                        await Guild.findOneAndUpdate(
-                            { guildID: message.guild.id },
-                            { $set:{ automod:{
-                                active:automod.active,
-                                channel:automod.channel,
-                                invites:automod.invites,
-                                rateLimit:automod.rateLimit,
-                                massMention:{active:automod.massMention.active,thres:automod.massMention.thres},
-                                badWords:{active:true,list:automod.badWords.list}}}},
-                            { new: true }
-                        );
-                        client.checkEmb('Successfully Enabled the BadWords plugin!', message);
-                        break;
-                    default:
-                        client.errEmb(`Unknown Plugin \`${args[1]}\`. See \`help automod\` for subcommands and plugins.`, message);
-                        break;
+                const p = args[1].toLowerCase();
+                if (p === 'all') {
+                    _active = true;
+                    _invites = true;
+                    _ratelimit = true;
+                    _mentions.active = true;
+                    _badwords.active = true;
+                } else if (p === 'invites') {
+                    _invites = true;
+                } else if (p === 'anti-spam') {
+                    _ratelimit = true;
+                } else if (p === 'mass-mention') {
+                    _mentions.active = true;
+                } else if (p === 'filter') {
+                    _badwords.active = true;
+                } else {
+                    return client.errEmb('Unknown Option. See `help automod` for subcommands, plugins and options.', message);
                 }
-            } else if (args[0] === 'disable') {
-                if (!args[1]) return client.errEmb('No Plugin Specified.\n```\nautomod disable <plugin>\n```', message);
-                switch (args[1]) {
-                    case 'all':
-                        await Guild.findOneAndUpdate(
-                            { guildID: message.guild.id },
-                            { $set:{ automod:{
-                                active:false,
-                                channel:automod.channel,
-                                invites:automod.invites,
-                                rateLimit:automod.rateLimit,
-                                massMention:{active:automod.massMention.active,thres:automod.massMention.thres},
-                                badWords:{active:automod.badWords.active,list:automod.badWords.list}}}},
-                            { new: true }
-                        );
-                        client.checkEmb('Successfully Disabled the Main module!', message);
-                        break;
-                    case 'invites':
-                        await Guild.findOneAndUpdate(
-                            { guildID: message.guild.id },
-                            { $set:{ automod:{
-                                active:automod.active,
-                                channel:automod.channel,
-                                invites:false,
-                                rateLimit:automod.rateLimit,
-                                massMention:{active:automod.massMention.active,thres:automod.massMention.thres},
-                                badWords:{active:automod.badWords.active,list:automod.badWords.list}}}},
-                            { new: true }
-                        );
-                        client.checkEmb('Successfully Disabled the Invites plugin!', message);
-                        break;
-                    case 'antispam':
-                    case 'anti-spam':
-                        await Guild.findOneAndUpdate(
-                            { guildID: message.guild.id },
-                            { $set:{ automod:{
-                                active:automod.active,
-                                channel:automod.channel,
-                                invites:automod.invites,
-                                rateLimit:false,
-                                massMention:{active:automod.massMention.active,thres:automod.massMention.thres},
-                                badWords:{active:automod.badWords.active,list:automod.badWords.list}}}},
-                            { new: true }
-                        );
-                        client.checkEmb('Successfully Disabled the Anti-Spam plugin!', message);
-                        break;
-                    case 'massmention':
-                    case 'mass-mention':
-                        await Guild.findOneAndUpdate(
-                            { guildID: message.guild.id },
-                            { $set:{ automod:{
-                                active:automod.active,
-                                channel:automod.channel,
-                                invites:automod.invites,
-                                rateLimit:automod.rateLimit,
-                                massMention:{active:false,thres:automod.massMention.thres},
-                                badWords:{active:automod.badWords.active,list:automod.badWords.list}}}},
-                            { new: true }
-                        );
-                        client.checkEmb('Successfully Disabled the Mass-Mention plugin!', message);
-                        break;
-                    case 'badwords':
-                        await Guild.findOneAndUpdate(
-                            { guildID: message.guild.id },
-                            { $set:{ automod:{
-                                active:automod.active,
-                                channel:automod.channel,
-                                invites:automod.invites,
-                                rateLimit:automod.rateLimit,
-                                massMention:{active:automod.massMention.active,thres:automod.massMention.thres},
-                                badWords:{active:false,list:automod.badWords.list}}}},
-                            { new: true }
-                        );
-                        client.checkEmb('Successfully Disabled the BadWords plugin!', message);
-                        break;
-                    default:
-                        client.errEmb(`Unknown Plugin \`${args[1]}\`. See \`help automod\` for subcommands and plugins.`, message);
-                        break;
+
+            } else if (sub === 'disable') {
+                if (!args[1]) return client.errEmb('No Plugin Specified.\n```\nautomod enable <plugin>\n```', message);
+                const p = args[1].toLowerCase();
+                if (p === 'all') {
+                    _active = false;
+                    _invites = false;
+                    _ratelimit = false;
+                    _mentions.active = false;
+                    _badwords.active = false;
+                } else if (p === 'invites') {
+                    _invites = false;
+                } else if (p === 'anti-spam') {
+                    _ratelimit = false;
+                } else if (p === 'mass-mention') {
+                    _mentions.active = false;
+                } else if (p === 'filter') {
+                    _badwords.active = false;
+                } else {
+                    return client.errEmb('Unknown Option. See `help automod` for subcommands, plugins and options.', message);
                 }
-            } else if (args[0] === 'logchannel') {
-                if (!args[1]) return client.errEmb('No Option Specified.\n```\nautomod logchannel <Channel:Mention/ID>\nautomod logchannel remove\n```', message);
-                if (args[1] === 'remove') {
-                    if (!automod.channel) return client.infoEmb('There is no automod log channel setup.', message);
-                    await Guild.findOneAndUpdate(
-                        { guildID: message.guild.id },
-                        { $set:{ automod:{
-                            active:automod.active,
-                            channel:'',
-                            invites:automod.invites,
-                            rateLimit:automod.rateLimit,
-                            massMention:{active:automod.massMention.active,thres:automod.massMention.thres},
-                            badWords:{active:automod.badWords.active,list:automod.badWords.list}}}},
-                        { new: true }
-                    );
-                    client.checkEmb('Successfully Removed Automod log channel!', message);
+
+            } else if (sub === 'logchannel') {
+                if (args[1]) return client.errEmb('No Option Specified.\n```\nautomod logchannel <Channel:Mention/ID>\nautomod logchannel remove\n```', message);
+                if (args[1].toLowerCase() === 'remove') {
+                    if (!channel) return client.infoEmb('There is no Automod log channel setup.', message);
+                    _channel = '';
                 } else {
                     const chan = message.mentions.channels.first() || message.guild.channels.cache.get(args[1]);
                     if (!chan) return client.errEmb('Unknown Channel Specified.', message);
-                    if (chan.type != 'text') return client.errEmb('Channel is not a default Text channel.', message);
-                    if (!message.guild.member(client.user.id).permissionsIn(chan).has('SEND_MESSAGES')) return client.errEmb('I do not have `SEND MESSAGES` permissions for that channel.', message);
-                    await Guild.findOneAndUpdate(
-                        { guildID: message.guild.id },
-                        { $set:{ automod:{
-                            active:automod.active,
-                            channel:chan.id,
-                            invites:automod.invites,
-                            rateLimit:automod.rateLimit,
-                            massMention:{active:automod.massMention.active,thres:automod.massMention.thres},
-                            badWords:{active:automod.badWords.active,list:automod.badWords.list}}}},
-                        { new: true }
-                    );
-                    client.checkEmb(`Successfully Updated Automod log channel to ${chan}!`, message);
+                    if (chan.type != 'text') return client.errEmb('Specified Channel is not a default Text Channel.', message);
+                    if (!chan.permissionsFor(message.guild.me).has(2048)) return client.errEmb('I am missing `Send Messages` permissions for that channel.', message);
+                    _channel = chan.id;
                 }
-            } else if (args[0] === 'mention-limit') {
+
+            } else if (sub === 'mention-limit') {
                 if (!args[1]) return client.errEmb('No Option Specified.\n```\nautomod mention-limit <Number>\nautomod mention-limit reset\n```', message);
-                if (args[1] === 'reset') {
-                    await Guild.findOneAndUpdate(
-                        { guildID: message.guild.id },
-                        { $set:{ automod:{
-                            active:automod.active,
-                            channel:automod.channel,
-                            invites:automod.invites,
-                            rateLimit:automod.rateLimit,
-                            massMention:{active:automod.massMention.active,thres:5},
-                            badWords:{active:automod.badWords.active,list:automod.badWords.list}}}},
-                        { new: true }
-                    );
-                    client.checkEmb('Successfully Reset Automod mass-mention threshold!', message);
+                if (args[1].toLowerCase() === 'reset') {
+                    _mentions.thres = 5;
                 } else {
                     const num = parseInt(args[1]);
                     if (isNaN(num)) return client.errEmb('Invalid Integer Specified.', message);
+                    _mentions.thres = num;
+                }
+
+            } else if (sub === 'filter') {
+                if (!args[1]) return client.errEmb('No Option Specified.\n```\nautomod filter list\nautomod filter add <...words>\nautomod filter remove <...words>\n```', message);
+                const opt = args[1].toLowerCase();
+                if (opt === 'list') {
+                    if (!_badwords.list.length) return client.infoEmb('There are no badwords saved.', message);
+                    const embed = new MessageEmbed()
+                    .setTitle('Autmod: Filter List')
+                    .setDescription(`Please view this list with discression.\n\`\`\`\n${_badwords.list.join('\n')}\n\`\`\``)
+                    .setColor(0x1e143b)
+                    .setFooter(`Triggered By ${message.author.tag}`, message.author.displayAvatarURL());
+                    return message.channel.send(embed);
+                } else if (opt === 'add') {
+                    if (!args[2]) return client.errEmb('No Words Provided.\n```\nautomod filter add <...words>\n```', message);
+                    let addwords = args.slice(2).toLowerCase().trim().split(' ');
+                    if (_badwords.list.length) {
+                        addwords.filter(w => !badwords.list.includes(w))
+                        .forEach(w => _badwords.list.push(w));
+                    } else {
+                        _badwords.list = addwords;
+                    }
+                } else if (opt === 'remove') {
+                    if (!args[2]) return client.errEmb('No Words Provided.\n```\nautomod filter remove <...words>\n```', message);
+                    let remwords = args.slice(2).toLowerCase().trim().split(' ');
+                    if (_badwords.list.length) {
+                        remwords.filter(w => _badwords.list.includes(w))
+                        .forEach(w => _badwords.list.push(w));
+                    } else {
+                        _badwords.list = remwords;
+                    }
+                } else {
+                    return client.errEmb('Unknown Filter Option. See `help automod` for subcommands, plugins and options.', message);
+                }
+
+            } else {
+                return client.errEmb('Unknown Subcommand. See `help automod` for subcommands, plugins and options.', message);
+            }
+
+            if (
+                _active == Active
+                && _channel == Channel
+                && _invites == Invites
+                && _ratelimit == Ratelimit
+                && _mentions.active == Mentions.active
+                && _mentions.thres == Mentions.thres
+                && _badwords.active == Badwords.active
+                && _badwords.list.toString() == Badwords.list.toString()
+            ) {
+                console.log(_mentions, Mentions);
+                return client.infoEmb('No changes were made to Automod settings.', message);
+            } else {
+                try {
                     await Guild.findOneAndUpdate(
                         { guildID: message.guild.id },
                         { $set:{ automod:{
-                            active:automod.active,
-                            channel:automod.channel,
-                            invites:automod.invites,
-                            rateLimit:automod.rateLimit,
-                            massMention:{active:automod.massMention.active,thres:num},
-                            badWords:{active:automod.badWords.active,list:automod.badWords.list}}}},
+                            active: _active,
+                            channel: _channel,
+                            invites: _invites,
+                            rateLimit: _ratelimit,
+                            massMention:{
+                                active: _mentions.active,
+                                thres: _mentions.thres
+                            },
+                            badWords:{
+                                active: _badwords.active,
+                                list: _badwords.list
+                            }
+                        }}},
                         { new: true }
                     );
-                    client.checkEmb(`Successfully Updated Automod mass-mention threshold to ${num}!`, message);
+                    return client.checkEmb('Successfully Updated Automod Settings!', message);
+                } catch (err) {
+                    console.error(err);
+                    return client.errEmb('Unknown: Failed Updating Automod.\nTry contacting support if this error persists.', message);
                 }
-            } else if (args[0] === 'badwords') {
-                if (!args[1]) return client.errEmb('No Option Specified.\n```\nautomod badwords list\nautomod badwords add <...words>\nautomod badwords remove <...words>\n```', message);
-                let words;
-                switch (args[1]) {
-                    case 'list':
-                        if (!automod.badWords.list.length) return client.infoEmb('There are no badwords saved.', message);
-                        const emb = new MessageEmbed()
-                        .setTitle('Automod: Badwords List')
-                        .setDescription(`Please view this list with discression.\n\`\`\`\n${automod.badWords.list.forEach(i => i).join(', ')}\n\`\`\``)
-                        .setColor(0x1e143b)
-                        .setFooter(`Triggered By ${message.author.tag}`, message.author.displayAvatarURL());
-                        message.channel.send(emb);
-                        break;
-                    case 'add':
-                        if (!args[2]) return client.errEmb('No Words Specified.', message);
-                        words = args.splice(2);
-                        let current = automod.badWords.list, added = [];
-                        added.push(words.filter(w => !current.includes(w)));
-                        await Guild.findOneAndUpdate(
-                            { guildID: message.guild.id },
-                            { $set:{ automod:{
-                                active:automod.active,
-                                channel:automod.channel,
-                                invites:automod.invites,
-                                rateLimit:automod.rateLimit,
-                                massMention:{active:automod.massMention.active,thres:automod.massMention.thres},
-                                badWords:{active:automod.badWords.active,list:added}}}},
-                            { new: true }
-                        );
-                        console.log(added);
-                        client.checkEmb(`Successfully added word(s) to Automod badWords list!`, message);
-                        break;
-                    case 'remove':
-                        if (!args[2]) return client.errEmb('No Words Specified.', message);
-                        words = args.splice(2);
-                        let removed = [];
-                        for (let word of words) {
-                            if (automod.badWords.list.includes(word)) return;
-                            removed.push(word);
-                        }
-                        if (!removed.length) return client.infoEmb('No changes were made.', message);
-                        await Guild.findOneAndUpdate(
-                            { guildID: message.guild.id },
-                            { $pullAll:{ automod:{ badWords:{ removed }}}},
-                            { new: true }
-                        );
-                        client.checkEmb(`Successfully removed ${removed.length} word(s) to Automod badWords list!`, message);
-                        break;
-                        default:
-                            client.errEmb(`Unknown Subcommand \`${args[2]}\`. See \`help automod\` for subcommands and plugins.`, message);
-                            break;
-                }
-            } else return client.errEmb(`Unknown Plugin \`${args[0]}\`. See \`help automod\` for subcommands and plugins.`, message);
+            }
         }
     }
 }
