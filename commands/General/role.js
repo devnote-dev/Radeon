@@ -1,4 +1,5 @@
 const { Permissions } = require('discord.js');
+const { parseQuotes } = require('../../functions/stringParser');
 
 module.exports = {
     name: 'role',
@@ -31,16 +32,7 @@ module.exports = {
             }
         } else if (sub === 'c' || sub === 'create') {
             if (!args[1]) return client.errEmb('No Name Provided.\n```\nrole create <Name> [Color:Hex/Decimal] [Permissions:Bitfield] [Hoisted:True/False] [Mentionable:True/False]\n```', message);
-            let rname = '';
-            if (args[1].startsWith('"')) {
-                args.splice(1).forEach(a => {
-                    rname += a + ' ';
-                    if (a.endsWith('"')) return;
-                });
-                rname = rname.trim().replace(/^"|"$/g, '');
-            } else {
-                rname = args[1];
-            }
+            const rname = parseQuotes(args.slice(1).join(' '), true);
             let rcolor = 0, rperms = 0, rhoist = false, rmention = false;
             if (args[2]) rcolor = args[2];
             if (args[3]) rperms = parseInt(args[3]);
@@ -70,12 +62,13 @@ module.exports = {
             if (!args[1]) return client.errEmb('No Role Specified.\n```\nrole delete <Role:Name/Mention/ID>\n```', message);
             const role = message.mentions.roles.first() || message.guild.roles.resolve(args.join(' ')) || message.guild.roles.cache.find(r => r.name.toLowerCase() === args.slice(1).join(' ').toLowerCase());
             if (!role) return client.errEmb('Unknown Role Specified.', message);
+            if (role.managed) return client.errEmb('Cannot Manage Integration/Service Roles.', message);
             if (role.comparePositionTo(message.guild.me.roles.highest) >= 0) return client.errEmb('Cannot Manage Roles Higher or Equal to Radeon.', message);
             try {
                 await role.delete(`Deleted By ${message.author.tag}`);
                 return client.checkEmb('Successfully Deleted the Role!', message);
             } catch (err) {
-                return client.errEmb(err.message);
+                return client.errEmb(err.message, message);
             }
         } else {
             return client.errEmb('Unknown Subcommand Specified. See `help role` for more information.', message);
