@@ -41,6 +41,26 @@ function logDB(type: string, data?: any) {
     return console.log(log);
 }
 
+function logAdmin(type: string, path: string, user: string, args: string) {
+    let log: string;
+    switch (type) {
+        case 'eval':
+            log = `\x1b[33mEval\x1b[0m\nPath: ${path}\nUser: ${user}\n\n${args}`;
+            break;
+        case 'exec':
+            log = `\x1b[33mExecute\x1b[0m\nPath: ${path}\nUser: ${user}\nCmd: ${args}`;
+            break;
+        case 'reload':
+            log = `\x1b[33mReload\x1b[0m\nPath: ${path}\nUser: ${user}\nFile: ${args}.js`;
+            break;
+        case 'status':
+            log = `\x1b[33mSetstatus\x1b[0m\nPath: ${path}\nUser: ${user}\n${args}`;
+            break;
+    }
+    borderSmall();
+    return console.log(log);
+}
+
 function logWarn(msg: string, error?: Error) {
     let log = `\x1b[33mWARNING!\x1b[0m ${msg}`;
     if (error) log += `\n${error.message}`;
@@ -54,4 +74,4 @@ function logError(err: Error) {
     return console.log(log);
 }
 
-export { botReady, logShardSpawn, logDB, logWarn, logError }
+export { botReady, logShardSpawn, logDB, logAdmin, logWarn, logError }

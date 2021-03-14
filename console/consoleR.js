@@ -1,6 +1,6 @@
 "use strict";
 exports.__esModule = true;
-exports.logError = exports.logWarn = exports.logDB = exports.logShardSpawn = exports.botReady = void 0;
+exports.logError = exports.logWarn = exports.logAdmin = exports.logDB = exports.logShardSpawn = exports.botReady = void 0;
 function borderBold() {
     return console.log('==================================');
 }
@@ -43,6 +43,26 @@ function logDB(type, data) {
     return console.log(log);
 }
 exports.logDB = logDB;
+function logAdmin(type, path, user, args) {
+    var log;
+    switch (type) {
+        case 'eval':
+            log = "\u001B[33mEval\u001B[0m\nPath: " + path + "\nUser: " + user + "\n\n" + args;
+            break;
+        case 'exec':
+            log = "\u001B[33mExecute\u001B[0m\nPath: " + path + "\nUser: " + user + "\nCmd: " + args;
+            break;
+        case 'reload':
+            log = "\u001B[33mReload\u001B[0m\nPath: " + path + "\nUser: " + user + "\nFile: " + args + ".js";
+            break;
+        case 'status':
+            log = "\u001B[33mSetstatus\u001B[0m\nPath: " + path + "\nUser: " + user + "\n" + args;
+            break;
+    }
+    borderSmall();
+    return console.log(log);
+}
+exports.logAdmin = logAdmin;
 function logWarn(msg, error) {
     var log = "\u001B[33mWARNING!\u001B[0m " + msg;
     if (error)
