@@ -58,12 +58,12 @@ exports.run = async (client, message) => {
         if (message.mentions.users.size) {
             let user = message.mentions.users.first();
             if (user.id === '762359941121048616') {
-                args = message.content.trim().split(/ +/g).splice(1);
+                args = message.content.trim().split(/\s+|\n+/g).splice(1);
             } else {
-                args = message.content.slice(prefix.length).trim().split(/ +/g);
+                args = message.content.slice(prefix.length).trim().split(/\s+|\n+/g);
             }
         } else {
-            args = message.content.slice(prefix.length).trim().split(/ +/g);
+            args = message.content.slice(prefix.length).trim().split(/\s+|\n+/g);
         }
 
         const cmd = args.shift().toLowerCase();
