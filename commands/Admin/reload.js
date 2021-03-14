@@ -1,4 +1,5 @@
 require('discord.js');
+const { logAdmin } = require('../../console/consoleR');
 
 module.exports = {
     name: 'reload',
@@ -40,6 +41,8 @@ module.exports = {
         }
         if (!category) return client.errEmb('Unknown Command Category Specified.', message);
         if (!cmd) return client.errEmb('Unknown Command Specified.', message);
+        const path = `${message.guild.id}/${message.channel.id}`;
+        logAdmin('reload', path, message.author.id, cmd.name);
         try {
             delete require.cache[require.resolve(`../${category}/${cmd.name}.js`)];
             client.commands.delete(cmd);
