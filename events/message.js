@@ -1,5 +1,6 @@
 const { Permissions, MessageEmbed } = require('discord.js');
-const { isBotStaff, humanize } = require('../functions/functions')
+const { isBotStaff, humanize } = require('../functions/functions');
+const { logWarn, logError } = require('../console/consoleR');
 const Guild = require('../schemas/guild-schema');
 
 exports.run = async (client, message) => {
@@ -19,8 +20,13 @@ exports.run = async (client, message) => {
             return message.channel.send(embed);
         } else if (command.modOnly) {
             if (isBotStaff(message.author.id)) {
-                command.run(client, message, args);
-                cmdlog(client, author, command, channel);
+                try {
+                    command.run(client, message, args);
+                    cmdlog(client, author, command, channel);
+                } catch (err) {
+                    logWarn(err.message, err);
+                    return message.channel.send(`Command \`${command.name}\` Failed Executing, Contact Support.`);
+                }
             } else if (command.modOnly === 'warn') {
                 const embed = new MessageEmbed()
                 .setAuthor(author.tag, author.displayAvatarURL({dynamic: true}))
@@ -32,8 +38,8 @@ exports.run = async (client, message) => {
                 command.run(client, message, args);
                 cmdlog(client, author, command, channel);
             } catch (err) {
-                client.channels.cache.get(client.config.logs.error).send({embed:{description:err}}).catch(console.error);
-                message.channel.send(`Command \`${command.name}\` Failed Executing, Contact Support.`);
+                logWarn(err.message, err);
+                return message.channel.send(`Command \`${command.name}\` Failed Executing, Contact Support.`);
             }
         }
         return;
@@ -45,7 +51,7 @@ exports.run = async (client, message) => {
             if (!guild) {
                 client.emit('guildCreate', message.guild);
             } else if (err) {
-                console.error(err);
+                logError(err);
             }
         }
     );
@@ -78,7 +84,7 @@ exports.run = async (client, message) => {
                     command.run(client, message, args);
                     cmdlog(client, author, command, channel);
                 } catch (err) {
-                    client.channels.cache.get(client.config.logs.error).send({embed:{description:err}}).catch(console.error);
+                    logWarn(err.message, err);
                     return message.channel.send(`Command \`${command.name}\` Failed Executing, Contact Support.`);
                 }
             } else if (command.modOnly === 'warn') {
@@ -99,7 +105,7 @@ exports.run = async (client, message) => {
                             command.run(client, message, args);
                             cmdlog(client, author, command, channel);
                         } catch (err) {
-                            client.channels.cache.get(client.config.logs.error).send({embed:{description:err}}).catch(console.error);
+                            logWarn(err.message, err);
                             return message.channel.send(`Command \`${command.name}\` Failed Executing, Contact Support.`);
                         }
                     }
@@ -119,7 +125,7 @@ exports.run = async (client, message) => {
                     command.run(client, message, args);
                     cmdlog(client, author, command, channel);
                 } catch (err) {
-                    client.channels.cache.get(client.config.logs.error).send({embed:{description:err}}).catch(console.error);
+                    logWarn(err.message, err);
                     return message.channel.send(`Command \`${command.name}\` Failed Executing, Contact Support.`);
                 }
             }
@@ -129,7 +135,7 @@ exports.run = async (client, message) => {
                 command.run(client, message, args);
                 cmdlog(client, author, command, channel);
             } catch (err) {
-                client.channels.cache.get(client.config.logs.error).send({embed:{description:err}}).catch(console.error);
+                logWarn(err.message, err);
                 return message.channel.send(`Command \`${command.name}\` Failed Executing, Contact Support.`);
             }
         }
