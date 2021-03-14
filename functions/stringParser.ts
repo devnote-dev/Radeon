@@ -1,7 +1,6 @@
 type FlagOptions = {
     name:   string;
     type:   'string'|'int'|'bool';
-    quote?: boolean;
 }
 
 type Flag = {
@@ -15,31 +14,38 @@ type Flag = {
  * @param stripQuotes Removes quotes after parsing.
  */
 function parseQuotes(str: string, stripQuotes?: boolean) {
-    let parsed = [''];
+    const split = str.split(' ');
+    let parsed = [];
     let start = false;
-    let end   = false;
-    const splitStr = str.split(' ');
-    splitStr.forEach(word => {
+    let end = false;
+
+    split.forEach(word => {
         if (end) return;
-        if (word.startsWith('"') && word.endsWith('"')) {
-            return parsed.push(word);
+        if (word.startsWith('"') && !word.endsWith('\\"') && word.endsWith('"')) {
+            parsed.push(word);
+            start = true;
+            end = true;
         }
-        if (word.startsWith('"')) {
+        if (word.startsWith('"') && !start) {
             parsed.push(word);
             start = true;
         }
-        if (!word.startsWith('"') && start && !word.endsWith('"')) {
+        if (!word.startsWith('"') && !word.endsWith('"') && !word.endsWith('\\"') && start) {
             parsed.push(word);
         }
-        if (word.endsWith('"')) {
+        if (word.endsWith('\\"')) {
+            parsed.push(word);
+        }
+        if (word.endsWith('"') && !word.endsWith('\\"') && !end) {
             parsed.push(word);
             end = true;
         }
     });
+
     if (stripQuotes) {
-        return parsed.join(' ').trim().replace(/^"|"$/g, '');
+        return parsed.join(' ').replace(/^"|"$/g, '');
     } else {
-        return parsed.join(' ').trim();
+        return parsed.join(' ');
     }
 }
 
@@ -56,6 +62,7 @@ function parseFlags(str: string, flags: FlagOptions[]) {
         if (flag.type == 'string') {
             let res: string;
             let index: number;
+
             splitStr.forEach(word => {
                 if (word == '-'+ flag.name) {
                     index = splitStr.indexOf(word);
@@ -63,8 +70,12 @@ function parseFlags(str: string, flags: FlagOptions[]) {
                         parsed.push({name: flag.name, value: null});
                         // fallback for string is not trimmed
                     } else {
-                        if (flag.quote) res = parseQuotes(splitStr.slice(index).join(' '), true);
-                        else res = splitStr[index+1];
+                        const conv = splitStr.slice(index);
+                        if (conv.length > 1) {
+                            res = parseQuotes(conv.join(' ').trim(), true);
+                        } else {
+                            res = splitStr[index+1].replace(/^"|"$/g, '');
+                        }
                         parsed.push({name: flag.name, value: res});
                     }
                 }

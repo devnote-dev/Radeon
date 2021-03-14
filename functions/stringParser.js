@@ -7,33 +7,38 @@ exports.parseFlags = exports.parseQuotes = void 0;
  * @param stripQuotes Removes quotes after parsing.
  */
 function parseQuotes(str, stripQuotes) {
-    var parsed = [''];
+    var split = str.split(' ');
+    var parsed = [];
     var start = false;
     var end = false;
-    var splitStr = str.split(' ');
-    splitStr.forEach(function (word) {
+    split.forEach(function (word) {
         if (end)
             return;
-        if (word.startsWith('"') && word.endsWith('"')) {
-            return parsed.push(word);
+        if (word.startsWith('"') && !word.endsWith('\\"') && word.endsWith('"')) {
+            parsed.push(word);
+            start = true;
+            end = true;
         }
-        if (word.startsWith('"')) {
+        if (word.startsWith('"') && !start) {
             parsed.push(word);
             start = true;
         }
-        if (!word.startsWith('"') && start && !word.endsWith('"')) {
+        if (!word.startsWith('"') && !word.endsWith('"') && !word.endsWith('\\"') && start) {
             parsed.push(word);
         }
-        if (word.endsWith('"')) {
+        if (word.endsWith('\\"')) {
+            parsed.push(word);
+        }
+        if (word.endsWith('"') && !word.endsWith('\\"') && !end) {
             parsed.push(word);
             end = true;
         }
     });
     if (stripQuotes) {
-        return parsed.join(' ').trim().replace(/^"|"$/g, '');
+        return parsed.join(' ').replace(/^"|"$/g, '');
     }
     else {
-        return parsed.join(' ').trim();
+        return parsed.join(' ');
     }
 }
 exports.parseQuotes = parseQuotes;
@@ -57,10 +62,13 @@ function parseFlags(str, flags) {
                         // fallback for string is not trimmed
                     }
                     else {
-                        if (flag.quote)
-                            res_1 = parseQuotes(splitStr.slice(index_1).join(' '), true);
-                        else
-                            res_1 = splitStr[index_1 + 1];
+                        var conv = splitStr.slice(index_1);
+                        if (conv.length > 1) {
+                            res_1 = parseQuotes(conv.join(' ').trim(), true);
+                        }
+                        else {
+                            res_1 = splitStr[index_1 + 1].replace(/^"|"$/g, '');
+                        }
                         parsed.push({ name: flag.name, value: res_1 });
                     }
                 }
