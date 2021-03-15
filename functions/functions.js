@@ -1,6 +1,6 @@
 "use strict";
 exports.__esModule = true;
-exports.humanize = exports.isBotStaff = exports.toDurationDays = exports.toDurationLong = exports.toDurationDefault = void 0;
+exports.humanize = exports.isBotOwner = exports.isBotStaff = exports.toDurationDays = exports.toDurationLong = exports.toDurationDefault = void 0;
 var config_json_1 = require("../config.json");
 function toDurationDefault(ms) {
     var secs = Math.floor((ms / 1000) % 60).toString();
@@ -30,6 +30,12 @@ function isBotStaff(id) {
     return false;
 }
 exports.isBotStaff = isBotStaff;
+function isBotOwner(id) {
+    if (config_json_1.botOwners.includes(id))
+        return true;
+    return false;
+}
+exports.isBotOwner = isBotOwner;
 function humanize(permissions) {
     var permStr = [];
     permissions.toArray().forEach(function (p) {
