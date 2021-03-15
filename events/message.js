@@ -1,18 +1,26 @@
 const { Permissions, MessageEmbed } = require('discord.js');
-const { isBotStaff, humanize } = require('../functions/functions');
-const { logWarn, logError } = require('../console/consoleR');
+const { isBotStaff, isBotOwner, humanize } = require('../functions/functions');
+const { logError } = require('../console/consoleR');
 const Guild = require('../schemas/guild-schema');
+const Settings = require('../schemas/settings-schema');
 
 exports.run = async (client, message) => {
     const { author, channel } = message;
     if (author.bot) return;
 
+    const state = await Settings.findOne({ client: client.user.id });
+    let lock = false;
+    if (state.maintenance) {
+        if (!isBotOwner(author.id)) lock = true;
+    }
+
     if (!message.guild) {
-        const args = message.content.trim().split(/ +/g);
+        const args = message.content.trim().split(/\s+|\n+/g);
         const cmd = args.shift().toLowerCase();
         if (!cmd.length) return;
         let command = client.commands.get(cmd) || client.commands.get(client.aliases.get(cmd));
         if (!command) return;
+        if (lock) return errMain(message);
         if (command.guildOnly) {
             const embed = new MessageEmbed()
             .setAuthor(author.tag, author.displayAvatarURL({dynamic: true}))
@@ -21,11 +29,11 @@ exports.run = async (client, message) => {
         } else if (command.modOnly) {
             if (isBotStaff(message.author.id)) {
                 try {
-                    command.run(client, message, args);
                     cmdlog(client, author, command, channel);
+                    await command.run(client, message, args);
                 } catch (err) {
-                    logWarn(err.message, err);
-                    return message.channel.send(`Command \`${command.name}\` Failed Executing, Contact Support.`);
+                    logError(err, channel.id, author.id);
+                    return errNoExec(message, command.name);
                 }
             } else if (command.modOnly === 'warn') {
                 const embed = new MessageEmbed()
@@ -35,11 +43,11 @@ exports.run = async (client, message) => {
             } else if (command.modOnly === 'void') return;
         } else {
             try {
-                command.run(client, message, args);
                 cmdlog(client, author, command, channel);
+                await command.run(client, message, args);
             } catch (err) {
-                logWarn(err.message, err);
-                return message.channel.send(`Command \`${command.name}\` Failed Executing, Contact Support.`);
+                logError(err, channel.id, author.id);
+                return errNoExec(message, command.name);
             }
         }
         return;
@@ -51,7 +59,7 @@ exports.run = async (client, message) => {
             if (!guild) {
                 client.emit('guildCreate', message.guild);
             } else if (err) {
-                logError(err);
+                logError(err, channel.id);
             }
         }
     );
@@ -76,16 +84,17 @@ exports.run = async (client, message) => {
         if (!cmd.length) return;
         let command = client.commands.get(cmd) || client.commands.get(client.aliases.get(cmd));
         if (!command) return;
+        if (lock) return errMain(message);
         if (ignoredCommands.includes(command.name)) return;
 
         if (command.modOnly) {
             if (isBotStaff(message.author.id)) {
                 try {
-                    command.run(client, message, args);
                     cmdlog(client, author, command, channel);
+                    await command.run(client, message, args);
                 } catch (err) {
-                    logWarn(err.message, err);
-                    return message.channel.send(`Command \`${command.name}\` Failed Executing, Contact Support.`);
+                    logError(err, channel.id, author.id);
+                    return errNoExec(message, command.name);
                 }
             } else if (command.modOnly === 'warn') {
                 const embed = new MessageEmbed()
@@ -102,11 +111,11 @@ exports.run = async (client, message) => {
                         return message.react('⏳');
                     } else {
                         try {
-                            command.run(client, message, args);
                             cmdlog(client, author, command, channel);
+                            await command.run(client, message, args);
                         } catch (err) {
-                            logWarn(err.message, err);
-                            return message.channel.send(`Command \`${command.name}\` Failed Executing, Contact Support.`);
+                            logError(err, channel.id, author.id);
+                            return errNoExec(message, command.name);
                         }
                     }
                 } else {
@@ -122,21 +131,21 @@ exports.run = async (client, message) => {
                 return message.react('⏳');
             } else {
                 try {
-                    command.run(client, message, args);
                     cmdlog(client, author, command, channel);
+                    await command.run(client, message, args);
                 } catch (err) {
-                    logWarn(err.message, err);
-                    return message.channel.send(`Command \`${command.name}\` Failed Executing, Contact Support.`);
+                    logError(err, channel.id, author.id);
+                    return errNoExec(message, command.name);
                 }
             }
 
         } else {
             try {
-                command.run(client, message, args);
                 cmdlog(client, author, command, channel);
+                await command.run(client, message, args);
             } catch (err) {
-                logWarn(err.message, err);
-                return message.channel.send(`Command \`${command.name}\` Failed Executing, Contact Support.`);
+                logError(err, channel.id, author.id);
+                return errNoExec(message, command.name);
             }
         }
 
@@ -147,6 +156,15 @@ exports.run = async (client, message) => {
             }
         }
     }
+}
+
+function errMain(message) {
+    const m = 'Radeon is currently undergoing maintenance and will be temporarily unavailable. For more information join the Support Server using the link below!\n<https://discord.gg/xcZwGhSy4G>';
+    return setTimeout(() => message.channel.send(m), 500);
+}
+
+function errNoExec(message, command) {
+    return message.channel.send(`Command \`${command}\` stopped running unexpectedly.\nIf you see this error regularly, contact support via the \`@Radeon support\` command.`);
 }
 
 function cmdlog(client, user, command, channel) {
@@ -184,5 +202,6 @@ function checkRateLimit(client) {
         return setTimeout(()=>{},500);
     } else {
         client.rlcount++;
+        return;
     }
 }
