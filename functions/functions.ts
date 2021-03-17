@@ -28,6 +28,11 @@ function isBotStaff(id: string) {
     return false;
 }
 
+function isBotOwner(id: string) {
+    if (botOwners.includes(id)) return true;
+    return false;
+}
+
 function humanize(permissions: Permissions) {
     let permStr = [];
     permissions.toArray().forEach(p => {
@@ -45,5 +50,6 @@ export {
     toDurationLong,
     toDurationDays,
     isBotStaff,
+    isBotOwner,
     humanize
 }
