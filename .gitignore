@@ -13,4 +13,5 @@ web/*.*
 
 # Secret Files
 .vscode
+commands/Admin/test.js
 config.json
