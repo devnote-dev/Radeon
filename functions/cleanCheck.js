@@ -8,7 +8,7 @@ module.exports = async (message, amount, options) => {
     if (flagRegex) regex = new re2(flagRegex, 'gm');
 
     if (target || flagUsers || flagBots) {
-        messages.forEach(msg => {
+        messages.array().forEach(msg => {
             if (count > amount) return;
             if (target) {
                 if (msg.author.id == target) {
@@ -47,8 +47,13 @@ module.exports = async (message, amount, options) => {
     }
 
     if (filtered.length) {
-        const num = await message.channel.bulkDelete(filtered, true);
-        return num.size;
+        if (filtered.length == 1) {
+            await filtered[0].delete();
+            return 1;
+        } else {
+            const num = await message.channel.bulkDelete(filtered, true);
+            return num.size;
+        }
     } else {
         return 0;
     }
