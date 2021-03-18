@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+
+<html lang="en-US">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <head>
+        <style>
+            body {
+                background-color:#0e0e0e;
+            }
+            h1, h2, h3 {
+                color:#6b49d1;
+                font-family: Arial, Helvetica, sans-serif;
+                text-align: left;
+            }
+            p {
+                color:white;
+                font-family: Arial, Helvetica, sans-serif;
+                text-align: left;
+            }
+            li {
+                color:white;
+                font-family: Arial, Helvetica, sans-serif;
+                text-align: left;
+            }
+        </style>
+    </head>
+    <body>
+        <h1>Radeon Development</h1>
+        <p>
+            Radeon is a multi-functional moderation bot with an anti-raid system! While still a small bot, it has a powerful and up-to-date moderation system with active development on the anti-raid system. Any and all support is appreciated!
+        </p>
+        <h2>Commands</h2>
+        <p>
+            All commands can be triggered by using the prefix or by mentioning Radeon (e.g. <code>@Radeon help</code>). Some commands can also be used in DMs (shown in the help message). DM commands do not require a prefix, just the command and arguments (e.g. <code>help ping</code>).
+            <br>
+            Commands with required arguments have <code>&lt;ab&gt;</code>, optional arguments have <code>[ab]</code>, and arguments where you pick one use pipes <code>a|b</code>.
+        </p>
+        <h3>General</h3>
+        <p>
+            <li><code>help [Category|Command]</code> - Sends the help embed or help on a specified command.</li>
+            <li><code>invite</code> - Sends Radeon's invite links.</li>
+            <li><code>privacy</code> - Sends Radeon's privacy policy (information on data collection and usage).</li>
+            <li><code>serverinfo</code> - Sends information about the server.</li>
+            <li><code>userinfo [User:Mention/ID]</code> - Sends information about a specified Member, or the triggering Member if none is specified.</li>
+            <li><code>roleinfo &lt;Role:Name/Mention/ID&gt;</code> - Sends information about a specified role.</li>
+            <li><code>role &lt;SubCommand&gt; &lt;...args&gt;</code> - Role Tools: a set of powerful role commands (see <code>help role</code> for more).</li>
+            <li><code>embed [...Flags]</code> - Creates an embed using flags (see <code>help embed</code> for flags).</li>
+            <li><code>jsonembed &lt;JSON:Text&gt;</code> - Creates an embed using JSON text.</li>
+            <li><code>editembed &lt;JSON:Text&gt;</code> - Edits an existing embed message sent by Radeon using JSON text.</li>
+        </p>
+        <h3>Maintenance</h3>
+        <p>
+            <li><code>ping</code> - Sends Radeon's ping!</li>
+            <li><code>status</code> - Sends Radeon's overral status</li>
+            <li><code>prefix</code> - Sends the prefix(es) for Radeon</li>
+            <li><code>shard [Guild:ID]</code> - Sends the shard information for that server or a specified server.</li>
+            <li><code>permissions <SubCommand> <...args></code> - Permissions Tools: a set of readonly permission commands (see <code>help permissions</code> for more)</li>
+        </p>
+        <h3>Moderation</h3>
+        <p>
+            <li><code>slowmode &lt;Time:Duration|off&gt; [Reason:Text]</code> - Sets the channel slowmode to a specified duration or off.</li>
+            <li><code>clean &lt;Amount:Number&gt; [...Flags]</code> - Deletes a number of messages with optional flags (see <code>help clean</code> for more).</li>
+            <li><code>mute &lt;User:Mention/ID&gt; [Time:Duration] &lt;Reason:Text&gt;</code> - Mutes a specified Member (optional duration).</li>
+            <li><code>unmute &lt;User:Mention/ID&gt; [Reason:Text]</code> - Unumutes a muted Member (optional reason).</li>
+            <li><code>kick &lt;User:Mention/ID&gt; [Reason:Text]</code> - Kicks a Member from the server.</li>
+            <li><code>ban &lt;User:Mention/ID&gt; &lt;Reason:Text&gt; [-dd &lt;Number&gt;]</code> - Bans a Member from the server. Optional deletion days flag to delete Member messages (max. 7).</li>
+            <li><code>unban &lt;User:ID&gt; [Reason:Text]</code> - Unbans a banned User (optional reason).</li>
+        </p>
+        <h3>Server Settings</h3>
+        <p>
+            <li><code>setprefix &lt;Prefix:Text|reset&gt;</code> - Changes Radeon's prefix for the server.</li>
+            <li><code>muterole [Role:Name/Mention/ID|reset]</code> - Sends the current mute role for the server and allows for a new one to be set.</li>
+            <li><code>modlogs &lt;SubCommand&gt; &lt;arg&gt;</code> - Modlogs config commands for managing logs (see <code>help modlogs</code> for more).</li>
+            <li><code>automod &lt;SubCommand&gt; &lt;...args&gt;</code> - Automod config commands for managing automod triggers and events (see <code>help automod</code> for more).</li>
+            <li><code>override &lt;SubCommand&gt; &lt;...args&gt;</code> - Channel and command override manager (see <code>help override</code> for more).</li>
+        </p>
+    </body>
+</html>
