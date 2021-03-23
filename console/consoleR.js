@@ -36,7 +36,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 exports.__esModule = true;
-exports.logError = exports.logWarn = exports.logAdmin = exports.logDB = exports.logShardSpawn = exports.botReady = void 0;
+exports.logError = exports.logWarn = exports.logAdmin = exports.logDB = exports.logShard = exports.logShardSpawn = exports.botReady = void 0;
 var settings_schema_1 = require("../schemas/settings-schema");
 function borderBold() {
     return console.log('==================================');
@@ -65,8 +65,7 @@ function botReady(client) {
                         log += '\nReady at: ' + client.readyAt.toLocaleString();
                     log += "\nMaintenance: " + state.maintenance;
                     borderBold();
-                    console.log(log);
-                    return [2 /*return*/, borderBold()];
+                    return [2 /*return*/, console.log(log)];
             }
         });
     });
@@ -76,6 +75,29 @@ function logShardSpawn(shard) {
     return console.log("\n\u001B[35mSHARD\u001B[0m | " + shard.id + " of " + shard.manager.totalShards + " Spawned");
 }
 exports.logShardSpawn = logShardSpawn;
+function logShard(client, type, shard) {
+    var log = "\u001B[35mSHARD\u001B[0m | " + shard + " of " + client.shard.count + " ";
+    switch (type) {
+        case 'create':
+            log += 'Created';
+            break;
+        case 'discon':
+            log += "Disconnected: " + new Date().toLocaleTimeString();
+            break;
+        case 'error':
+            log += "Errored: " + new Date().toLocaleTimeString();
+            break;
+        case 'ready':
+            log += 'Ready';
+            break;
+        case 'recon':
+            log += 'Reconnecting';
+            break;
+        default: log += "Unknown: Invalid Log Request\nPath: " + __dirname;
+    }
+    return console.log(log);
+}
+exports.logShard = logShard;
 function logDB(type, data) {
     var log;
     switch (type) {
@@ -116,7 +138,7 @@ function logWarn(msg, error) {
     var log = "\u001B[33mWARNING!\u001B[0m " + msg;
     if (error)
         log += "\n" + error.message;
-    borderSmall();
+    borderBold();
     return console.log(log);
 }
 exports.logWarn = logWarn;
@@ -126,7 +148,7 @@ function logError(err, path, user) {
         log += "\nUser: " + user;
     if (err.stack)
         log += "\n\n" + err.stack;
-    borderSmall();
+    borderBold();
     return console.log(log);
 }
 exports.logError = logError;

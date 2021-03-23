@@ -20,12 +20,24 @@ async function botReady(client: any) {
     if (client.readyAt) log += '\nReady at: '+ client.readyAt.toLocaleString();
     log += `\nMaintenance: ${state.maintenance}`;
     borderBold();
-    console.log(log);
-    return borderBold();
+    return console.log(log);
 }
 
 function logShardSpawn(shard: Shard) {
     return console.log(`\n\x1b[35mSHARD\x1b[0m | ${shard.id} of ${shard.manager.totalShards} Spawned`);
+}
+
+function logShard(client: any, type: string, shard: number) {
+    let log: string = `\x1b[35mSHARD\x1b[0m | ${shard} of ${client.shard.count} `;
+    switch (type) {
+        case 'create': log += 'Created'; break;
+        case 'discon': log += `Disconnected: ${new Date().toLocaleTimeString()}`; break;
+        case 'error': log += `Errored: ${new Date().toLocaleTimeString()}`; break;
+        case 'ready': log += 'Ready'; break;
+        case 'recon': log += 'Reconnecting'; break;
+        default: log += `Unknown: Invalid Log Request\nPath: ${__dirname}`;
+    }
+    return console.log(log);
 }
 
 function logDB(type: string, data?: any) {
@@ -67,15 +79,23 @@ function logAdmin(type: string, path: string, user: string, args: string) {
 function logWarn(msg: string, error?: Error) {
     let log = `\x1b[33mWARNING!\x1b[0m ${msg}`;
     if (error) log += `\n${error.message}`;
-    borderSmall();
+    borderBold();
     return console.log(log);
 }
 function logError(err: Error, path: string, user?: string) {
     let log = `\x1b[31mERROR!\x1b[0m ${err.name}\n\nPath: ${path}`;
     if (user) log += `\nUser: ${user}`;
     if (err.stack) log += `\n\n${err.stack}`;
-    borderSmall();
+    borderBold();
     return console.log(log);
 }
 
-export { botReady, logShardSpawn, logDB, logAdmin, logWarn, logError }
+export {
+    botReady,
+    logShardSpawn,
+    logShard,
+    logDB,
+    logAdmin,
+    logWarn,
+    logError
+}
