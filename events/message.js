@@ -149,12 +149,14 @@ exports.run = async (client, message) => {
             }
         }
 
-    } else {
-        if (automod.active) {
-            if (automod.invites || automod.massMention.active) {
-                require('../functions/messageCheck')(client, message, automod);
-            }
-        }
+    // Disabled until messageCheck is debugged and fixed.
+
+    // } else {
+    //     if (automod.active) {
+    //         if (automod.invites || automod.massMention.active) {
+    //             require('../functions/messageCheck')(client, message, automod);
+    //         }
+    //     }
     }
 }
 
