@@ -1,6 +1,7 @@
 const { MessageEmbed } = require('discord.js');
 const Guild = require('../schemas/guild-schema');
 const Muted = require('../schemas/muted-schema');
+const Warns = require('../schemas/warn-schema');
 
 exports.run = async (client, guild) => {
     const e = new MessageEmbed()
@@ -22,4 +23,5 @@ exports.run = async (client, guild) => {
         guildID: guild.id,
         mutedList: []
     }).save();
+    await new Warns({ guildID: guild.id }).save();
 }
