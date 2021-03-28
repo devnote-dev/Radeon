@@ -45,6 +45,19 @@ const guildSchema = mongoose.Schema({
                 default:    []
             }
         }
+    },
+    antiraid:{
+        active:             Boolean,
+        viewStrikes:        Boolean,
+        syncInternalKicks:  Boolean,
+        syncExternalKicks:  Boolean,
+        syncInternalBans:   Boolean,
+        syncExternalBans:   Boolean,
+        config:{
+            spammers:       Boolean,
+            raiders:        Boolean,
+            alts:           Boolean
+        }
     }
 });
 
