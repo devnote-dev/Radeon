@@ -67,15 +67,19 @@ exports.run = async (client, message) => {
     const { prefix, ignoredChannels, ignoredCommands, automod } = data;
 
     if (ignoredChannels.includes(channel.id)) return;
-    if (message.content.toLowerCase().startsWith(prefix) || /^<@!?762359941121048616>\s+/gi.test(message.content)) {
+    if (
+        message.content.toLowerCase().startsWith(prefix)
+        || message.content.toLowerCase().startsWith(client.config.prefix)
+        || /^<@!?762359941121048616>\s+/gi.test(message.content)
+    ) {
         let args;
         if (message.mentions.users.size) {
             let user = message.mentions.users.first();
-            if (user.id === '762359941121048616') {
+            if (user.id === client.user.id) {
                 args = message.content.trim().split(/\s+|\n+/g).splice(1);
-            } else {
-                args = message.content.slice(prefix.length).trim().split(/\s+|\n+/g);
             }
+        } else if (message.content.toLowerCase().startsWith(client.config.prefix)) {
+            args = message.content.slice(client.config.prefix.length).trim().split(/\s+|\n+/g);
         } else {
             args = message.content.slice(prefix.length).trim().split(/\s+|\n+/g);
         }
@@ -86,6 +90,9 @@ exports.run = async (client, message) => {
         if (!command) return;
         if (lock) return errMain(message);
         if (ignoredCommands.includes(command.name)) return;
+
+        if (!channel.permissionsFor(message.guild.me).has(2048)) return;
+        if (!channel.permissionsFor(message.guild.me).has(16384)) return channel.send('I don\'t have permissions to send embeds here! Please enable this permission to use Radeon.');
 
         if (command.modOnly) {
             if (isBotStaff(message.author.id)) {
@@ -103,12 +110,48 @@ exports.run = async (client, message) => {
                 return channel.send(embed);
             } else if (command.modOnly === 'void') return;
 
-        } else if (command.permissions) {
-            if (message.guild.me.permissions.has(command.permissions)) {
-                if (message.member.permissions.has(command.permissions)) {
+        } else if (command.userPerms || command.botPerms) {
+            if (command.botPerms) {
+                if (message.guild.me.permissions.has(command.botPerms)) {
+                    if (command.userPerms) {
+                        if (message.member.permissions.has(command.userPerms)) {
+                            if (isOnCooldown(client, author, command)) {
+                                checkRateLimit(client);
+                                return message.react('⏳').catch(()=>{});
+                            } else {
+                                try {
+                                    cmdlog(client, author, command, channel);
+                                    await command.run(client, message, args);
+                                } catch (err) {
+                                    logError(err, channel.id, author.id);
+                                    return errNoExec(message, command.name);
+                                }
+                            }
+                        } else {
+                            return channel.send(`You are missing the \`${humanize(new Permissions(command.permissions))}\` permission(s) to use this command.`);
+                        }
+                    } else {
+                        if (isOnCooldown(client, author, command)) {
+                            checkRateLimit(client);
+                            return message.react('⏳').catch(()=>{});
+                        } else {
+                            try {
+                                cmdlog(client, author, command, channel);
+                                await command.run(client, message, args);
+                            } catch (err) {
+                                logError(err, channel.id, author.id);
+                                return errNoExec(message, command.name);
+                            }
+                        }
+                    }
+                } else {
+                    return channel.send(`I am missing the \`${humanize(new Permissions(command.permissions))}\` permission(s) for this command.`);
+                }
+            } else if (command.userPerms) {
+                if (message.member.permissions.has(command.userPerms)) {
                     if (isOnCooldown(client, author, command)) {
                         checkRateLimit(client);
-                        return message.react('⏳');
+                        return message.react('⏳').catch(()=>{});
                     } else {
                         try {
                             cmdlog(client, author, command, channel);
@@ -121,14 +164,13 @@ exports.run = async (client, message) => {
                 } else {
                     return channel.send(`You are missing the \`${humanize(new Permissions(command.permissions))}\` permission(s) to use this command.`);
                 }
-            } else {
-                return channel.send(`I am missing the \`${humanize(new Permissions(command.permissions))}\` permission(s) for this command.`);
             }
+        }
 
         } else if (command.cooldown) {
             if (isOnCooldown(client, author, command)) {
                 checkRateLimit(client);
-                return message.react('⏳');
+                return message.react('⏳').catch(()=>{});
             } else {
                 try {
                     cmdlog(client, author, command, channel);
@@ -157,7 +199,6 @@ exports.run = async (client, message) => {
     //             require('../functions/messageCheck')(client, message, automod);
     //         }
     //     }
-    }
 }
 
 function errMain(message) {
