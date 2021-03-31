@@ -101,25 +101,30 @@ exports.run = async (client, message) => {
                         try {
                             cmdlog(client, author, command, channel);
                             await command.run(client, message, args);
+                            break;
                         } catch (err) {
                             logError(err, channel.id, author.id);
-                            return errNoExec(message, command.name);
+                            errNoExec(message, command.name);
+                            break;
                         }
-                    } else return;
+                    } else break;
                 case 2:{
                     if (isBotOwner(author.id)) {
                         try {
                             cmdlog(client, author, command, channel);
                             await command.run(client, message, args);
+                            break;
                         } catch (err) {
                             logError(err, channel.id, author.id);
-                            return errNoExec(message, command.name);
+                            errNoExec(message, command.name);
+                            break;
                         }
                     } else {
                         const e = new MessageEmbed()
                         .setDescription('This command is for Bot Owners only.')
                         .setColor(0x1e143b).setFooter(author.tag, author.displayAvatarURL());
-                        return channel.send(e);
+                        channel.send(e);
+                        break;
                     }
                 }
                 case 3:
@@ -127,25 +132,30 @@ exports.run = async (client, message) => {
                         try {
                             cmdlog(client, author, command, channel);
                             await command.run(client, message, args);
+                            break;
                         } catch (err) {
                             logError(err, channel.id, author.id);
-                            return errNoExec(message, command.name);
+                            errNoExec(message, command.name);
+                            break;
                         }
-                    } else return;
+                    } else break;
                 case 4:{
                     if (isBotStaff(author.id)) {
                         try {
                             cmdlog(client, author, command, channel);
                             await command.run(client, message, args);
+                            break;
                         } catch (err) {
                             logError(err, channel.id, author.id);
-                            return errNoExec(message, command.name);
+                            errNoExec(message, command.name);
+                            break;
                         }
                     } else {
                         const e = new MessageEmbed()
                         .setDescription('This command is for Bot Admins only.')
                         .setColor(0x1e143b).setFooter(author.tag, author.displayAvatarURL());
-                        return channel.send(e);
+                        channel.send(e);
+                        break;
                     }
                 }
             }
@@ -205,7 +215,6 @@ exports.run = async (client, message) => {
                     return channel.send(`You are missing the \`${humanize(new Permissions(command.permissions))}\` permission(s) to use this command.`);
                 }
             }
-        }
 
         } else if (command.cooldown) {
             if (isOnCooldown(client, author, command)) {
@@ -239,6 +248,7 @@ exports.run = async (client, message) => {
     //             require('../functions/messageCheck')(client, message, automod);
     //         }
     //     }
+    }
 }
 
 function errMain(message) {
