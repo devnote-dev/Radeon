@@ -7,7 +7,7 @@ module.exports = {
     description: 'Reloads a command into the client',
     usage: 'reload <Category> <Command>',
     guildOnly: true,
-    modOnly: 'void',
+    modOnly: 1,
     run: async (client, message, args) => {
         if (args.length < 2) return client.errEmb('Insufficient Arguments\n```\nreload <Category> <Command>\n```', message);
         const cat = args[0].toLowerCase();

@@ -5,7 +5,7 @@ const { join } = require('path');
 module.exports = {
     name: 'cmdlogs',
     guildOnly: true,
-    modOnly: true,
+    modOnly: 4,
     run: async (client, message) => {
         let content = '';
         client.cmdlogs.forEach(log => {
