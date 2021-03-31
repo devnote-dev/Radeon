@@ -57,8 +57,8 @@ function botReady(client) {
                     return [4 /*yield*/, settings_schema_1.findOne({ client: client.user.id })];
                 case 1:
                     state = _a.sent();
-                    log = "\u001B[35mRadeon is Ready!\u001B[0m\n\n\u001B[32m" + loaded + "\u001B[0m Loaded Commands\n\u001B[31m" + failed.length + "\u001B[0m Failed Commands\n\u001B[36m" + events + "\u001B[0m Loaded Events";
-                    if (failed.length)
+                    log = "\u001B[35mRadeon is Ready!\u001B[0m\n\n\u001B[32m" + loaded + "\u001B[0m Loaded Commands\n\u001B[31m" + (failed ? failed.length : 0) + "\u001B[0m Failed Commands\n\u001B[36m" + events + "\u001B[0m Loaded Events";
+                    if (failed && failed.length)
                         log += ':\n\x1b[31m' + failed.join('\n') + '\x1b[0m';
                     log += "\n\nConnected to " + guilds + " servers";
                     if (client.readyAt)

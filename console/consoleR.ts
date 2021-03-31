@@ -14,8 +14,8 @@ async function botReady(client: any) {
     const events = client.commands.get('_events');
     const guilds = client.guilds.cache.size;
     const state = await Settings.findOne({ client: client.user.id });
-    let log = `\x1b[35mRadeon is Ready!\x1b[0m\n\n\x1b[32m${loaded}\x1b[0m Loaded Commands\n\x1b[31m${failed.length}\x1b[0m Failed Commands\n\x1b[36m${events}\x1b[0m Loaded Events`;
-    if (failed.length) log += ':\n\x1b[31m'+ failed.join('\n') +'\x1b[0m';
+    let log = `\x1b[35mRadeon is Ready!\x1b[0m\n\n\x1b[32m${loaded}\x1b[0m Loaded Commands\n\x1b[31m${failed ? failed.length : 0}\x1b[0m Failed Commands\n\x1b[36m${events}\x1b[0m Loaded Events`;
+    if (failed && failed.length) log += ':\n\x1b[31m'+ failed.join('\n') +'\x1b[0m';
     log += `\n\nConnected to ${guilds} servers`;
     if (client.readyAt) log += '\nReady at: '+ client.readyAt.toLocaleString();
     log += `\nMaintenance: ${state.maintenance}`;
