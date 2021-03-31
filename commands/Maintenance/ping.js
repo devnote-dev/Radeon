@@ -2,6 +2,7 @@ require('discord.js');
 
 module.exports = {
     name: 'ping',
+    tag: 'Sends Radeon\'s ping!',
     description: 'Sends Radeon\'s ping.',
     run: async (client, message) => {
         const msg = await message.channel.send({embed:{color:0x1e143b,thumbnail:{url:'https://cdn.discordapp.com/emojis/786661451385274368.gif?v=1'}}});

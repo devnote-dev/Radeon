@@ -3,6 +3,7 @@ const { toDurationDefault } = require('../../functions/functions');
 
 module.exports = {
     name: 'serverinfo',
+    tag: 'Sends information about the server.',
     description: 'Sends information about the server.',
     cooldown: 6,
     guildOnly: true,

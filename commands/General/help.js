@@ -5,6 +5,7 @@ const { readdirSync } = require('fs');
 module.exports = {
     name: 'help',
     aliases: ['h','commands'],
+    tag: 'Sends help on a command',
     description: 'Sends help on a command.',
     usage: 'help [Command:Name/Alias]\nhelp [Category]',
     cooldown: 3,

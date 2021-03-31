@@ -3,6 +3,7 @@ const Warns = require('../../schemas/warn-schema');
 
 module.exports = {
     name: 'warn',
+    tag: 'Warns a specified user',
     description: 'Warns a specified user.',
     usage: 'warn <User:Mention/ID> <Reason:Text>',
     permissions: 8192,

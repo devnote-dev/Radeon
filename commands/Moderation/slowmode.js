@@ -4,7 +4,8 @@ const ms = require('ms');
 module.exports = {
     name: 'slowmode',
     aliases: ['sm'],
-    description: 'Set\'s the slowmode time for the triggering channel. To disable slowmode put `0` or `off`.',
+    tag: 'Sets the slowmode for the channel',
+    description: 'Sets the slowmode time for the triggering channel. To disable slowmode put `0` or `off`.',
     usage: 'slowmode <Time:Duration> [Reason:Text]\nslowmode off',
     cooldown: 2,
     permissions: 16,
@@ -24,7 +25,7 @@ module.exports = {
             } else {
                 return client.checkEmb(`Slowmode Successfully Set to ${ms(time * 1000, {long: true})}!`, message);
             }
-        } catch (err) {
+        } catch {
             return client.errEmb('Unknown: Failed Setting Slowmode.', message);
         }
     }

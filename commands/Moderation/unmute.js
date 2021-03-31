@@ -4,6 +4,7 @@ const Muted = require('../../schemas/muted-schema');
 
 module.exports = {
     name: 'unmute',
+    tag: 'Unmutes a muted user',
     description: 'Unmutes a muted user.',
     usage: 'unmute <User:Mention/ID> [Reason:Text]',
     permissions: 268435456,

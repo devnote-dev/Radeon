@@ -4,6 +4,7 @@ const { toDurationDefault } = require('../../functions/functions');
 
 module.exports = {
     name: 'status',
+    tag: 'Sends Radeon\'s status',
     description: 'Sends the bot\'s status for that guild.',
     run: async (client, message) => {
         const { heapUsed, heapTotal } = process.memoryUsage();

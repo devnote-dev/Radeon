@@ -5,6 +5,7 @@ const Muted = require('../../schemas/muted-schema');
 
 module.exports = {
     name: 'mute',
+    tag: 'Mutes a specified user for a certain time',
     description: 'Mutes a specified user for a certain time.',
     usage: 'mute <User:Mention/ID> [Time:Duration] <Reason:Text>',
     permissions: 8192,

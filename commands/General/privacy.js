@@ -2,6 +2,7 @@ const { MessageEmbed } = require('discord.js');
 
 module.exports = {
     name: 'privacy',
+    tag: 'Sends Radeon\'s privacy policy.',
     description: 'Sends Radeon\'s privacy policy and information on data collected.',
     cooldown: 2,
     run: async (client, message) => {

@@ -2,6 +2,7 @@ require('discord.js');
 
 module.exports = {
     name: 'ban',
+    tag: 'Bans a member from the server',
     description: 'Bans a member from the server. `-dd <number>` flag is for the number of days the user\'s messages should be deleted (max 7).',
     usage: 'ban <User:Mention/ID> <Reason:text> [-dd <number>]',
     cooldown: 2,
@@ -27,7 +28,7 @@ module.exports = {
             if (client.users.cache.get(target)) await client.users.cache.get(target).send({embed:{title:'You have been Banned!',description:`**Reason:** ${reason}`,color:0x1e143b,footer:{text:`Sent from ${message.guild.name}`, icon_url:message.guild.iconURL({dynamic:true})}}}).catch(()=>{});
             message.guild.members.ban(target, {days:ddays, reason:message.author.tag +': '+ reason});
             return client.checkEmb(`Successfully Banned \`${tag}\`!`, message);
-        } catch (err) {
+        } catch {
             return client.errEmb(`Unknown: Failed Banning Member \`${tag}\``, message);
         }
     }
