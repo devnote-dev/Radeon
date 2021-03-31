@@ -1,4 +1,5 @@
 require('discord.js');
+const re2 = require('re2');
 const { parseFlags } = require('../../functions/stringParser');
 
 module.exports = {
@@ -19,9 +20,9 @@ module.exports = {
         if (flags[0] && flags[0].value != null && flags[0].value.length) reason = flags[0].value;
 
         if (message.mentions.users.size) message.mentions.users.forEach(u => users.push(u.id));
-        const res = /\b\d{17,19}\b/g.exec(args.join(' '));
-        if (res.length) {
-            res.forEach(id => {
+        const reg = new re2(/\b(\d{17,19})+\b/, 'gm').compile().exec(args.join(' '));
+        if (reg.length) {
+            reg.forEach(id => {
                 if (!users.includes(id)) users.push(id);
             });
         }
@@ -29,7 +30,7 @@ module.exports = {
 
         const total = users.length;
         let count = 0, res = 0;
-        users.forEach(id => {
+        users.forEach(async id => {
             if (count == 4) {
                 count = 0;
                 setTimeout(() => {}, 3000);
