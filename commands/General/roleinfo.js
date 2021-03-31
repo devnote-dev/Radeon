@@ -3,6 +3,7 @@ const { toDurationDefault } = require('../../functions/functions');
 
 module.exports = {
     name: 'roleinfo',
+    tag: 'Sends information about a specific role.',
     description: 'Sends information about a specified role.',
     usage: 'roleinfo <Role:Name/Mention/ID>',
     cooldown: 4,

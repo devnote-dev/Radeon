@@ -4,6 +4,7 @@ const { toDurationDefault } = require('../../functions/functions');
 module.exports = {
     name: 'userinfo',
     aliases: ['whois'],
+    tag: 'Info about you or a specified user',
     description: 'Sends information about a specified user, or the triggering user if none is specified.',
     usage: 'userinfo [User:Mention/ID]',
     cooldown: 5,

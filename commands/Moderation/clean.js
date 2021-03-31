@@ -4,6 +4,7 @@ const cleanCheck = require('../../functions/cleanCheck');
 module.exports = {
     name: 'clean',
     aliases: ['cl','clear','purge'],
+    tag: 'Deletes a number of messages in a chat',
     description: 'Deletes a number of messages in a channel (min 1, max 100).\n\n**Flags:**\n`-users` - Deletes only user messages\n`-bots` - Deletes only bot messages\n`-nopin` - Deletes messages that aren\'t pinned\n`-r <Regex>` - Deletes messages matching the pattern',
     usage: 'clean <Amount:Number>\nclean <Amount:Number> [User:Mention/ID]\nclean <Amount:Number> [...Flags]',
     cooldown: 4,

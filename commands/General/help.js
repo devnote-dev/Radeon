@@ -5,6 +5,7 @@ const { readdirSync } = require('fs');
 module.exports = {
     name: 'help',
     aliases: ['h','commands'],
+    tag: 'Sends help on a command',
     description: 'Sends help on a command.',
     usage: 'help [Command:Name/Alias]\nhelp [Category]',
     cooldown: 3,
@@ -13,7 +14,8 @@ module.exports = {
         if (args.length) {
             let valid = false;
             let search = args.join(' ').toLowerCase();
-            const embed = new MessageEmbed().setColor(0x1e143b);
+            const embed = new MessageEmbed().setColor(0x1e143b)
+            .setFooter('Use "help [Command]" to get info on a specific command.');
             switch (search) {
                 case 'admin':
                     search = 'admin';
@@ -42,11 +44,11 @@ module.exports = {
                     embed.setTitle(`Category: ${dir}`);
                     let desc = [];
                     readdirSync(`./commands/${dir}/`).forEach(f => {
-                        if (!f.endsWith('.js')) return;
-                        desc.push(f.split('.').shift());
+                        if (!f.startsWith('.js')) return;
+                        const pull = require(`./commands/${dir}/${f}`);
+                        desc.push(`\`${pull.name}\`\n${pull.tag ?? 'No Additional Info.\n'}`);
                     });
-                    embed.setDescription(`\`${desc.join('`, `')}\``).setFooter('Use "help [Command]" to get info on a specific command.');
-                    valid = true;
+                    embed.setDescription(desc.join('\n'));
                 }
             });
 
@@ -54,20 +56,25 @@ module.exports = {
             const cmd = client.commands.get(search) || client.commands.get(client.aliases.get(search));
             if (cmd) {
                 if (cmd.modOnly && !isBotStaff(message.author.id)) {
-                    return message.channel.send({embed:{title:'Help Error',description:'You do not have permission to view this command.',color:0x1e143b}});
+                    embed.setTitle('Help Error').setDescription('You don\'t have permission to view this command.');
+                    return message.channel.send(embed);
                 } else {
-                    let alias = '', desc = '', use = '';
-                    if (cmd.aliases) alias = `**Aliases:** \`${cmd.aliases.join('`, `')}\`\n\n`;
-                    if (cmd.description) desc = `**Description:** ${cmd.description}\n\n`;
+                    let [alias, desc, use] = '';
+                    if (cmd.aliases) alias = `**Aliases:** \`${cmd.aliases.join('`, `')}\`\n`;
+                    if (cmd.description) desc = `**Description:**\n${cmd.description}\n`;
                     if (cmd.usage) use = `**Usage:**\n\`\`\`\n${cmd.usage}\n\`\`\`\n`;
-                    let go = `**Guild-Only:** \`${cmd.guildOnly}\`\n**Required Perms:** \`${cmd.permissions ? humanize(new Permissions(cmd.permissions)) : 'None'}\``;
+                    let footer = `**Guild Only:** ${cmd.guildOnly ?? 'false'}
+                    **User Perms:** \`${cmd.userPerms ? humanize(new Permissions(cmd.userPerms)) : 'None'}\`
+                    **Bot Perms:** \`${cmd.botPerms ? humanize(new Permissions(cmd.botPerms)) : 'None'}\``;
                     embed.setTitle(`Command: ${cmd.name}`)
-                    .setDescription(alias+desc+use+go)
+                    .setDescription(alias + desc + use + footer)
                     .setFooter('<> - Required, [] - Optional, a|b - Pick one');
                     return message.channel.send(embed);
                 }
             } else {
-                return message.channel.send({embed:{title:'Help Error',description:`No command or category with the name "${search}"`,color:0x1e143b}});
+                if (search.length >= 100) search = search.slice(0,100) + '...';
+                embed.setTitle('Help Error').setDescription(`No command or category with the name "${search}"`);
+                return message.channel.send(embed);
             }
 
         } else {
@@ -80,7 +87,7 @@ module.exports = {
                 {name: '<:moderation:813778681914851421> Moderation', value: '`help mod`', inline: true},
                 {name: '⚙ Server Settings', value: '`help settings`', inline: true},
                 {name: '👮‍♂️ Anti-Raid', value: 'Coming Soon!', inline: true},
-                {name: '🔗 Links', value: '[Bot Invite](https://discord.com/api/oauth2/authorize?client_id=762359941121048616&permissions=8&scope=bot) | [Support Server](https://discord.gg/xcZwGhSy4G)', inline: false}
+                {name: '🔗 Links', value: '[Bot Invite](https://discord.com/api/oauth2/authorize?client_id=762359941121048616&permissions=8&scope=bot) | [Support Server](https://discord.gg/xcZwGhSy4G) | [Github Repository](https://github.com/Devnote/Radeon)', inline: false}
             )
             .setColor(0x1e143b);
             return message.channel.send(embed);

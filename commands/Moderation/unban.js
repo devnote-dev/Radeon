@@ -2,6 +2,7 @@ require('discord.js');
 
 module.exports = {
     name: 'unban',
+    tag: 'Unbans a specified user',
     description: 'Unbans a specified user from the server.',
     usage: 'unban <User:ID> [Reason:text]',
     cooldown: 2,
@@ -16,7 +17,7 @@ module.exports = {
         try {
             await message.guild.members.unban(target, message.author.tag +': '+ reason);
             return client.checkEmb(`Successfully Unbanned \`${target}\`!`, message);
-        } catch (err) {
+        } catch {
             return client.errEmb(`Unknown: Failed Unbanning User \`${target}\``, message);
         }
     }

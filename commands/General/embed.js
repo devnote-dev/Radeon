@@ -3,6 +3,7 @@ const { parseFlags } = require('../../functions/stringParser');
 
 module.exports = {
     name: 'embed',
+    tag: 'Creates a custom embed via command flags',
     description: 'Creates a custom embed via command flags.',
     usage: 'embed <...Flags>\n-raw "message\n-author "author message"\n-aicon "author iconURL"\n-thumb "thumbnail URL"\n-title "title message"\n-url "title URL"\n-desc "description message"\n-color "HEX/DECIMAL"\n-image "image URL"\n-footer "footer message"\n-ficon "footer iconURL"\n-ts (timestamp)',
     cooldown: 3,

@@ -3,6 +3,7 @@ const Guild = require('../../schemas/guild-schema');
 
 module.exports = {
     name: 'prefix',
+    tag: 'Shows the current prefix for the server',
     desription: 'Shows the current prefix for the server.',
     guildOnly: true,
     run: async (client, message) => {

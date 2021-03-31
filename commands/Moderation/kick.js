@@ -2,6 +2,7 @@ require('discord.js');
 
 module.exports = {
     name: 'kick',
+    tag: 'Kicks a member from the server',
     description: 'Kicks a member from the server.',
     usage: 'kick <User:Mention/ID> [Reason:text]',
     cooldown: 2,
@@ -18,7 +19,7 @@ module.exports = {
             await target.send({embed:{title:'You have been kicked!',description:`**Reason:** ${reason}`,color:0x1e143b,footer:{text:`Sent from ${message.guild.name}`, icon_url:message.guild.iconURL({dynamic: true})}}}).catch(()=>{});
             target.kick(message.author.tag +': '+ reason);
             return client.checkEmb(`Successfully Kicked \`${target.user.tag}\`!`, message);
-        } catch (err) {
+        } catch {
             return client.errEmb(`Unknown: Failed Kicking Member \`${target.user.tag}\``, message);
         }
     }

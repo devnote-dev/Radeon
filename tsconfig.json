@@ -1,0 +1,10 @@
+{
+    "compilerOptions": {
+        "lib": ["ES2020"],
+        "pretty": true,
+        "module": "commonJS",
+        "moduleResolution": "Node",
+        "noUnusedLocals": true,
+        "target": "ES6"
+    }
+}

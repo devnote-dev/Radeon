@@ -3,6 +3,7 @@ const { Permissions, MessageEmbed } = require('discord.js');
 module.exports = {
     name: 'permissions',
     aliases: ['perms','permsof'],
+    tag: 'Permissions Tools: subcommands for permissions.',
     description: 'Permissions Tools: can send the permissions of a specified user or triggering user, and permissions in a specified channel.',
     usage:'permissions [User:Mention/ID]\npermissions create <\\n...Permissions:Name>\npermissions resolve <Bitfield:Number>\npermissions in <Channel:Mention/ID>',
     guildOnly: true,

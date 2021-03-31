@@ -1,9 +1,12 @@
 const { MessageEmbed } = require('discord.js');
+const { logShard } = require('../console/consoleR');
 
 exports.run = async (client, shard) => {
+    logShard(client, 'recon', shard);
     const e = new MessageEmbed()
     .setTitle('Radeon')
     .setDescription(`Shard ${shard} / ${client.shard.count} - Reconnecting`)
     .setColor('YELLOW');
-    client.channels.cache.get(client.config.logs.event).send(e).catch(()=>{});
+    const c = client.channels.cache.get(client.config.logs.event);
+    if (c) c.send(e).catch(()=>{});
 }

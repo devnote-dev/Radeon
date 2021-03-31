@@ -4,6 +4,7 @@ const { parseQuotes } = require('../../functions/stringParser');
 module.exports = {
     name: 'role',
     aliases: ['r'],
+    tag: 'Role Tools: subcommands for roles.',
     description: 'Role Tools: Allows for creating, updating, deleting, and assigning roles using the subcommands below.',
     usage: 'role <User:Mention/ID> <Role:Name/Mention/ID>\nrole c/create <Name> [Color:Hex/Decimal] [Permissions:Bitfield] [Hoisted:True/False] [Mentionable:True/False]\nrole d/delete <Role:Name/Mention/ID>',
     cooldown: 4,

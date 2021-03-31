@@ -3,6 +3,7 @@ require('discord.js');
 module.exports = {
     name: 'editembed',
     aliases: ['editemb'],
+    tag: 'Edits an existing embed using JSON',
     description: 'Edits an existing embed sent by Radeon using JSON string.',
     usage: 'editembed <Message:ID> <JSON:Text>',
     cooldown: 3,

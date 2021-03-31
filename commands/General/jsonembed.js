@@ -3,6 +3,7 @@ require('discord.js');
 module.exports = {
     name: 'jsonembed',
     aliases: ['jsonemb','jsemb'],
+    tag: 'Creates an embed using JSON string.',
     description: 'Creates an embed using JSON string.',
     usage: 'jsonembed <JSON:Text>\n\njsonembed { "title":"hi", "description":"hello" }',
     cooldown: 2,

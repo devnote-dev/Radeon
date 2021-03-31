@@ -3,6 +3,7 @@ const { toDurationDefault } = require('../../functions/functions');
 
 module.exports = {
     name: 'shard',
+    tag: 'Sends info on a shard',
     description: 'Sends information on a shard of a specified server, or the shard it was triggered in.',
     usage: 'shard [Guild:ID]',
     cooldown: 2,
