@@ -95,20 +95,60 @@ exports.run = async (client, message) => {
         if (!channel.permissionsFor(message.guild.me).has(16384)) return channel.send('I don\'t have permissions to send embeds here! Please enable this permission to use Radeon.');
 
         if (command.modOnly) {
-            if (isBotStaff(message.author.id)) {
-                try {
-                    cmdlog(client, author, command, channel);
-                    await command.run(client, message, args);
-                } catch (err) {
-                    logError(err, channel.id, author.id);
-                    return errNoExec(message, command.name);
+            switch (command.modOnly) {
+                case 1:
+                    if (isBotOwner(author.id)) {
+                        try {
+                            cmdlog(client, author, command, channel);
+                            await command.run(client, message, args);
+                        } catch (err) {
+                            logError(err, channel.id, author.id);
+                            return errNoExec(message, command.name);
+                        }
+                    } else return;
+                case 2:{
+                    if (isBotOwner(author.id)) {
+                        try {
+                            cmdlog(client, author, command, channel);
+                            await command.run(client, message, args);
+                        } catch (err) {
+                            logError(err, channel.id, author.id);
+                            return errNoExec(message, command.name);
+                        }
+                    } else {
+                        const e = new MessageEmbed()
+                        .setDescription('This command is for Bot Owners only.')
+                        .setColor(0x1e143b).setFooter(author.tag, author.displayAvatarURL());
+                        return channel.send(e);
+                    }
                 }
-            } else if (command.modOnly === 'warn') {
-                const embed = new MessageEmbed()
-                .setAuthor(author.tag, author.displayAvatarURL({dynamic: true}))
-                .setDescription('This command is for Bot Owners only.');
-                return channel.send(embed);
-            } else if (command.modOnly === 'void') return;
+                case 3:
+                    if (isBotStaff(author.id)) {
+                        try {
+                            cmdlog(client, author, command, channel);
+                            await command.run(client, message, args);
+                        } catch (err) {
+                            logError(err, channel.id, author.id);
+                            return errNoExec(message, command.name);
+                        }
+                    } else return;
+                case 4:{
+                    if (isBotStaff(author.id)) {
+                        try {
+                            cmdlog(client, author, command, channel);
+                            await command.run(client, message, args);
+                        } catch (err) {
+                            logError(err, channel.id, author.id);
+                            return errNoExec(message, command.name);
+                        }
+                    } else {
+                        const e = new MessageEmbed()
+                        .setDescription('This command is for Bot Admins only.')
+                        .setColor(0x1e143b).setFooter(author.tag, author.displayAvatarURL());
+                        return channel.send(e);
+                    }
+                }
+            }
 
         } else if (command.userPerms || command.botPerms) {
             if (command.botPerms) {
