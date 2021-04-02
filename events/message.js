@@ -25,11 +25,12 @@ exports.run = async (client, message) => {
             const embed = new MessageEmbed()
             .setAuthor(author.tag, author.displayAvatarURL({dynamic: true}))
             .setDescription('This command cannot be used in DMs.');
-            return message.channel.send(embed);
+            return channel.send(embed);
         } else if (command.modOnly) {
-            if (isBotStaff(message.author.id)) {
+            if (isBotStaff(author.id)) {
                 try {
                     cmdlog(client, author, command, channel);
+                    client.stats.commands++;
                     await command.run(client, message, args);
                 } catch (err) {
                     logError(err, channel.id, author.id);
@@ -44,6 +45,7 @@ exports.run = async (client, message) => {
         } else {
             try {
                 cmdlog(client, author, command, channel);
+                client.stats.commands++;
                 await command.run(client, message, args);
             } catch (err) {
                 logError(err, channel.id, author.id);
@@ -67,6 +69,7 @@ exports.run = async (client, message) => {
     const { prefix, ignoredChannels, ignoredCommands, automod } = data;
 
     if (ignoredChannels.includes(channel.id)) return;
+    client.stats.messages++;
     if (
         message.content.toLowerCase().startsWith(prefix)
         || message.content.toLowerCase().startsWith(client.config.prefix)
@@ -96,10 +99,11 @@ exports.run = async (client, message) => {
 
         if (command.modOnly) {
             switch (command.modOnly) {
-                case 1:
+                case 1:{
                     if (isBotOwner(author.id)) {
                         try {
                             cmdlog(client, author, command, channel);
+                            client.stats.commands++;
                             await command.run(client, message, args);
                             break;
                         } catch (err) {
@@ -108,10 +112,12 @@ exports.run = async (client, message) => {
                             break;
                         }
                     } else break;
+                }
                 case 2:{
                     if (isBotOwner(author.id)) {
                         try {
                             cmdlog(client, author, command, channel);
+                            client.stats.commands++;
                             await command.run(client, message, args);
                             break;
                         } catch (err) {
@@ -127,10 +133,11 @@ exports.run = async (client, message) => {
                         break;
                     }
                 }
-                case 3:
+                case 3:{
                     if (isBotStaff(author.id)) {
                         try {
                             cmdlog(client, author, command, channel);
+                            client.stats.commands++;
                             await command.run(client, message, args);
                             break;
                         } catch (err) {
@@ -139,10 +146,12 @@ exports.run = async (client, message) => {
                             break;
                         }
                     } else break;
+                }
                 case 4:{
                     if (isBotStaff(author.id)) {
                         try {
                             cmdlog(client, author, command, channel);
+                            client.stats.commands++;
                             await command.run(client, message, args);
                             break;
                         } catch (err) {
@@ -171,6 +180,7 @@ exports.run = async (client, message) => {
                             } else {
                                 try {
                                     cmdlog(client, author, command, channel);
+                                    client.stats.commands++;
                                     await command.run(client, message, args);
                                 } catch (err) {
                                     logError(err, channel.id, author.id);
@@ -178,7 +188,7 @@ exports.run = async (client, message) => {
                                 }
                             }
                         } else {
-                            return channel.send(`You are missing the \`${humanize(new Permissions(command.permissions))}\` permission(s) to use this command.`);
+                            return channel.send(`You are missing the \`${humanize(new Permissions(command.userPerms))}\` permission(s) to use this command.`);
                         }
                     } else {
                         if (isOnCooldown(client, author, command)) {
@@ -187,6 +197,7 @@ exports.run = async (client, message) => {
                         } else {
                             try {
                                 cmdlog(client, author, command, channel);
+                                client.stats.commands++;
                                 await command.run(client, message, args);
                             } catch (err) {
                                 logError(err, channel.id, author.id);
@@ -195,7 +206,7 @@ exports.run = async (client, message) => {
                         }
                     }
                 } else {
-                    return channel.send(`I am missing the \`${humanize(new Permissions(command.permissions))}\` permission(s) for this command.`);
+                    return channel.send(`I am missing the \`${humanize(new Permissions(command.botPerms))}\` permission(s) for this command.`);
                 }
             } else if (command.userPerms) {
                 if (message.member.permissions.has(command.userPerms)) {
@@ -205,6 +216,7 @@ exports.run = async (client, message) => {
                     } else {
                         try {
                             cmdlog(client, author, command, channel);
+                            client.stats.commands++;
                             await command.run(client, message, args);
                         } catch (err) {
                             logError(err, channel.id, author.id);
@@ -212,7 +224,7 @@ exports.run = async (client, message) => {
                         }
                     }
                 } else {
-                    return channel.send(`You are missing the \`${humanize(new Permissions(command.permissions))}\` permission(s) to use this command.`);
+                    return channel.send(`You are missing the \`${humanize(new Permissions(command.userPerms))}\` permission(s) to use this command.`);
                 }
             }
 
@@ -223,6 +235,7 @@ exports.run = async (client, message) => {
             } else {
                 try {
                     cmdlog(client, author, command, channel);
+                    client.stats.commands++;
                     await command.run(client, message, args);
                 } catch (err) {
                     logError(err, channel.id, author.id);
@@ -233,6 +246,7 @@ exports.run = async (client, message) => {
         } else {
             try {
                 cmdlog(client, author, command, channel);
+                client.stats.commands++;
                 await command.run(client, message, args);
             } catch (err) {
                 logError(err, channel.id, author.id);
