@@ -7,7 +7,7 @@ module.exports = {
     description: 'Executes a specified command. Arguments are also taken into account.',
     usage: 'execute <Command:Name/Alias> [...args]',
     guildOnly: true,
-    modOnly: 'warn',
+    modOnly: 4,
     run: async (client, message, args) => {
         if (!args.length) return client.errEmb('No Command Specified.', message);
         const path = `${message.guild.id}/${message.channel.id}`;

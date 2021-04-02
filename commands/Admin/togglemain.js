@@ -4,7 +4,7 @@ const Settings = require('../../schemas/settings-schema');
 module.exports = {
     name: 'togglemain',
     description: 'Toggles Radeon\'s maintenance mode (disables all commands, functions).',
-    modOnly: 'warn',
+    modOnly: 1,
     run: async (client, message) => {
         const state = await Settings.findOne({ client: client.user.id });
         switch (state.maintenance) {

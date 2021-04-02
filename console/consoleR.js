@@ -51,14 +51,14 @@ function botReady(client) {
             switch (_a.label) {
                 case 0:
                     loaded = client.commands.size;
-                    failed = client.commands.get('_failed');
-                    events = client.commands.get('_events');
+                    failed = client.stats._failed;
+                    events = client.stats._events;
                     guilds = client.guilds.cache.size;
                     return [4 /*yield*/, settings_schema_1.findOne({ client: client.user.id })];
                 case 1:
                     state = _a.sent();
-                    log = "\u001B[35mRadeon is Ready!\u001B[0m\n\n\u001B[32m" + loaded + "\u001B[0m Loaded Commands\n\u001B[31m" + failed.length + "\u001B[0m Failed Commands\n\u001B[36m" + events + "\u001B[0m Loaded Events";
-                    if (failed.length)
+                    log = "\u001B[35mRadeon is Ready!\u001B[0m\n\n\u001B[32m" + loaded + "\u001B[0m Loaded Commands\n\u001B[31m" + (failed ? failed.length : 0) + "\u001B[0m Failed Commands\n\u001B[36m" + events + "\u001B[0m Loaded Events";
+                    if (failed && failed.length)
                         log += ':\n\x1b[31m' + failed.join('\n') + '\x1b[0m';
                     log += "\n\nConnected to " + guilds + " servers";
                     if (client.readyAt)
@@ -95,6 +95,7 @@ function logShard(client, type, shard) {
             break;
         default: log += "Unknown: Invalid Log Request\nPath: " + __dirname;
     }
+    borderSmall();
     return console.log(log);
 }
 exports.logShard = logShard;
@@ -111,6 +112,7 @@ function logDB(type, data) {
             log = "\u001B[31mMONGO\u001B[0m | Disconnected\nServers may be temporarily unavailable.";
             break;
     }
+    borderSmall();
     return console.log(log);
 }
 exports.logDB = logDB;

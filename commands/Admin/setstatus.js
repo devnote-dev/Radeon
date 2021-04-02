@@ -11,7 +11,7 @@ module.exports = {
     aliases: ['setstatus'],
     description: 'Sets bot\'s status.',
     guildOnly: false,
-    modOnly: 'warn',
+    modOnly: 4,
     run: async (client, message, args) => { 
         if(args[0]) {
             const activityType = args[0].toUpperCase();

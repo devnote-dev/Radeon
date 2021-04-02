@@ -1,6 +1,6 @@
 {
   "name": "radeon",
-  "version": "2.4.7",
+  "version": "2.5.1",
   "description": "Radeon is a multi-functional moderation bot with a cross-server anti-raid system!",
   "main": "index.js",
   "scripts": {
@@ -8,15 +8,15 @@
   },
   "author": "Devonte#0745",
   "contributors": [
-    "Piter#2105",
+    "Piter#8444",
     "tryharddeveloper#0001"
   ],
   "repository": {
     "type": "git",
-    "url": "github:NaruDevnote/Radeon"
+    "url": "github:devnote-dev/Radeon"
   },
   "private": true,
-  "license": "MIT",
+  "license": "GNU General Public License v3",
   "dependencies": {
     "ascii-table": "0.0.9",
     "discord.js": "^12.5.1",

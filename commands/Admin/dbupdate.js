@@ -5,7 +5,7 @@ module.exports = {
     description: 'Updates the database of a specified guild to the latest schema update.',
     usage: 'dbupdate <Guild:ID>',
     guildOnly: true,
-    modOnly: 'warn',
+    modOnly: 2,
     run: async (client, message, args) => {
         if (!args.length) return client.errEmb('No Guild Specified.\n```\ndbupdate <Guild:ID>\n```', message);
         const server = client.guilds.cache.get(args[0]);

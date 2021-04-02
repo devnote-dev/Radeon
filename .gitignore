@@ -6,6 +6,7 @@
 *.mp4
 
 # Hidden Directories
+anti-raid/
 images/
 node_modules/
 other files/

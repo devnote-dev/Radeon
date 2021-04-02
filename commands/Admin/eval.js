@@ -5,7 +5,7 @@ const { logAdmin } = require('../../console/consoleR');
 module.exports = {
     name: 'eval',
     guildOnly: true,
-    modOnly: 'void',
+    modOnly: 1,
     run: async (client, message, args) => {
         if (!args.length) return client.errEmb('No Code Provided.', message);
         const path = `${message.guild.id}/${message.channel.id}`;

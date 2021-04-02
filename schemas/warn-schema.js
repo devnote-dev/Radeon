@@ -10,8 +10,8 @@ const warnSchema = mongoose.Schema({
         required:  true
     },
     reason:        String,
-    mod?:          String,
-    date?:          Date
+    mod:           String,
+    date:          Date
 });
 
 module.exports = mongoose.model('Warns', warnSchema, 'Warns');

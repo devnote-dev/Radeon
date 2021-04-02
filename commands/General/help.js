@@ -18,39 +18,40 @@ module.exports = {
             .setFooter('Use "help [Command]" to get info on a specific command.');
             switch (search) {
                 case 'admin':
-                    search = 'admin';
+                    search = 'Admin';
                     break;
                 case 'general':
-                    search = 'general';
+                    search = 'General';
                     break;
                 case 'main':
                 case 'maintenance':
-                    search = 'maintenance';
+                    search = 'Maintenance';
                     break;
                 case 'mod':
                 case 'moderation':
-                    search = 'moderation';
+                    search = 'Moderation';
                     break;
                 case 'ss':
                 case 'settings':
                 case 'server settings':
-                    search = 'server settings';
+                    search = 'Server Settings';
                     break;
             }
-
+            
+            let desc = [];
             readdirSync('./commands/').forEach(dir => {
-                if (search === dir.toLowerCase()) {
+                if (search == dir) {
                     if (dir == 'Admin' && !isBotStaff(message.author.id)) return;
                     embed.setTitle(`Category: ${dir}`);
-                    let desc = [];
                     readdirSync(`./commands/${dir}/`).forEach(f => {
-                        if (!f.startsWith('.js')) return;
-                        const pull = require(`./commands/${dir}/${f}`);
-                        desc.push(`\`${pull.name}\`\n${pull.tag ?? 'No Additional Info.\n'}`);
+                        if (!f.endsWith('.js')) return;
+                        const pull = require(`../${dir}/${f}`);
+                        desc.push(`**${pull.name}**\n> ${pull.tag || 'No Additional Info.'}\n`);
                     });
-                    embed.setDescription(desc.join('\n'));
+                    valid = true;
                 }
             });
+            embed.setDescription(desc.join('\n'));
 
             if (valid) return message.channel.send(embed);
             const cmd = client.commands.get(search) || client.commands.get(client.aliases.get(search));
@@ -72,7 +73,7 @@ module.exports = {
                     return message.channel.send(embed);
                 }
             } else {
-                if (search.length >= 100) search = search.slice(0,100) + '...';
+                if (search.length >= 50) search = search.slice(0,50) + '...';
                 embed.setTitle('Help Error').setDescription(`No command or category with the name "${search}"`);
                 return message.channel.send(embed);
             }
@@ -87,7 +88,7 @@ module.exports = {
                 {name: '<:moderation:813778681914851421> Moderation', value: '`help mod`', inline: true},
                 {name: '⚙ Server Settings', value: '`help settings`', inline: true},
                 {name: '👮‍♂️ Anti-Raid', value: 'Coming Soon!', inline: true},
-                {name: '🔗 Links', value: '[Bot Invite](https://discord.com/api/oauth2/authorize?client_id=762359941121048616&permissions=8&scope=bot) | [Support Server](https://discord.gg/xcZwGhSy4G) | [Github Repository](https://github.com/Devnote/Radeon)', inline: false}
+                {name: '🔗 Links', value: '[Bot Invite](https://discord.com/api/oauth2/authorize?client_id=762359941121048616&permissions=8&scope=bot) | [Support Server](https://discord.gg/xcZwGhSy4G) | [Github Repo](https://github.com/devnote-dev/Radeon)', inline: false}
             )
             .setColor(0x1e143b);
             return message.channel.send(embed);

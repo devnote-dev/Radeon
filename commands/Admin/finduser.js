@@ -7,7 +7,7 @@ module.exports = {
     description: 'Fetches a user globally.',
     usage: 'finduser <User:Name/Mention/ID>',
     guildOnly: false,
-    modOnly: 'warn',
+    modOnly: 4,
     run: async (client, message, args) => {
         if (!args.length) return client.errEmb('No User Specified\n```\nfinduser <User:Name/Mention/ID>\n```', message);
         message.channel.startTyping();

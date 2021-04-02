@@ -35,7 +35,7 @@ module.exports = {
                 if (flag.name == 'thumb') embed.setThumbnail(flag.value);
                 if (flag.name == 'title') embed.setTitle(flag.value);
                 if (flag.name == 'url') embed.setURL(flfag.value);
-                if (flag.name == 'desc') embed.setDescription(flag.value);
+                if (flag.name == 'desc') embed.setDescription(flag.value.replace(/\n|\\n/gm, '\n'));
                 if (flag.name == 'color') embed.setColor(flag.value);
                 if (flag.name == 'image') embed.setImage(flag.value);
                 if (flag.name == 'footer') embed.setFooter(flag.value, embed.footer);
