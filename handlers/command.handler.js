@@ -15,5 +15,5 @@ module.exports = async client => {
             if (command.aliases && Array.isArray(command.aliases)) command.aliases.forEach(a => client.aliases.set(a, command.name));
         });
     });
-    client.stats._failed.append(Array.of<String>(failed));
+    client.stats._failed = failed;
 }
