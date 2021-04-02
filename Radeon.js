@@ -1,4 +1,5 @@
 const Discord = require('discord.js');
+const { readdirSync } = require('fs');
 const client = new Discord.Client({
     ws:{
         intents:[
@@ -9,7 +10,7 @@ const client = new Discord.Client({
             'GUILD_INVITES',
             'GUILD_MEMBERS',
             'GUILD_MESSAGES',
-            'GUILD_PRESENCES',
+            'GUILD_PRESENCES'
         ]
     },
     partials:[
@@ -22,15 +23,21 @@ const client = new Discord.Client({
         parse:['users']
     }
 });
-const { readdirSync } = require('fs');
 
 client.commands  = new Discord.Collection();
 client.aliases   = new Discord.Collection();
 client.cmdlogs   = new Set();
 client.cooldowns = new Map();
-client.rlcount   = 0;
 client.config    = require('./config.json');
 client.mongoose  = require('./mongo');
+client.rlcount   = 0;
+client.stats     = {
+    events   = 0,
+    commands = 0,
+    messages = 0,
+    _events  = 0,
+    _failed  = []
+};
 
 readdirSync('./handlers/').forEach(handler => {
     if (!handler.endsWith('.handler.js')) return;
