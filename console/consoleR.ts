@@ -10,8 +10,8 @@ function borderSmall() {
 
 async function botReady(client: any) {
     const loaded = client.commands.size;
-    const failed = client.commands.get('_failed');
-    const events = client.commands.get('_events');
+    const failed = client.stats._failed;
+    const events = client.stats._events;
     const guilds = client.guilds.cache.size;
     const state = await Settings.findOne({ client: client.user.id });
     let log = `\x1b[35mRadeon is Ready!\x1b[0m\n\n\x1b[32m${loaded}\x1b[0m Loaded Commands\n\x1b[31m${failed ? failed.length : 0}\x1b[0m Failed Commands\n\x1b[36m${events}\x1b[0m Loaded Events`;
@@ -37,6 +37,7 @@ function logShard(client: any, type: string, shard: number) {
         case 'recon': log += 'Reconnecting'; break;
         default: log += `Unknown: Invalid Log Request\nPath: ${__dirname}`;
     }
+    borderSmall();
     return console.log(log);
 }
 
@@ -53,6 +54,7 @@ function logDB(type: string, data?: any) {
             log = `\x1b[31mMONGO\x1b[0m | Disconnected\nServers may be temporarily unavailable.`;
             break;
     }
+    borderSmall();
     return console.log(log);
 }
 
