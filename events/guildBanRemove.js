@@ -4,11 +4,11 @@ const Guild = require('../schemas/guild-schema');
 exports.run = async (client, guild, user) => {
     const db = await Guild.findOne({ guildID: guild.id });
     const { modLogs } = db;
-    if (!modLogs.channel && !modLogs.bans) return;
+    if (!modLogs.channel || !modLogs.bans) return;
     let count = 0;
     let audit;
     while (!audit) {
-        audit = await guild.fetchAuditLogs({ type: 'MEMBER_BAN_REMOVE', limit: 3 });
+        audit = await guild.fetchAuditLogs({ type: 'MEMBER_BAN_REMOVE', user: user }).catch(()=>{});
         if (!audit) {
             count++;
             if (count == 3) break;
