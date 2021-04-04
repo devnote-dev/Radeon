@@ -75,11 +75,17 @@ exports.run = async (client, message) => {
         || message.content.toLowerCase().startsWith(client.config.prefix)
         || /^<@!?762359941121048616>\s+/gi.test(message.content)
     ) {
+        // I hate this mess but it works,
+        // please ignore it for the time being.
         let args;
         if (message.mentions.users.size) {
             let user = message.mentions.users.first();
             if (user.id === client.user.id) {
                 args = message.content.trim().split(/\s+|\n+/g).splice(1);
+            } else if (message.content.toLowerCase().startsWith(client.config.prefix)) {
+                args = message.content.slice(client.config.prefix.length).trim().split(/\s+|\n+/g);
+            } else {
+                args = message.content.slice(prefix.length).trim().split(/\s+|\n+/g);
             }
         } else if (message.content.toLowerCase().startsWith(client.config.prefix)) {
             args = message.content.slice(client.config.prefix.length).trim().split(/\s+|\n+/g);
@@ -87,6 +93,7 @@ exports.run = async (client, message) => {
             args = message.content.slice(prefix.length).trim().split(/\s+|\n+/g);
         }
 
+        if (!args.length) return;
         const cmd = args.shift().toLowerCase();
         if (!cmd.length) return;
         let command = client.commands.get(cmd) || client.commands.get(client.aliases.get(cmd));
