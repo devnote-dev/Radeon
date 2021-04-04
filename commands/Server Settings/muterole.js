@@ -7,7 +7,7 @@ module.exports = {
     description: 'Set\'s the mute role for this server.',
     usage: 'muterole <Role:Name/Mention/ID>\nmuterole reset',
     guildOnly: true,
-    permissions: 268435488,
+    userPerms: 32,
     run: async (client, message, args) => {
         if (!args.length) {
             const data = await Guild.findOne({guildID: message.guild.id});

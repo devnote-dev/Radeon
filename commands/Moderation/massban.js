@@ -8,7 +8,8 @@ module.exports = {
     description: 'Mass-bans multiple users (message optional). Reason must be in quotations, otherwise default is used.',
     usage: 'massban <...User:Mention/ID> [-m Reason:Text]',
     cooldown: 10,
-    permissions: 8,
+    userPerms: 8,
+    botPerms: 4,
     guildOnly: true,
     run: async (client, message, args) => {
         if (!args.length) return client.errEmb('Insufficient Arguments.\n```\nmassban <...User:Mention/ID> [-m Reason:Text]\n```', message);

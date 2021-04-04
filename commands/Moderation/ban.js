@@ -6,7 +6,8 @@ module.exports = {
     description: 'Bans a member from the server. `-dd <number>` flag is for the number of days the user\'s messages should be deleted (max 7).',
     usage: 'ban <User:Mention/ID> <Reason:text> [-dd <number>]',
     cooldown: 2,
-    permissions: 4,
+    userPerms: 4,
+    botPerms: 4,
     guildOnly: true,
     run: async (client, message, args) => {
         if (!args.length) return client.errEmb('No User Specified.\n```\nban <User:Mention/ID> <Reason:text> [-dd <number>]\n```', message);

@@ -6,7 +6,8 @@ module.exports = {
     description: 'Kicks a member from the server.',
     usage: 'kick <User:Mention/ID> [Reason:text]',
     cooldown: 2,
-    permissions: 2,
+    userPerms: 2,
+    botPerms: 2,
     guildOnly: true,
     run: async (client, message, args) => {
         if (!args.length) return client.errEmb('No User Specified.\n```\nkick <User:Mention/ID> [Reason:text]\n```', message);

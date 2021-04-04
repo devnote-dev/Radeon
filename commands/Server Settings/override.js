@@ -6,7 +6,7 @@ module.exports = {
     aliases: ['overrides'],
     description: 'Shows the current ignored channels or commands and allows for them to be edited using the subcommands shown below.',
     usage: 'override add-channels <...Channel:Mention/ID>\noverride del-channels <...Channel:Mention/ID>\noverride add-commands <...Command:Name>\noverride del-commands <...Command:Name>',
-    permissions: 32,
+    userPerms: 32,
     guildOnly: true,
     modBypass: true,
     run: async (client, message, args) => {

@@ -6,7 +6,8 @@ module.exports = {
     description: 'Unbans a specified user from the server.',
     usage: 'unban <User:ID> [Reason:text]',
     cooldown: 2,
-    permissions: 4,
+    userPerms: 4,
+    botPerms: 4,
     guildOnly: true,
     run: async (client, message, args) => {
         if (!args.length) return client.errEmb('No User Specified.\n```\nunban <User:ID> [Reason:text]\n```', message);

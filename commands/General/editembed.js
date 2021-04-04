@@ -7,7 +7,8 @@ module.exports = {
     description: 'Edits an existing embed sent by Radeon using JSON string.',
     usage: 'editembed <Message:ID> <JSON:Text>',
     cooldown: 3,
-    permissions: 8192,
+    userPerms: 8192,
+    botPerms: 24576,
     guildOnly: true,
     run: async (client, message, args) => {
         if (args.length < 2) return client.errEmb('Insufficient Arguments Specified.\n```\neditembed <Message:ID> <JSON:Text>\n```', message);

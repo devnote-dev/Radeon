@@ -7,7 +7,6 @@ module.exports = {
     description: 'Creates a custom embed via command flags.',
     usage: 'embed <...Flags>\n-raw "message\n-author "author message"\n-aicon "author iconURL"\n-thumb "thumbnail URL"\n-title "title message"\n-url "title URL"\n-desc "description message"\n-color "HEX/DECIMAL"\n-image "image URL"\n-footer "footer message"\n-ficon "footer iconURL"\n-ts (timestamp)',
     cooldown: 3,
-    permissions: 16384,
     guildOnly: true,
     run: async (client, message, args) => {
         if (!args.length) return client.errEmb('No Arguments Provided.\n```\nembed <...Flags>\n```', message);

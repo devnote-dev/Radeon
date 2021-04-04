@@ -6,7 +6,7 @@ module.exports = {
     tag: 'Warns a specified user',
     description: 'Warns a specified user.',
     usage: 'warn <User:Mention/ID> <Reason:Text>',
-    permissions: 8192,
+    userPerms: 8192,
     guildOnly: true,
     run: async (client, message, args) => {
         if (!args.length) return client.errEmb('Insufficient Arguments.\n```\nwarn <User:Mention/ID> <Reason:Text>\n```', message);

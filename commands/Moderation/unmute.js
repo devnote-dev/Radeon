@@ -7,7 +7,8 @@ module.exports = {
     tag: 'Unmutes a muted user',
     description: 'Unmutes a muted user.',
     usage: 'unmute <User:Mention/ID> [Reason:Text]',
-    permissions: 268435456,
+    userPerms: 8192,
+    botPerms: 268435456,
     guildOnly: true,
     run: async (client, message, args) => {
         const { muteRole, modLogs } = await Guild.findOne({guildID: message.guild.id});

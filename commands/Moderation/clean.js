@@ -8,7 +8,8 @@ module.exports = {
     description: 'Deletes a number of messages in a channel (min 1, max 100).\n\n**Flags:**\n`-users` - Deletes only user messages\n`-bots` - Deletes only bot messages\n`-nopin` - Deletes messages that aren\'t pinned\n`-r <Regex>` - Deletes messages matching the pattern',
     usage: 'clean <Amount:Number>\nclean <Amount:Number> [User:Mention/ID]\nclean <Amount:Number> [...Flags]',
     cooldown: 4,
-    permissions: 8192,
+    userPerms: 8192,
+    botPerms: 8192,
     guildOnly: true,
     run: async (client, message, args) => {
         if (!args.length) return client.errEmb('No Amount Specified.\n```\nclean <Amount:Number>\nclean <Amount:Number> [User:Mention/ID]\nclean <Amount:Number> [...Flags]\n```\n**Flags:**\n`-users` - Users only\n`-bots` - Bots Only\n`-r <Regex>` - Messages that match a certain regex.', message);

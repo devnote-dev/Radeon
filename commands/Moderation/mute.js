@@ -8,7 +8,8 @@ module.exports = {
     tag: 'Mutes a specified user for a certain time',
     description: 'Mutes a specified user for a certain time.',
     usage: 'mute <User:Mention/ID> [Time:Duration] <Reason:Text>',
-    permissions: 8192,
+    userPerms: 8192,
+    botPerms: 268435456,
     guildOnly: true,
     run: async (client, message, args) => { 
         const { muteRole, modLogs } = await Guild.findOne({guildID: message.guild.id});
