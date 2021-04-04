@@ -93,7 +93,12 @@ function logShard(client, type, shard) {
         case 'recon':
             log += 'Reconnecting';
             break;
-        default: log += "Unknown: Invalid Log Request\nPath: " + __dirname;
+        case 'resume':
+            log += 'Resumed';
+            break;
+        default:
+            log += "Unknown: Invalid Log Request\nPath: " + __dirname;
+            break;
     }
     borderSmall();
     return console.log(log);
