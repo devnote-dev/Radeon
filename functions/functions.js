@@ -27,24 +27,21 @@ exports.toDurationDays = toDurationDays;
 function isBotStaff(id) {
     if (config_json_1.botOwners.includes(id) || config_json_1.botAdmins.includes(id))
         return true;
-    return false;
+    else
+        return false;
 }
 exports.isBotStaff = isBotStaff;
-function isBotOwner(id) {
-    if (config_json_1.botOwners.includes(id))
-        return true;
-    return false;
-}
+function isBotOwner(id) { return config_json_1.botOwners.includes(id); }
 exports.isBotOwner = isBotOwner;
 function humanize(permissions) {
-    var permStr = [];
+    var perms = [];
     permissions.toArray().forEach(function (p) {
         var r = '';
         p.replace(/_/g, ' ').split(' ').forEach(function (w) {
             r += w.split('')[0] + w.slice(1).toLowerCase() + ' ';
         });
-        permStr.push(r.trim());
+        perms.push(r.trim());
     });
-    return permStr.join('`, `');
+    return perms;
 }
 exports.humanize = humanize;

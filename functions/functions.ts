@@ -24,25 +24,21 @@ function toDurationDays(ms: number) {
 }
 
 function isBotStaff(id: string) {
-    if (botOwners.includes(id) || botAdmins.includes(id)) return true;
-    return false;
+    if (botOwners.includes(id) || botAdmins.includes(id)) return true; else return false;
 }
 
-function isBotOwner(id: string) {
-    if (botOwners.includes(id)) return true;
-    return false;
-}
+function isBotOwner(id: string): boolean { return botOwners.includes(id) }
 
-function humanize(permissions: Permissions) {
-    let permStr = [];
+function humanize(permissions: Permissions): string[] {
+    let perms = [];
     permissions.toArray().forEach(p => {
         let r = '';
         p.replace(/_/g, ' ').split(' ').forEach(w => {
             r += w.split('')[0] + w.slice(1).toLowerCase() + ' ';
         });
-        permStr.push(r.trim());
+        perms.push(r.trim());
     });
-    return permStr.join('`, `');
+    return perms;
 }
 
 export {
