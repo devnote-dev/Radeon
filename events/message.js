@@ -195,7 +195,7 @@ exports.run = async (client, message) => {
                                 }
                             }
                         } else {
-                            return channel.send(`You are missing the \`${humanize(new Permissions(command.userPerms))}\` permission(s) to use this command.`);
+                            return channel.send(`You are missing the \`${humanize(new Permissions(command.userPerms)).join('`, `')}\` permission(s) to use this command.`);
                         }
                     } else {
                         if (isOnCooldown(client, author, command)) {
@@ -213,7 +213,7 @@ exports.run = async (client, message) => {
                         }
                     }
                 } else {
-                    return channel.send(`I am missing the \`${humanize(new Permissions(command.botPerms))}\` permission(s) for this command.`);
+                    return channel.send(`I am missing the \`${humanize(new Permissions(command.botPerms)).join('`, `')}\` permission(s) for this command.`);
                 }
             } else if (command.userPerms) {
                 if (message.member.permissions.has(command.userPerms)) {
@@ -231,7 +231,7 @@ exports.run = async (client, message) => {
                         }
                     }
                 } else {
-                    return channel.send(`You are missing the \`${humanize(new Permissions(command.userPerms))}\` permission(s) to use this command.`);
+                    return channel.send(`You are missing the \`${humanize(new Permissions(command.userPerms)).join('`, `')}\` permission(s) to use this command.`);
                 }
             }
 
