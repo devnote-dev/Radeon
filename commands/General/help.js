@@ -73,7 +73,7 @@ module.exports = {
                     return message.channel.send(embed);
                 }
             } else {
-                if (search.length >= 50) search = search.slice(0,50) + '...';
+                if (search.length >= 20) search = search.slice(0,20) + '...';
                 embed.setTitle('Help Error').setDescription(`No command or category with the name "${search}"`);
                 return message.channel.send(embed);
             }
