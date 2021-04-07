@@ -18,7 +18,7 @@ module.exports = {
 
         if (!user) {
             message.channel.stopTyping();
-            if (/\D+/g.test(q)) return client.errEmb('User Not Found. Try using ID for API fetch.', message);
+            if (/\D+/g.test(q)) return client.errEmb('User Not Found. Try using User ID.', message);
             try {
                 user = await client.users.fetch(q, true);
                 if (!user) return client.errEmb('User is not available.', message);
@@ -38,7 +38,7 @@ module.exports = {
         .addField('ID', `${user.id}`, true)
         .addField('Avatar', `[Download Link 📥](${user.displayAvatarURL({dynamic: true})})`, true)
         .addField('Account Age', toDurationDefault(user.createdTimestamp), false)
-        .addField('Mutuals', `\`\`\`\n${mutuals}\n\`\`\``, false)
+        .addField('Mutuals', `\`\`\`\n${mutuals || 'None'}\n\`\`\``, false)
         .setColor(0x1e143b)
         .setThumbnail(user.displayAvatarURL({dynamic: true}))
         .setFooter(`Triggered By ${message.author.tag}`, message.author.displayAvatarURL());
