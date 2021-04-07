@@ -10,11 +10,14 @@ module.exports = {
     cooldown: 5,
     guildOnly: true,
     run: async (client, message, args) => {
-        let target = message.author;
-        if (args.length) target = message.mentions.users.first() || message.guild.member(args[0]).user;
+        let target = message.member;
+        if (args.length) target = message.mentions.members.first() || message.guild.members.cache.get(args[0]);
         if (!target) return client.errEmb('Invalid Member Specified.', message);
-        const member = message.guild.member(target);
-        let color = member.roles.cache.find(r => r.hexColor != '#000000');
+        const member = target;
+        target = target.user;
+        let color = member.roles.cache
+            .sort((a,b) => b.position - a.position)
+            .find(r => r.hexColor != '#000000');
         if (!color || !color.hexColor) color = 0x2f3136; else color = color.hexColor;
 
         switch (target.presence.status) {
@@ -45,6 +48,19 @@ module.exports = {
             if (!presence.length) presence = 'Unknown Activity';
         }
 
+        let roles = [], rest = 0;
+        if (member.roles.cache.size) {
+            member.roles.cache
+            .sort((a, b) => b.position - a.position)
+            .forEach(r => roles.push(r));
+            if (roles.length > 5) {
+                roles = roles.slice(0, 5);
+                rest = member.roles.cache.size - 5;
+            }
+            roles = roles.join(', ');
+            if (rest) roles += `... +${rest} more`;
+        }
+
         let totalf = '';
         const flags = {
             'HOUSE_BRAVERY': '<:hypesquad_bravery:815679606656204831>',
@@ -72,7 +88,8 @@ module.exports = {
         .addField('Avatar', `[Download Link 📥](${target.displayAvatarURL({dynamic: true})})`, true)
         .addField('Account Age', `${target.createdAt.toDateString()}\n${toDurationDefault(target.createdTimestamp)}`, false)
         .addField('Server Member Age', `${member.joinedAt.toDateString()}\n${toDurationDefault(member.joinedTimestamp)}`, false)
-        .addField('Presence', presence, true)
+        .addField('Presence', presence, false)
+        .addField('Roles', roles, false)
         .setColor(color)
         .setThumbnail(target.displayAvatarURL({dynamic: true}))
         .setFooter(`Triggered By ${message.author.tag}`, message.author.displayAvatarURL());
