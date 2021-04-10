@@ -9,7 +9,11 @@ exports.run = async (client, oldMem, newMem) => {
     if (!gData.muteRole) return;
     const mData = await Muted.findOne({guildID: guild.id}).catch(()=>{});
     if (!mData.mutedList.length) return;
-    if (oldMem.roles.cache.has(gData.muteRole) && !newMem.roles.cache.has(gData.muteRole) && mData.mutedList.includes(newMem.user.id)) {
+    if (
+        oldMem.roles.cache.has(gData.muteRole)
+        && !newMem.roles.cache.has(gData.muteRole)
+        && mData.mutedList.includes(newMem.user.id)
+    ) {
         newMem.roles.add(gData.muteRole).catch(()=>{});
     }
 }
