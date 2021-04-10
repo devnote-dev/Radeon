@@ -10,9 +10,8 @@ exports.run = async client => {
             type: 'WATCHING'
         }
     });
+    client.stats.events++;
     const { guilds, users } = client.config.logs;
-    if (!guilds) return;
-    client.channels.cache.get(guilds).setName(`│🌐» ${client.guilds.cache.size}`).catch(()=>{});
-    if (!users) return;
-    client.channels.cache.get(users).setName(`│👥» ${client.users.cache.size}`).catch(()=>{});
+    if (client.channels.cache.has(guilds)) client.channels.cache.get(guilds).setName(`│🌐» ${client.guilds.cache.size}`).catch(()=>{});
+    if (client.channels.cache.has(users)) client.channels.cache.get(users).setName(`│👥» ${client.users.cache.size}`).catch(()=>{});
 }
