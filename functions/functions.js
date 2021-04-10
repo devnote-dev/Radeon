@@ -3,10 +3,11 @@ exports.__esModule = true;
 exports.humanize = exports.isBotOwner = exports.isBotStaff = exports.toDurationDays = exports.toDurationLong = exports.toDurationDefault = void 0;
 var config_json_1 = require("../config.json");
 function toDurationDefault(ms) {
+    ms = Math.abs(ms);
     var secs = Math.floor((ms / 1000) % 60).toString();
     var mins = Math.floor((ms / 1000 * 60) % 60).toString();
     var hours = Math.floor((ms / 1000 * 60 * 60) % 24).toString();
-    var days = Math.floor((ms / 1000 * 60 * 60 * 24) % 60).toString();
+    var days = Math.floor((ms / 1000 * 60 * 60 * 24) % 30).toString();
     return days + " days " + hours + " hours " + mins + " minutes and " + secs + " seconds";
 }
 exports.toDurationDefault = toDurationDefault;
