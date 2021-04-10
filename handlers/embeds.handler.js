@@ -5,7 +5,7 @@ module.exports = async client => {
         const e = new MessageEmbed()
         .setDescription('<:checkgreen:796925441771438080> '+ msg)
         .setColor(0x00d134);
-        if (channel instanceof Message) {
+        if (ctx instanceof Message) {
             return ctx.channel.send(e);
         } else {
             return ctx.send(e);
@@ -16,7 +16,7 @@ module.exports = async client => {
         const e = new MessageEmbed()
         .setDescription('<:crossred:796925441490681889> '+ msg)
         .setColor(0xd10000);
-        if (channel instanceof Message) {
+        if (ctx instanceof Message) {
             return ctx.channel.send(e);
         } else {
             return ctx.send(e);
@@ -27,7 +27,7 @@ module.exports = async client => {
         const e = new MessageEmbed()
         .setDescription('ℹ️ '+ msg)
         .setColor(0x0054d1);
-        if (channel instanceof Message) {
+        if (ctx instanceof Message) {
             return ctx.channel.send(e);
         } else {
             return ctx.send(e);
