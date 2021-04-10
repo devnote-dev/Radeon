@@ -1,6 +1,6 @@
-const Discord = require('discord.js');
+const { Client, Collection } = require('discord.js');
 const { readdirSync } = require('fs');
-const client = new Discord.Client({
+const client = new Client({
     ws:{
         intents:[
             'DIRECT_MESSAGES',
@@ -24,14 +24,15 @@ const client = new Discord.Client({
     }
 });
 
-client.commands  = new Discord.Collection();
-client.aliases   = new Discord.Collection();
-client.cmdlogs   = new Set();
-client.cooldowns = new Map();
-client.config    = require('./config.json');
-client.mongoose  = require('./mongo');
-client.rlcount   = 0;
-client.stats     = {
+client.commands   = new Collection();
+client.aliases    = new Collection();
+client.ratelimits = new Collection();
+client.cmdlogs    = new Set();
+client.cooldowns  = new Map();
+client.config     = require('./config.json');
+client.mongoose   = require('./mongo');
+client.rlcount    = 0;
+client.stats      = {
     events:   0,
     commands: 0,
     messages: 0,
