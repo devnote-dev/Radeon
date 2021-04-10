@@ -260,15 +260,12 @@ exports.run = async (client, message) => {
                 return errNoExec(message, command.name);
             }
         }
-
-    // Disabled until messageCheck is debugged and fixed.
-
-    // } else {
-    //     if (automod.active) {
-    //         if (automod.invites || automod.massMention.active) {
-    //             require('../functions/messageCheck')(client, message, automod);
-    //         }
-    //     }
+    } else {
+        try {
+            require('../functions/amod-main')(client, message, automod);
+        } catch (err) {
+            logError(err, channel.id, author.id);
+        }
     }
 }
 
