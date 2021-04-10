@@ -2,6 +2,7 @@ const Discord = require('discord.js');
 const Util = Discord.Util;
 const { inspect } = require('util');
 const { logAdmin } = require('../../console/consoleR');
+const _funcs = require('../../functions/functions');
 
 module.exports = {
     name: 'eval',
