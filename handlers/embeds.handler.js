@@ -1,27 +1,40 @@
-const {MessageEmbed} = require('discord.js');
+const { Message, MessageEmbed } = require('discord.js');
 
 module.exports = async client => {
-    client.checkEmb = (msg, message) => {
+    client.checkEmb = (msg, ctx) => {
         const e = new MessageEmbed()
         .setDescription('<:checkgreen:796925441771438080> '+ msg)
         .setColor(0x00d134);
-        return message.channel.send(e);
+        if (channel instanceof Message) {
+            return ctx.channel.send(e);
+        } else {
+            return ctx.send(e);
+        }
     }
 
-    client.errEmb = (msg, message) => {
+    client.errEmb = (msg, ctx) => {
         const e = new MessageEmbed()
         .setDescription('<:crossred:796925441490681889> '+ msg)
         .setColor(0xd10000);
-        return message.channel.send(e);
+        if (channel instanceof Message) {
+            return ctx.channel.send(e);
+        } else {
+            return ctx.send(e);
+        }
     }
 
-    client.infoEmb = (msg, message) => {
+    client.infoEmb = (msg, ctx) => {
         const e = new MessageEmbed()
         .setDescription('ℹ️ '+ msg)
         .setColor(0x0054d1);
-        return message.channel.send(e);
+        if (channel instanceof Message) {
+            return ctx.channel.send(e);
+        } else {
+            return ctx.send(e);
+        }
     }
 
+    // deprecated
     client.logEmb = (msg, user, channel) => {
         const e = new MessageEmbed()
         .setTitle('Automod Triggered')
