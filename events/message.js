@@ -7,6 +7,7 @@ const Settings = require('../schemas/settings-schema');
 exports.run = async (client, message) => {
     const { author, channel } = message;
     if (author.bot) return;
+    const path = `${message.guild.id}/${channel.id}`;
 
     const state = await Settings.findOne({ client: client.user.id });
     let lock = false;
@@ -61,7 +62,7 @@ exports.run = async (client, message) => {
             if (!guild) {
                 client.emit('guildCreate', message.guild);
             } else if (err) {
-                logError(err, channel.id);
+                logError(err, path);
             }
         }
     );
@@ -114,7 +115,7 @@ exports.run = async (client, message) => {
                             await command.run(client, message, args);
                             break;
                         } catch (err) {
-                            logError(err, channel.id, author.id);
+                            logError(err, path, author.id);
                             errNoExec(message, command.name);
                             break;
                         }
@@ -128,7 +129,7 @@ exports.run = async (client, message) => {
                             await command.run(client, message, args);
                             break;
                         } catch (err) {
-                            logError(err, channel.id, author.id);
+                            logError(err, path, author.id);
                             errNoExec(message, command.name);
                             break;
                         }
@@ -148,7 +149,7 @@ exports.run = async (client, message) => {
                             await command.run(client, message, args);
                             break;
                         } catch (err) {
-                            logError(err, channel.id, author.id);
+                            logError(err, path, author.id);
                             errNoExec(message, command.name);
                             break;
                         }
@@ -162,7 +163,7 @@ exports.run = async (client, message) => {
                             await command.run(client, message, args);
                             break;
                         } catch (err) {
-                            logError(err, channel.id, author.id);
+                            logError(err, path, author.id);
                             errNoExec(message, command.name);
                             break;
                         }
@@ -190,7 +191,7 @@ exports.run = async (client, message) => {
                                     client.stats.commands++;
                                     await command.run(client, message, args);
                                 } catch (err) {
-                                    logError(err, channel.id, author.id);
+                                    logError(err, path, author.id);
                                     return errNoExec(message, command.name);
                                 }
                             }
@@ -207,7 +208,7 @@ exports.run = async (client, message) => {
                                 client.stats.commands++;
                                 await command.run(client, message, args);
                             } catch (err) {
-                                logError(err, channel.id, author.id);
+                                logError(err, path, author.id);
                                 return errNoExec(message, command.name);
                             }
                         }
@@ -226,7 +227,7 @@ exports.run = async (client, message) => {
                             client.stats.commands++;
                             await command.run(client, message, args);
                         } catch (err) {
-                            logError(err, channel.id, author.id);
+                            logError(err, path, author.id);
                             return errNoExec(message, command.name);
                         }
                     }
@@ -245,7 +246,7 @@ exports.run = async (client, message) => {
                     client.stats.commands++;
                     await command.run(client, message, args);
                 } catch (err) {
-                    logError(err, channel.id, author.id);
+                    logError(err, path, author.id);
                     return errNoExec(message, command.name);
                 }
             }
@@ -256,15 +257,26 @@ exports.run = async (client, message) => {
                 client.stats.commands++;
                 await command.run(client, message, args);
             } catch (err) {
-                logError(err, channel.id, author.id);
+                logError(err, path, author.id);
                 return errNoExec(message, command.name);
             }
         }
     } else {
-        try {
-            require('../functions/amod-main')(client, message, automod);
-        } catch (err) {
-            logError(err, channel.id, author.id);
+        if (!automod.active) return;
+        if (!channel.permissionsFor(message.guild.me).has(10240)) return;
+        if (automod.invites || automod.massMention.active) {
+            try {
+                require('../functions/amod-main')(message, automod);
+            } catch (err) {
+                logError(err, path);
+            }
+        }
+        if (automod.rateLimit) {
+            try {
+                require('../functions/amod-ratelimit')(client, message, automod);
+            } catch (err) {
+                logError(err, path);
+            }
         }
     }
 }
