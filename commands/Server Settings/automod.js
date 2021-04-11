@@ -115,7 +115,7 @@ module.exports = {
                 }
 
             } else if (sub === 'logchannel') {
-                if (args[1]) return client.errEmb('No Option Specified.\n```\nautomod logchannel <Channel:Mention/ID>\nautomod logchannel remove\n```', message);
+                if (!args[1]) return client.errEmb('No Option Specified.\n```\nautomod logchannel <Channel:Mention/ID>\nautomod logchannel remove\n```', message);
                 if (args[1].toLowerCase() === 'remove') {
                     if (!channel) return client.infoEmb('There is no Automod log channel setup.', message);
                     _channel = '';
