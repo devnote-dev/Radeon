@@ -1,8 +1,5 @@
 // Automod Main: message filter v2
 // Current Issues: None
-//
-// Notes:
-// - remove try{any}catch{void}
 
 const { MessageEmbed } = require("discord.js");
 
@@ -18,7 +15,7 @@ function amodEmbed(message, user, channel) {
     .setTimestamp();
 }
 
-module.exports = async (client, message, automod) => {
+module.exports = async (message, automod) => {
     let channel;
     if (automod.channel) channel = message.guild.channels.cache.get(automod.channel);
 
@@ -38,9 +35,7 @@ module.exports = async (client, message, automod) => {
                         channel.send(amodEmbed(`Invite Code Sent: \`${matches[1]}\``, message.author, message.channel));
                     }
                     message.reply('Invites are not allowed here.');
-                } catch (err) {
-                    console.error(err);
-                }
+                } catch {}
             }
         }
 
