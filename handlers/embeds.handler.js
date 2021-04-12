@@ -1,4 +1,4 @@
-const { Message, MessageEmbed } = require('discord.js');
+const { Guild, Message, MessageEmbed } = require('discord.js');
 
 module.exports = async client => {
     client.checkEmb = (msg, ctx) => {
@@ -34,16 +34,16 @@ module.exports = async client => {
         }
     }
 
-    // deprecated
-    client.logEmb = (msg, user, channel) => {
+    client.actionDM = (action, ctx, message) => {
         const e = new MessageEmbed()
-        .setTitle('Automod Triggered')
-        .addFields(
-            {name: 'Rule Triggered', value: msg, inline: false},
-            {name: 'User', value: `• ${user.tag}\n• ${user.id}`, inline: true},
-            {name: 'Channel', value: `• ${channel}\n• ${channel.id}`, inline: true}
-        )
-        .setColor('ORANGE').setTimestamp();
+        .setTitle(`You have been ${action}!`)
+        .setDescription(message)
+        .setColor(0x1e143b);
+        if (ctx instanceof Guild) {
+            e.setFooter(`Sent from ${ctx.name}`, ctx.iconURL({dynamic: true}));
+        } else if (ctx instanceof Message) {
+            e.setFooter(`Sent from ${ctx.guild.name}`, ctx.guild.iconURL({dynamic: true}));
+        }
         return e;
     }
 }
