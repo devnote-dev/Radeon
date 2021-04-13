@@ -18,6 +18,7 @@ const guildSchema = mongoose.Schema({
         }
     },
     muteRole:               String,
+    everyoneRole:           String,
     ignoredCommands:{
         type:               [String],
         default:            []
