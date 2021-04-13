@@ -1,7 +1,7 @@
 "use strict";
 exports.__esModule = true;
 exports.humanize = exports.isBotOwner = exports.isBotStaff = exports.toDurationDays = exports.toDurationLong = exports.toDurationDefault = void 0;
-var config_json_1 = require("../config.json");
+var config_json_1 = require("../../config.json");
 function toDurationDefault(ms) {
     ms = Math.abs(ms);
     var secs = Math.floor((ms / 1000) % 60).toString();

@@ -39,11 +39,11 @@ module.exports = {
             }
             
             let desc = [];
-            readdirSync('./commands/').forEach(dir => {
+            readdirSync('./src/commands/').forEach(dir => {
                 if (search == dir) {
                     if (dir == 'Admin' && !isBotStaff(message.author.id)) return;
                     embed.setTitle(`Category: ${dir}`);
-                    readdirSync(`./commands/${dir}/`).forEach(f => {
+                    readdirSync(`./src/commands/${dir}/`).forEach(f => {
                         if (!f.endsWith('.js')) return;
                         const pull = require(`../${dir}/${f}`);
                         desc.push(`**${pull.name}**\n> ${pull.tag || 'No Additional Info.'}\n`);

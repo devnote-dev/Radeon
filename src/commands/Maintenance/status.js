@@ -1,5 +1,6 @@
 const Discord = require('discord.js');
-const { version } = require('../../package.json');
+const { join } = require('path');
+const { version } = require(join(process.cwd(), 'package.json'));
 const { toDurationDefault } = require('../../functions/functions');
 
 module.exports = {

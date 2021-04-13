@@ -29,7 +29,7 @@ client.aliases    = new Collection();
 client.ratelimits = new Collection();
 client.cmdlogs    = new Set();
 client.cooldowns  = new Map();
-client.config     = require('./config.json');
+client.config     = require('../config.json');
 client.mongoose   = require('./mongo');
 client.rlcount    = 0;
 client.stats      = {
@@ -41,7 +41,7 @@ client.stats      = {
     _failed:    []
 };
 
-readdirSync('./handlers/').forEach(handler => {
+readdirSync('./src/handlers/').forEach(handler => {
     if (!handler.endsWith('.handler.js')) return;
     require(`./handlers/${handler}`)(client);
 });

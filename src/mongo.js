@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const { MongoPath } = require('./config.json');
+const { MongoPath } = require('../config.json');
 const { logDB } = require('./console/consoleR');
 
 module.exports = {

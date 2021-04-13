@@ -7,13 +7,13 @@
 
 # Hidden Directories
 anti-raid/
-commands/Moderation/_logs.txt
 images/
 node_modules/
 other files/
 web/*.*
 
-# Secret Files
+# Private Files
 .vscode
-commands/Admin/test.js
+src/commands/Admin/_logs.txt
+src/commands/Admin/test.js
 config.json
