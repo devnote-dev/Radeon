@@ -7,7 +7,7 @@ const Settings = require('../schemas/settings-schema');
 exports.run = async (client, message) => {
     const { author, channel } = message;
     if (author.bot) return;
-    const path = `${message.guild.id}/${channel.id}`;
+    const path = `${message.guild ? message.guild.id +'/' : ''}${channel.id}`;
 
     const state = await Settings.findOne({ client: client.user.id });
     let lock = false;
