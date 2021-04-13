@@ -1,7 +1,7 @@
-const { token } = require('./config.json');
+const { token } = require('../config.json');
 const { ShardingManager } = require('discord.js');
 const { logShardSpawn } = require('./console/consoleR');
-const manager = new ShardingManager(`./Radeon.js`, {
+const manager = new ShardingManager('./src/Radeon.js', {
     totalShards: 'auto',
     respawn: true,
     token: token

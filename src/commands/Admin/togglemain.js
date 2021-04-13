@@ -7,16 +7,11 @@ module.exports = {
     modOnly: 1,
     run: async (client, message) => {
         const state = await Settings.findOne({ client: client.user.id });
-        switch (state.maintenance) {
-            case true: newstate = false; break;
-            case false: newstate = true; break;
-            default: newstate = false; break;
-        }
         await Settings.findOneAndUpdate(
             { client: client.user.id },
-            { $set:{ maintenance: newstate }},
+            { $set:{ maintenance: !state }},
             { new: true }
         );
-        return client.checkEmb(`Maintenance Mode Successfully ${newstate ? 'Disabled' : 'Enabled'}!`, message);
+        return client.checkEmb(`Maintenance Mode Successfully ${!state ? 'Enabled' : 'Disabled'}!`, message);
     }
 }

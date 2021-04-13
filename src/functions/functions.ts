@@ -1,4 +1,4 @@
-import { botOwners, botAdmins } from "../config.json";
+import { botOwners, botAdmins } from "../../config.json";
 import { Permissions, SnowflakeUtil } from "discord.js";
 const { deconstruct } = SnowflakeUtil;
 
