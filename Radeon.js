@@ -33,11 +33,12 @@ client.config     = require('./config.json');
 client.mongoose   = require('./mongo');
 client.rlcount    = 0;
 client.stats      = {
-    events:   0,
-    commands: 0,
-    messages: 0,
-    _events:  0,
-    _failed:  []
+    events:     0,
+    commands:   0,
+    messages:   0,
+    background: 0,
+    _events:    0,
+    _failed:    []
 };
 
 readdirSync('./handlers/').forEach(handler => {

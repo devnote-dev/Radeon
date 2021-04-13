@@ -25,6 +25,7 @@ module.exports = async client => {
                     remove.forEach(i => require('../commands/Moderation/unmute')._selfexec(client, GS.guildID, i));
                 }
             });
+            client.stats.background++;
         } catch (err) {
             logError(err, __dirname);
         }
