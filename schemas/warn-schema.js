@@ -5,10 +5,7 @@ const warnSchema = mongoose.Schema({
         type:      String,
         required:  true
     },
-    userid:{
-        type:      String,
-        required:  true
-    },
+    userid:        String,
     reason:        String,
     mod:           String,
     date:          Date
