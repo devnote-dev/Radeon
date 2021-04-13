@@ -1,5 +1,6 @@
 // Automod Main: message filter v2
 // Current Issues: None
+// © Radeon Development 2021 (GNU GPL v3)
 
 const { MessageEmbed } = require("discord.js");
 

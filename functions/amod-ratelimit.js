@@ -11,7 +11,8 @@
 //     AFTER: save userState to channelState; save channelState to guildState;
 //     save guildState to client.ratelimits;
 //
-// Efficiency: unknown, async works: unknown
+// Efficiency: unknown
+// © Radeon Development 2021 (GNU GPL v3)
 
 const { Collection, MessageEmbed } = require("discord.js");
 
