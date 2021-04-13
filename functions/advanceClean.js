@@ -1,11 +1,11 @@
-require('discord.js');
-const re2 = require('re2');
+// Advanced Clean Processor
+// Current Issues: None
+// © Radeon Development 2021 (GNU GPL v3)
 
 module.exports = async (message, amount, options) => {
-    let { target, flagUsers, flagBots, flagNopin, flagRegex } = options;
-    let filtered = [], count = 0, regex;
+    const { target, flagUsers, flagBots, flagNopin, flagHas } = options;
+    let filtered = [], count = 0;
     const messages = await message.channel.messages.fetch({limit: 100});
-    if (flagRegex) regex = new re2(flagRegex, 'gm');
 
     if (target || flagUsers || flagBots) {
         messages.array().forEach(msg => {
@@ -28,21 +28,20 @@ module.exports = async (message, amount, options) => {
             }
         });
     } else {
-        filtered = messages.array();
+        messages.array().forEach(msg => {
+            if (count > amount) return;
+            filtered.push(msg);
+        });
     }
 
     if (flagNopin) {
-        let temp = [];
-        filtered.forEach(msg => {
-            if (!msg.pinned) temp.push(msg);
-        });
+        const temp = [];
+        filtered.forEach(msg => { if (!msg.pinned) temp.push(msg) });
         filtered = temp;
     }
-    if (regex) {
-        let temp = [];
-        filtered.forEach(msg => {
-            if (regex.test(msg.content)) temp.push(msg);
-        });
+    if (flagHas) {
+        const temp = [];
+        filtered.forEach(msg => { if (msg.content.includes(flagHas)) temp.push(msg) });
         filtered = temp;
     }
 
