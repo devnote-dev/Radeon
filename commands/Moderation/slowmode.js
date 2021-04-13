@@ -8,7 +8,8 @@ module.exports = {
     description: 'Sets the slowmode time for the triggering channel. To disable slowmode put `0` or `off`.',
     usage: 'slowmode <Time:Duration> [Reason:Text]\nslowmode off',
     cooldown: 2,
-    permissions: 16,
+    userPerms: 8192,
+    botPerms: 16,
     guildOnly: true,
     run: async (client, message, args) => {
         if (!args.length) return client.errEmb('No Duration Specified.\n```\nslowmode <Time:Duration> [Reason:Text]\nslowmode off\n```', message);

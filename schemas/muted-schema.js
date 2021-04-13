@@ -6,8 +6,8 @@ const mutedSchema = mongoose.Schema({
         required:   true
     },
     mutedList:{
-        type:       [String],
-        default:    []
+        type:       Map,
+        default:    new Map()
     }
 });
 

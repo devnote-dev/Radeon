@@ -14,14 +14,12 @@ exports.run = async (client, guild) => {
         prefix: client.config.prefix,
         modLogs:{channel:''},
         muteRole: '',
+        everyoneRole: '',
         ignoredChannels: [],
         ignoredCommands: [],
         automod:{active:false, channel:'', invites:false, rateLimit:false, massMention:{active:false},badWords:{active:false}}
     }).save();
-    console.log(`Mongoose | Guild Added: ${guild.name}`);
-    await new Muted({
-        guildID: guild.id,
-        mutedList: []
-    }).save();
+    console.log(`MONGO | Guild Added: ${guild.name}`);
+    await new Muted({ guildID: guild.id }).save();
     await new Warns({ guildID: guild.id }).save();
 }

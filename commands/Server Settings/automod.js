@@ -6,7 +6,7 @@ module.exports = {
     description: 'Shows the current automod config and allows for them to be edited using the subcommands below.',
     usage: 'automod <enable|disable> <all|invites|anti-spam|mass-mention|badwords>\nautomod logchannel <Channel:Mention/ID>\nautomod logchannel remove\nautomod mention-limit <Number>\nautomod mention-limit reset\nautomod badwords list\nautomod badwords <add|remove> [...words]',
     cooldown: 3,
-    permissions: 32,
+    userPerms: 32,
     guildOnly: true,
     modBypass: true,
     run: async (client, message, args) => {
@@ -115,7 +115,7 @@ module.exports = {
                 }
 
             } else if (sub === 'logchannel') {
-                if (args[1]) return client.errEmb('No Option Specified.\n```\nautomod logchannel <Channel:Mention/ID>\nautomod logchannel remove\n```', message);
+                if (!args[1]) return client.errEmb('No Option Specified.\n```\nautomod logchannel <Channel:Mention/ID>\nautomod logchannel remove\n```', message);
                 if (args[1].toLowerCase() === 'remove') {
                     if (!channel) return client.infoEmb('There is no Automod log channel setup.', message);
                     _channel = '';

@@ -1,10 +1,21 @@
 "use strict";
+// Strings Parser (quotations and flags) for Radeon
+//
+// There will be NO support for the use of this file
+// except for self-hosted instances of Radeon
+// (which is not currently supported).
+//
+// © Radeon Development 2021 (GNU GPL v3)
+// https://github.com/devnote-dev/Radeon
+
 exports.__esModule = true;
 exports.parseFlags = exports.parseQuotes = void 0;
+
 /**
  * Parses arguments encased in quotations.
  * @param str The string to parse from.
  * @param stripQuotes Removes quotes after parsing.
+ * @returns string
  */
 function parseQuotes(str, stripQuotes) {
     var split = str.split(' ');
@@ -42,10 +53,12 @@ function parseQuotes(str, stripQuotes) {
     }
 }
 exports.parseQuotes = parseQuotes;
+
 /**
  * Parses message flags into usable objects.
  * @param str The string to parse from.
  * @param flags The flags to parse.
+ * @returns Flags Array
  */
 function parseFlags(str, flags) {
     var parsed = [];
@@ -75,7 +88,6 @@ function parseFlags(str, flags) {
             });
         }
         else if (flag.type == 'int') {
-            var temp = [];
             splitStr.forEach(function (word) {
                 if (word == '-' + flag.name) {
                     if (splitStr.indexOf(word) < splitStr.length) {
@@ -96,7 +108,7 @@ function parseFlags(str, flags) {
             }
         }
         else {
-            throw new Error('Invalid Type for Flag.');
+            throw new TypeError('Invalid Type for Flag.');
         }
     });
     return parsed;

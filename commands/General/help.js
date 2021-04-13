@@ -65,15 +65,15 @@ module.exports = {
                     if (cmd.description) desc = `**Description:**\n${cmd.description}\n`;
                     if (cmd.usage) use = `**Usage:**\n\`\`\`\n${cmd.usage}\n\`\`\`\n`;
                     let footer = `**Guild Only:** ${cmd.guildOnly ?? 'false'}
-                    **User Perms:** \`${cmd.userPerms ? humanize(new Permissions(cmd.userPerms)) : 'None'}\`
-                    **Bot Perms:** \`${cmd.botPerms ? humanize(new Permissions(cmd.botPerms)) : 'None'}\``;
+                    **User Perms:** ${cmd.userPerms ? humanize(new Permissions(cmd.userPerms)).join(', ') : 'None'}
+                    **Bot Perms:** ${cmd.botPerms ? humanize(new Permissions(cmd.botPerms)).join(', ') : 'None'}`;
                     embed.setTitle(`Command: ${cmd.name}`)
                     .setDescription(alias + desc + use + footer)
                     .setFooter('<> - Required, [] - Optional, a|b - Pick one');
                     return message.channel.send(embed);
                 }
             } else {
-                if (search.length >= 50) search = search.slice(0,50) + '...';
+                if (search.length >= 20) search = search.slice(0,20) + '...';
                 embed.setTitle('Help Error').setDescription(`No command or category with the name "${search}"`);
                 return message.channel.send(embed);
             }

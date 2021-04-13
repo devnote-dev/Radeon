@@ -5,19 +5,32 @@ exports.run = async (client, guild, user) => {
     const db = await Guild.findOne({ guildID: guild.id });
     const { modLogs } = db;
     if (!modLogs.channel || !modLogs.bans) return;
-    const info = await guild.fetchBan(user);
-    let mod = 'Unknown';
-    if (/^.+#\d{4}:/gi.test(info.reason)) mod = reason.split(' ').shift().replace(':','');
-    const embed = new MessageEmbed()
-    .setTitle('Member Banned')
-    .setThumbnail(user.displayAvatarURL({dynamic: true}))
-    .addFields(
-        {name: 'User', value: `• ${user.tag}\n• ${user.id}`, inline: true},
-        {name: 'Moderator', value: mod, inline: true},
-        {name: 'Reason', value: info.reason ? info.reason.replace(/^.+#\d{4}:/gi,'') : '(No Reason Specified)', inline: false}
-    )
-    .setColor('RED')
-    .setTimestamp();
-    const c = guild.channels.cache.get(modLogs.channel);
-    if (c) c.send(embed).catch(()=>{});
+    let count = 0;
+    let audit;
+    while (!audit) {
+        audit = await guild.fetchAuditLogs({ type: 'MEMBER_BAN_ADD', user: user }).catch(()=>{});
+        if (!audit) {
+            count++;
+            if (count == 3) break;
+            setTimeout(() => {}, 3000);
+        } else {
+            audit = audit.entries.first();
+            break;
+        }
+    }
+    if (audit) {
+        const { reason, executor } = audit;
+        const embed = new MessageEmbed()
+        .setTitle('Member Banned')
+        .setThumbnail(user.displayAvatarURL({dynamic: true}))
+        .addFields(
+            {name: 'User', value: `• ${user.tag}\n• ${user.id}`, inline: true},
+            {name: 'Moderator', value: `• ${executor.tag}\n• ${executor.id}`, inline: true},
+            {name: 'Reason', value: reason || '(No Reason Specified)', inline: false}
+        )
+        .setColor('RED')
+        .setTimestamp();
+        const c = guild.channels.cache.get(modLogs.channel);
+        if (c) c.send(embed).catch(()=>{});
+    }
 }

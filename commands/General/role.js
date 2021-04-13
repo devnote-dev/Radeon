@@ -8,7 +8,8 @@ module.exports = {
     description: 'Role Tools: Allows for creating, updating, deleting, and assigning roles using the subcommands below.',
     usage: 'role <User:Mention/ID> <Role:Name/Mention/ID>\nrole c/create <Name> [Color:Hex/Decimal] [Permissions:Bitfield] [Hoisted:True/False] [Mentionable:True/False]\nrole d/delete <Role:Name/Mention/ID>',
     cooldown: 4,
-    permissions: 268435456,
+    userPerms: 268435456,
+    botPerms: 268435456,
     guildOnly: true,
     run: async (client, message, args) => {
         if (!args.length) return client.errEmb('No Subcommand Specified. See `help role` for more information.', message);

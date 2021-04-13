@@ -35,7 +35,8 @@ function logShard(client: any, type: string, shard: number) {
         case 'error': log += `Errored: ${new Date().toLocaleTimeString()}`; break;
         case 'ready': log += 'Ready'; break;
         case 'recon': log += 'Reconnecting'; break;
-        default: log += `Unknown: Invalid Log Request\nPath: ${__dirname}`;
+        case 'resume': log += 'Resumed'; break;
+        default: log += `Unknown: Invalid Log Request\nPath: ${__dirname}`; break;
     }
     borderSmall();
     return console.log(log);

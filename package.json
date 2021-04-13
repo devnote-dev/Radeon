@@ -1,6 +1,6 @@
 {
   "name": "radeon",
-  "version": "2.5.1",
+  "version": "3.6.3",
   "description": "Radeon is a multi-functional moderation bot with a cross-server anti-raid system!",
   "main": "index.js",
   "scripts": {
@@ -19,6 +19,7 @@
   "license": "GNU General Public License v3",
   "dependencies": {
     "ascii-table": "0.0.9",
+    "cron": "^1.8.2",
     "discord.js": "^12.5.1",
     "mongoose": "^5.11.14",
     "ms": "^2.1.3",

@@ -7,7 +7,10 @@ module.exports = async client => {
     .forEach(e => {
         const event = require(`../events/${e}`);
         loaded++;
-        client.on(e.split('.').shift(), (...args) => event.run(client, ...args));
+        client.on(e.split('.').shift(), (...args) => {
+            client.stats.events++;
+            event.run(client, ...args);
+        });
     });
     if (!loaded) {
         console.log(`\x1b[35mRadeon\x1b[0m | \x1b[31m0\x1b[0m Events Loaded.\nInsufficient Events To Run Radeon. Terminating...`);

@@ -4,10 +4,9 @@ const { parseFlags } = require('../../functions/stringParser');
 module.exports = {
     name: 'embed',
     tag: 'Creates a custom embed via command flags',
-    description: 'Creates a custom embed via command flags.',
-    usage: 'embed <...Flags>\n-raw "message\n-author "author message"\n-aicon "author iconURL"\n-thumb "thumbnail URL"\n-title "title message"\n-url "title URL"\n-desc "description message"\n-color "HEX/DECIMAL"\n-image "image URL"\n-footer "footer message"\n-ficon "footer iconURL"\n-ts (timestamp)',
+    description: 'Creates a custom embed via command flags. All flags with arguments require "quotations".',
+    usage: 'embed <...Flags>\n-raw "message"\n-author "author message"\n-aicon "author iconURL"\n-thumb "thumbnail URL"\n-title "title message"\n-url "title URL"\n-desc "description message"\n-color "HEX/DECIMAL"\n-image "image URL"\n-footer "footer message"\n-ficon "footer iconURL"\n-ts (timestamp)',
     cooldown: 3,
-    permissions: 16384,
     guildOnly: true,
     run: async (client, message, args) => {
         if (!args.length) return client.errEmb('No Arguments Provided.\n```\nembed <...Flags>\n```', message);
@@ -28,20 +27,35 @@ module.exports = {
         const embed = new MessageEmbed();
         let content = '';
         if (flags.length) {
+            let _author, _aicon, _footer, _ficon;
             flags.forEach(flag => {
                 if (flag.name == 'raw') content = flag.value;
-                if (flag.name == 'author') embed.setAuthor(flag.value, embed.author);
-                if (flag.name == 'aicon') embed.setAuthor(embed.author, flag.value);
+                if (flag.name == 'author') _author = flag.value;
+                if (flag.name == 'aicon') _aicon = flag.value;
                 if (flag.name == 'thumb') embed.setThumbnail(flag.value);
                 if (flag.name == 'title') embed.setTitle(flag.value);
                 if (flag.name == 'url') embed.setURL(flfag.value);
                 if (flag.name == 'desc') embed.setDescription(flag.value.replace(/\n|\\n/gm, '\n'));
                 if (flag.name == 'color') embed.setColor(flag.value);
                 if (flag.name == 'image') embed.setImage(flag.value);
-                if (flag.name == 'footer') embed.setFooter(flag.value, embed.footer);
-                if (flag.name == 'ficon') embed.setFooter(embed.footer, flag.value);
+                if (flag.name == 'footer') _footer = flag.value;
+                if (flag.name == 'ficon') _ficon = flag.value;
                 if (flag.name == 'ts') embed.setTimestamp();
             });
+            if (_author && _aicon) {
+                embed.setAuthor(_author, _aicon);
+            } else if (_author && !_aicon) {
+                embed.setAuthor(_author);
+            } else if (!_author && _aicon) {
+                embed.setAuthor('\u200b', _aicon);
+            }
+            if (_footer && _ficon) {
+                embed.setFooter(_footer, _ficon);
+            } else if (_author && !_ficon) {
+                embed.setFooter(_footer);
+            } else if (!_footer && _ficon) {
+                embed.setFooter('\u200b', _ficon);
+            }
             try {
                 return message.channel.send(content, embed);
             } catch (err) {

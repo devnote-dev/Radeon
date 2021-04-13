@@ -7,6 +7,7 @@ const Settings = require('../schemas/settings-schema');
 exports.run = async (client, message) => {
     const { author, channel } = message;
     if (author.bot) return;
+    const path = `${message.guild ? message.guild.id +'/' : ''}${channel.id}`;
 
     const state = await Settings.findOne({ client: client.user.id });
     let lock = false;
@@ -61,7 +62,7 @@ exports.run = async (client, message) => {
             if (!guild) {
                 client.emit('guildCreate', message.guild);
             } else if (err) {
-                logError(err, channel.id);
+                logError(err, path);
             }
         }
     );
@@ -75,11 +76,17 @@ exports.run = async (client, message) => {
         || message.content.toLowerCase().startsWith(client.config.prefix)
         || /^<@!?762359941121048616>\s+/gi.test(message.content)
     ) {
+        // I hate this mess but it works,
+        // please ignore it for the time being.
         let args;
         if (message.mentions.users.size) {
             let user = message.mentions.users.first();
             if (user.id === client.user.id) {
                 args = message.content.trim().split(/\s+|\n+/g).splice(1);
+            } else if (message.content.toLowerCase().startsWith(client.config.prefix)) {
+                args = message.content.slice(client.config.prefix.length).trim().split(/\s+|\n+/g);
+            } else {
+                args = message.content.slice(prefix.length).trim().split(/\s+|\n+/g);
             }
         } else if (message.content.toLowerCase().startsWith(client.config.prefix)) {
             args = message.content.slice(client.config.prefix.length).trim().split(/\s+|\n+/g);
@@ -87,6 +94,7 @@ exports.run = async (client, message) => {
             args = message.content.slice(prefix.length).trim().split(/\s+|\n+/g);
         }
 
+        if (!args.length) return;
         const cmd = args.shift().toLowerCase();
         if (!cmd.length) return;
         let command = client.commands.get(cmd) || client.commands.get(client.aliases.get(cmd));
@@ -107,7 +115,7 @@ exports.run = async (client, message) => {
                             await command.run(client, message, args);
                             break;
                         } catch (err) {
-                            logError(err, channel.id, author.id);
+                            logError(err, path, author.id);
                             errNoExec(message, command.name);
                             break;
                         }
@@ -121,7 +129,7 @@ exports.run = async (client, message) => {
                             await command.run(client, message, args);
                             break;
                         } catch (err) {
-                            logError(err, channel.id, author.id);
+                            logError(err, path, author.id);
                             errNoExec(message, command.name);
                             break;
                         }
@@ -141,7 +149,7 @@ exports.run = async (client, message) => {
                             await command.run(client, message, args);
                             break;
                         } catch (err) {
-                            logError(err, channel.id, author.id);
+                            logError(err, path, author.id);
                             errNoExec(message, command.name);
                             break;
                         }
@@ -155,7 +163,7 @@ exports.run = async (client, message) => {
                             await command.run(client, message, args);
                             break;
                         } catch (err) {
-                            logError(err, channel.id, author.id);
+                            logError(err, path, author.id);
                             errNoExec(message, command.name);
                             break;
                         }
@@ -183,12 +191,12 @@ exports.run = async (client, message) => {
                                     client.stats.commands++;
                                     await command.run(client, message, args);
                                 } catch (err) {
-                                    logError(err, channel.id, author.id);
+                                    logError(err, path, author.id);
                                     return errNoExec(message, command.name);
                                 }
                             }
                         } else {
-                            return channel.send(`You are missing the \`${humanize(new Permissions(command.userPerms))}\` permission(s) to use this command.`);
+                            return channel.send(`You are missing the \`${humanize(new Permissions(command.userPerms)).join('`, `')}\` permission(s) to use this command.`);
                         }
                     } else {
                         if (isOnCooldown(client, author, command)) {
@@ -200,13 +208,13 @@ exports.run = async (client, message) => {
                                 client.stats.commands++;
                                 await command.run(client, message, args);
                             } catch (err) {
-                                logError(err, channel.id, author.id);
+                                logError(err, path, author.id);
                                 return errNoExec(message, command.name);
                             }
                         }
                     }
                 } else {
-                    return channel.send(`I am missing the \`${humanize(new Permissions(command.botPerms))}\` permission(s) for this command.`);
+                    return channel.send(`I am missing the \`${humanize(new Permissions(command.botPerms)).join('`, `')}\` permission(s) for this command.`);
                 }
             } else if (command.userPerms) {
                 if (message.member.permissions.has(command.userPerms)) {
@@ -219,12 +227,12 @@ exports.run = async (client, message) => {
                             client.stats.commands++;
                             await command.run(client, message, args);
                         } catch (err) {
-                            logError(err, channel.id, author.id);
+                            logError(err, path, author.id);
                             return errNoExec(message, command.name);
                         }
                     }
                 } else {
-                    return channel.send(`You are missing the \`${humanize(new Permissions(command.userPerms))}\` permission(s) to use this command.`);
+                    return channel.send(`You are missing the \`${humanize(new Permissions(command.userPerms)).join('`, `')}\` permission(s) to use this command.`);
                 }
             }
 
@@ -238,7 +246,7 @@ exports.run = async (client, message) => {
                     client.stats.commands++;
                     await command.run(client, message, args);
                 } catch (err) {
-                    logError(err, channel.id, author.id);
+                    logError(err, path, author.id);
                     return errNoExec(message, command.name);
                 }
             }
@@ -249,19 +257,27 @@ exports.run = async (client, message) => {
                 client.stats.commands++;
                 await command.run(client, message, args);
             } catch (err) {
-                logError(err, channel.id, author.id);
+                logError(err, path, author.id);
                 return errNoExec(message, command.name);
             }
         }
-
-    // Disabled until messageCheck is debugged and fixed.
-
-    // } else {
-    //     if (automod.active) {
-    //         if (automod.invites || automod.massMention.active) {
-    //             require('../functions/messageCheck')(client, message, automod);
-    //         }
-    //     }
+    } else {
+        if (!automod.active) return;
+        if (!channel.permissionsFor(message.guild.me).has(10240)) return;
+        if (automod.invites || automod.massMention.active) {
+            try {
+                require('../functions/amod-main')(message, automod);
+            } catch (err) {
+                logError(err, path);
+            }
+        }
+        if (automod.rateLimit) {
+            try {
+                require('../functions/amod-ratelimit')(client, message, automod);
+            } catch (err) {
+                logError(err, path);
+            }
+        }
     }
 }
 
