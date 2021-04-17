@@ -20,6 +20,7 @@ module.exports = {
                 case 'admin':
                     search = 'Admin';
                     break;
+                case 'gen':
                 case 'general':
                     search = 'General';
                     break;
@@ -32,6 +33,7 @@ module.exports = {
                     search = 'Moderation';
                     break;
                 case 'ss':
+                case 'server':
                 case 'settings':
                 case 'server settings':
                     search = 'Server Settings';
@@ -60,11 +62,11 @@ module.exports = {
                     embed.setTitle('Help Error').setDescription('You don\'t have permission to view this command.');
                     return message.channel.send(embed);
                 } else {
-                    let [alias, desc, use] = '';
+                    let alias = '', desc = '', use = '';
                     if (cmd.aliases) alias = `**Aliases:** \`${cmd.aliases.join('`, `')}\`\n`;
                     if (cmd.description) desc = `**Description:**\n${cmd.description}\n`;
                     if (cmd.usage) use = `**Usage:**\n\`\`\`\n${cmd.usage}\n\`\`\`\n`;
-                    let footer = `**Guild Only:** ${cmd.guildOnly ?? 'false'}
+                    let footer = `\n**Guild Only:** ${cmd.guildOnly ?? 'false'}
                     **User Perms:** ${cmd.userPerms ? humanize(new Permissions(cmd.userPerms)).join(', ') : 'None'}
                     **Bot Perms:** ${cmd.botPerms ? humanize(new Permissions(cmd.botPerms)).join(', ') : 'None'}`;
                     embed.setTitle(`Command: ${cmd.name}`)
