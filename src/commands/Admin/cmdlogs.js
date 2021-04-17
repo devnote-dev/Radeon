@@ -6,21 +6,30 @@ module.exports = {
     name: 'cmdlogs',
     guildOnly: true,
     modOnly: 4,
-    run: async (client, message) => {
-        let content = '';
-        client.cmdlogs.forEach(log => {
-            content += `USER: ${log.user}\nCMD: ${log.command}\nCHANNEL: ${log.channel.id} - ${log.channel.type}\nTIME: ${log.time}\n\n`;
-        });
-        writeFileSync(join(__dirname, '/', '_logs.txt'), content, {flag: 'w+'}, err => console.error(err));
-        const buff = readFileSync(join(__dirname, '/', '_logs.txt'));
-        const att  = new MessageAttachment(buff, 'Radeon_cmdlogs.txt');
-        try {
-            message.author.send('Radeon Command Logs', att);
-            const msg = await client.infoEmb(`${message.author} I have DMed you the file.\nThis message will autodelete in 5 seconds.`, message);
-            setTimeout(() => msg.delete(), 5000);
-        } catch (err) {
-            client.errEmb(err.message, message);
+    run: async (client, message, args) => {
+        message.delete().catch(()=>{});
+        if (args.length) {
+            if (args[0].toLowerCase() == 'last') {
+                const buff = readFileSync(join(__dirname, '/', '_logs.txt'));
+                const att = new MessageAttachment(buff, 'radeon_pastlogs.txt');
+                try {
+                    await message.author.send('Radeon Command Logs', att);
+                    return client.infoEmb('I have DMed you the file.', message).then(m => setTimeout(() => m.delete(), 5000));
+                } catch {
+                    return client.errEmb('Failed Sending DM. Check that your DMs are enabled.', message);
+                }
+            }
+        } else {
+            let content = '';
+            client.cmdlogs.forEach(log => content += `USER: ${log.user}\nCMD: ${log.command}\nCHANNEL: ${log.channel.id} - ${log.channel.type}\nTIME: ${log.time}\n\n`);
+            writeFileSync(join(__dirname, '/', '_logs.txt'), content);
+            const att = new MessageAttachment(Buffer.from(content), 'radeon_cmdlogs.txt');
+            try {
+                await message.author.send('Radeon Command Logs', att);
+                return client.infoEmb('I have DMed you the file.', message).then(m => setTimeout(() => m.delete(), 5000));
+            } catch {
+                return client.errEmb('Failed Sending DM. Check that your DMs are enabled.', message);
+            }
         }
-        message.delete();
     }
 }
