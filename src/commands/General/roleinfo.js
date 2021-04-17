@@ -1,4 +1,4 @@
-const { MessageEmbed } = require('discord.js');
+const { MessageEmbed, Collection } = require('discord.js');
 const { toDurationDefault } = require('../../functions/functions');
 
 module.exports = {
@@ -10,7 +10,17 @@ module.exports = {
     guildOnly: true,
     run: async (client, message, args) => {
         if (!args.length) return client.errEmb('No Role Specified.\n```\nroleinfo <Role:Name/Mention/ID>\n```', message);
-        const role = message.mentions.roles.first() || message.guild.roles.resolve(args.join(' ')) || message.guild.roles.cache.find(r => r.name.toLowerCase() === args.join(' ').toLowerCase());
+        let role = message.mentions.roles.first()
+        || message.guild.roles.resolve(args.join(' '))
+        || message.guild.roles.cache.filter(r => r.name.toLowerCase().includes(args.join(' ')));
+        if (role instanceof Collection) {
+            if (!role.size) return client.errEmb('Argument Specified is an Invalid Role.', message);
+            if (role.size > 1) {
+                let rmap = role.map(r => `• ${r.name} (ID ${r.id})`).join('\n');
+                return client.infoEmb(`More than one role found with similar names:\n\n${rmap}`, message);
+            }
+            role = role.first();
+        }
         if (!role) return client.errEmb('Argument Specified is an Invalid Role.', message);
         message.channel.startTyping();
         const embed = new MessageEmbed()
@@ -27,7 +37,7 @@ module.exports = {
         .setColor(role.color)
         .setFooter(`Triggered By ${message.author.tag}`, message.author.displayAvatarURL());
         setTimeout(() => {
-            message.channel.stopTyping()
+            message.channel.stopTyping();
             return message.channel.send(embed)
         }, 1000);
     }
