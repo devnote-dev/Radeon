@@ -1,5 +1,5 @@
 const { MessageEmbed } = require('discord.js');
-const { toDurationDefault } = require('../../functions/functions');
+const { toDurationDefault, toDurationLong } = require('../../functions/functions');
 
 module.exports = {
     name: 'userinfo',
@@ -15,10 +15,6 @@ module.exports = {
         if (!target) return client.errEmb('Invalid Member Specified.', message);
         const member = target;
         target = target.user;
-        let color = member.roles.cache
-            .sort((a,b) => b.position - a.position)
-            .find(r => r.hexColor != '#000000');
-        if (!color || !color.hexColor) color = 0x2f3136; else color = color.hexColor;
 
         switch (target.presence.status) {
             case 'online': status = '<:status_online:782290447149432892> Online'; break;
@@ -86,11 +82,11 @@ module.exports = {
         .addField('ID', `${target.id}`, true)
         .addField('Status', status, true)
         .addField('Avatar', `[Download Link 📥](${target.displayAvatarURL({dynamic: true})})`, true)
-        .addField('Account Age', `${target.createdAt.toDateString()}\n${toDurationDefault(target.createdTimestamp)}`, false)
+        .addField('Account Age', `${target.createdAt.toDateString()}\n${toDurationLong(target.createdTimestamp)}`, false)
         .addField('Server Member Age', `${member.joinedAt.toDateString()}\n${toDurationDefault(member.joinedTimestamp)}`, false)
         .addField('Presence', presence, false)
         .addField('Roles', roles, false)
-        .setColor(color)
+        .setColor(member.displayColor || 0x2f3136)
         .setThumbnail(target.displayAvatarURL({dynamic: true}))
         .setFooter(`Triggered By ${message.author.tag}`, message.author.displayAvatarURL());
         return message.channel.send(embed);
