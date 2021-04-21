@@ -12,7 +12,7 @@ module.exports = {
         if (!args.length) return client.errEmb('No Role Specified.\n```\nroleinfo <Role:Name/Mention/ID>\n```', message);
         let role = message.mentions.roles.first()
         || message.guild.roles.resolve(args.join(' '))
-        || message.guild.roles.cache.filter(r => r.name.toLowerCase().includes(args.join(' ')));
+        || message.guild.roles.cache.filter(r => r.name.toLowerCase().includes(args.join(' ').toLowerCase()));
         if (role instanceof Collection) {
             if (!role.size) return client.errEmb('Argument Specified is an Invalid Role.', message);
             if (role.size > 1) {
