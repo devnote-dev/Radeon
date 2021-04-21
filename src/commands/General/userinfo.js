@@ -40,6 +40,8 @@ module.exports = {
                     }
                 }
                 if (act.type === 'WATCHING') presence += '📺 watching '+ act.name +'\n';
+                if (act.type === 'STREAMING') presence += `<:Twitch:815643584492994612> streaming [${act.name}](${act.url || 'https://twitch.tv/'})`;
+                if (act.type === 'COMPETING') presence += '⚔️ competing in '+ act.name +'\n';
             });
             if (!presence.length) presence = 'Unknown Activity';
         }
