@@ -11,16 +11,16 @@ module.exports = {
     run: async (client, message, args) => {
         if (!args.length) return client.errEmb('No Arguments Provided.\n```\nembed <...Flags>\n```', message);
         const flags = parseFlags(args.join(' '), [
-            {name: 'raw', type: 'string'},
-            {name: 'author', type: 'string'},
+            {name: 'raw', type: 'string', quotes: true},
+            {name: 'author', type: 'string', quotes: true},
             {name: 'aicon', type: 'string'},
             {name: 'thumb', type: 'string'},
-            {name: 'title', type: 'string'},
+            {name: 'title', type: 'string', quotes: true},
             {name: 'url', type: 'string'},
-            {name: 'desc', type: 'string'},
+            {name: 'desc', type: 'string', quotes: true},
             {name: 'color', type: 'string'},
             {name: 'image', type: 'string'},
-            {name: 'footer', type: 'string'},
+            {name: 'footer', type: 'string', quotes: true},
             {name: 'ficon', type: 'string'},
             {name: 'ts', type: 'bool'}
         ]);
@@ -29,18 +29,18 @@ module.exports = {
         if (flags.length) {
             let _author, _aicon, _footer, _ficon;
             flags.forEach(flag => {
-                if (flag.name == 'raw') content = flag.value;
-                if (flag.name == 'author') _author = flag.value;
-                if (flag.name == 'aicon') _aicon = flag.value;
-                if (flag.name == 'thumb') embed.setThumbnail(flag.value);
-                if (flag.name == 'title') embed.setTitle(flag.value);
-                if (flag.name == 'url') embed.setURL(flfag.value);
-                if (flag.name == 'desc') embed.setDescription(flag.value.replace(/\n|\\n/gm, '\n'));
-                if (flag.name == 'color') embed.setColor(flag.value);
-                if (flag.name == 'image') embed.setImage(flag.value);
-                if (flag.name == 'footer') _footer = flag.value;
-                if (flag.name == 'ficon') _ficon = flag.value;
-                if (flag.name == 'ts') embed.setTimestamp();
+                if (flag.name === 'raw') content = flag.value;
+                if (flag.name === 'author') _author = flag.value;
+                if (flag.name === 'aicon') _aicon = flag.value;
+                if (flag.name === 'thumb') embed.setThumbnail(flag.value || '');
+                if (flag.name === 'title') embed.setTitle(flag.value || '');
+                if (flag.name === 'url') embed.setURL(flag.value || '');
+                if (flag.name === 'desc') embed.setDescription(flag.value != null ? flag.value.replace(/\n|\\n/gm, '\n') : '\u200b');
+                if (flag.name === 'color') embed.setColor(flag.value || '');
+                if (flag.name === 'image') embed.setImage(flag.value || '');
+                if (flag.name === 'footer') _footer = flag.value;
+                if (flag.name === 'ficon') _ficon = flag.value;
+                if (flag.name === 'ts') embed.setTimestamp();
             });
             if (_author && _aicon) {
                 embed.setAuthor(_author, _aicon);
