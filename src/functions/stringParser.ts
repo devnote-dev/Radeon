@@ -10,7 +10,13 @@
 
 type FlagOptions = {
     name: string;
-    type: 'string'|'int'|'bool';
+    type:
+    |'string'
+    |'int'
+    |'bool'
+    |'user'
+    |'channel';
+    quotes?: boolean;
 }
 
 type Flag = {
@@ -20,98 +26,120 @@ type Flag = {
 
 /**
  * Parses arguments encased in quotations.
- * @param str The string to parse from.
- * @param stripQuotes Removes quotes after parsing.
+ * @param {string} ms The string to parse from.
+ * @param {boolean?} stripQuotes Removes quotes after parsing.
  * @returns string
  */
-function parseQuotes(str: string, stripQuotes?: boolean): string {
-    const split = str.split(' ');
-    let parsed = [];
+function parseQuotes(str: string, stripQuotes: boolean=false): string {
+    const split:  string[] = str.split('');
+    const parsed: string[] = [];
     let start = false;
-    let end = false;
 
-    split.forEach(word => {
-        if (end) return;
-        if (word.startsWith('"') && !word.endsWith('\\"') && word.endsWith('"')) {
-            parsed.push(word);
+    split.forEach((char, i) => {
+        if (char == '"' && !start) {
+            parsed.push(char);
             start = true;
-            end = true;
-        }
-        if (word.startsWith('"') && !start) {
-            parsed.push(word);
-            start = true;
-        }
-        if (!word.startsWith('"') && !word.endsWith('"') && !word.endsWith('\\"') && start) {
-            parsed.push(word);
-        }
-        if (word.endsWith('\\"')) {
-            parsed.push(word);
-        }
-        if (word.endsWith('"') && !word.endsWith('\\"') && !end) {
-            parsed.push(word);
-            end = true;
+        } else if (char == '"' && start) {
+            if (split[i-1] == '\\') {
+                parsed.push(char);
+            } else {
+                parsed.push(char);
+                start = false;
+            }
+        } else if (char == ' ' && start) {
+            parsed.push(char);
+        } else if (start) {
+            parsed.push(char);
         }
     });
 
-    if (stripQuotes) {
-        return parsed.join(' ').replace(/^"|"$/g, '');
+    if (parsed.length) {
+        if (stripQuotes) {
+            return parsed.join('').replace(/^"|"$/g, '');
+        } else {
+            return parsed.join('');
+        }
     } else {
-        return parsed.join(' ');
+        return '';
     }
 }
 
 /**
  * Parses message flags into usable objects.
- * @param str The string to parse from.
- * @param flags The flags to parse.
+ * @param {string} str The string to parse from.
+ * @param {Flag[]} flags The flags to parse.
  * @returns Flags Array
  */
 function parseFlags(str: string, flags: FlagOptions[]): Readonly<Flag[]> {
-    let parsed: Flag[] = [];
-    const splitStr = str.split(' ');
+    const parsed: Flag[] = [];
+    const split = str.split(' ');
 
     flags.forEach(flag => {
         if (flag.type == 'string') {
-            let res: string;
-            let index: number;
-
-            splitStr.forEach(word => {
-                if (word == '-'+ flag.name) {
-                    index = splitStr.indexOf(word);
-                    if (index >= splitStr.length) {
-                        parsed.push({name: flag.name, value: null});
-                        // fallback for string is not trimmed
-                    } else {
-                        const conv = splitStr.slice(index);
-                        if (conv.length > 1) {
-                            res = parseQuotes(conv.join(' ').trim(), true);
-                        } else {
-                            res = splitStr[index+1].replace(/^"|"$/g, '');
-                        }
+            let holder: number = -1;
+            split.forEach((word, i) => {
+                if (word == '-'+ flag.name) holder = i;
+            });
+            if (holder != -1) {
+                if (flag.quotes) {
+                    const res = parseQuotes(split.slice(holder).join(' '));
+                    if (res.length) {
                         parsed.push({name: flag.name, value: res});
+                    } else {
+                        parsed.push({name: flag.name, value: null});
                     }
+                } else {
+                    parsed.push({name: flag.name, value: split[holder+1]});
                 }
-            });
-
-        } else if (flag.type == 'int') {
-            splitStr.forEach(word => {
-                if (word == '-'+ flag.name) {
-                    if (splitStr.indexOf(word) < splitStr.length) {
-                        let res = parseInt(splitStr[splitStr.indexOf(word)+1]);
-                        if (isNaN(res)) {
-                            parsed.push({name: flag.name, value: null});
-                        } else {
-                            parsed.push({name: flag.name, value: res});
-                        }
-                    }
-                }
-            });
-
-        } else if (flag.type == 'bool') {
-            if (splitStr.includes('-'+ flag.name)) {
-                parsed.push({name: flag.name, value: true});
+            } else {
+                parsed.push({name: flag.name, value: null});
             }
-
+        } else if (flag.type == 'int') {
+            let holder: number = -1;
+            split.forEach(function (word, i) {
+                if (word == '-'+ flag.name) holder = i;
+            });
+            if (holder != -1) {
+                parsed.push({name: flag.name, value: split[holder+1]});
+            } else {
+                parsed.push({name: flag.name, value: null});
+            }
+        } else if (flag.type == 'bool') {
+            if (str.includes('-'+ flag.name)) {
+                parsed.push({name: flag.name, value: true});
+            } else {
+                parsed.push({name: flag.name, value: false});
+            }
+        } else if (flag.type == 'user') {
+            let holder: number = -1;
+            split.forEach((word, i) => {
+                if (word == '-'+ flag.name) holder = i;
+            });
+            if (holder != -1) {
+                const user = split[holder+1];
+                if (/(?:<@!?)?\d{17,}>?/g.test(user ?? '')) {
+                    parsed.push({name: flag.name, value: user.replace(/<@|!|>/g, '')});
+                } else {
+                    parsed.push({name: flag.name, value: null});
+                }
+            } else {
+                parsed.push({name: flag.name, value: null});
+            }
+        } else if (flag.type == 'channel') {
+            let holder: number = -1;
+            split.forEach((word, i) => {
+                if (word == '-'+ flag.name) holder = i;
+            });
+            if (holder != -1) {
+                const channel = split[holder+1];
+                if (/(?:<#)?\d{17,}>?/g.test(channel ?? '')) {
+                    parsed.push({name: flag.name, value: channel.replace(/<#|>/g, '')});
+                } else {
+                    parsed.push({name: flag.name, value: null});
+                }
+            } else {
+                parsed.push({name: flag.name, value: null});
+            }
         } else {
             throw new TypeError('Invalid Type for Flag.');
         }
@@ -120,4 +148,4 @@ function parseFlags(str: string, flags: FlagOptions[]): Readonly<Flag[]> {
     return parsed;
 }
 
-export { parseQuotes, parseFlags }
+export { parseQuotes, parseFlags };
