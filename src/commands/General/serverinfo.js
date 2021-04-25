@@ -1,5 +1,5 @@
 const { MessageEmbed } = require('discord.js');
-const { toDurationDefault } = require('../../functions/functions');
+const { toDurationLong } = require('../../functions/functions');
 
 module.exports = {
     name: 'serverinfo',
@@ -10,8 +10,7 @@ module.exports = {
     run: async (client, message) => {
         message.channel.startTyping();
         const server = message.guild;
-        const owner = server.member(server.ownerID);
-        const tc = server.channels.cache.filter(c => c.type === 'text');
+        const tc = server.channels.cache.filter(c => ['text','news','store'].includes(c.type));
         const vc = server.channels.cache.filter(c => c.type === 'voice');
         const roles = server.roles.cache.size;
         const bots = server.members.cache.filter(m => m.user.bot);
@@ -35,10 +34,10 @@ module.exports = {
         const embed = new MessageEmbed()
         .setTitle(`Server: ${server.name}`)
         .setThumbnail(server.iconURL({dynamic: true}))
-        .addField('Owner', `${owner}`, true)
+        .addField('Owner', `<@${server.ownerID}>`, true)
         .addField('Members', `${server.memberCount} Total Members\n${server.memberCount - bots.size} Users\n${bots.size} Bots`, true)
-        .addField('Created At', `${toDurationDefault(server.createdTimestamp)}`, true)
-        .addField('Acknowledgements', `${acc ?? 'None'}`, true)
+        .addField('Created At', `${toDurationLong(server.createdTimestamp)}`, true)
+        .addField('Acknowledgements', `${acc || 'None'}`, true)
         .addField('Info', `Region: ${server.region}\nMFA: ${server.mfaLevel}\nContent Filter: ${ecfl}`, true)
         .addField('General', `${tc.size} Text Channels\n${vc.size} Voice Channels\n${roles} Roles`, true)
         .addField('Emojis', `${server.emojis.cache.size} Total Emojis\n${server.emojis.cache.size - an.size} Default\n ${an.size} Animated`, true)
@@ -46,7 +45,7 @@ module.exports = {
         .setColor(0x1e143b)
         .setFooter(`Triggered By ${message.author.tag}`, message.author.displayAvatarURL());
         setTimeout(() => {
-            message.channel.stopTyping()
+            message.channel.stopTyping();
             return message.channel.send(embed)
         }, 2000);
     }

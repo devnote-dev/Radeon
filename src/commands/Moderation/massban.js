@@ -1,5 +1,4 @@
 require('discord.js');
-const re2 = require('re2');
 const { parseFlags } = require('../../functions/stringParser');
 
 module.exports = {
@@ -13,38 +12,37 @@ module.exports = {
     guildOnly: true,
     run: async (client, message, args) => {
         if (!args.length) return client.errEmb('Insufficient Arguments.\n```\nmassban <...User:Mention/ID> [-m Reason:Text]\n```', message);
-        let users = [];
+        const users = [];
         let reason = '(No Reason Specified)';
         const flags = parseFlags(args.join(' '), [
-            {name: 'm', type: 'string'}
+            {name: 'm', type: 'string', quotes: true}
         ]);
-        if (flags[0] && flags[0].value != null && flags[0].value.length) reason = flags[0].value;
+        if (flags[0].value != null && flags[0].value.length) reason = flags[0].value;
 
         if (message.mentions.users.size) message.mentions.users.forEach(u => users.push(u.id));
-        const reg = new re2(/\b(\d{17,19})+\b/, 'gm').compile().exec(args.join(' '));
-        if (reg.length) {
-            reg.forEach(id => {
+        args.forEach(a => {
+            if (/(?:<@!?)?\d{17,19}>?/g.test(a)) {
+                const id = a.replace(/<@|!|>/g, '');
                 if (!users.includes(id)) users.push(id);
-            });
-        }
+            }
+        });
         if (users.length < 2) return client.errEmb('Massban Must Have Minimum 2 Users.', message);
 
+        const banned = await message.guild.fetchBans();
         const total = users.length;
         let count = 0, res = 0;
         users.forEach(async id => {
-            if (count == 4) {
+            if (count === 4) {
                 count = 0;
-                setTimeout(() => {}, 3000);
+                await new Promise((res, rej) => setTimeout(() => {}, 3000));
             }
             try {
-                await message.guild.members.ban(id, {days: 0, reason: message.author.tag +': '+ reason});
+                if (banned.has(id)) return;
+                await message.guild.members.ban(id, {days: 0, reason: `${message.author.tag}: ${reason}`});
                 res++;
             } catch {}
-            users.splice(users.indexOf(id));
             count++;
         });
-        if (!users.length) {
-            return client.checkEmb(`Successfully Banned ${res} out of ${total} Users!`, message);
-        }
+        return await client.checkEmb(`Successfully Banned ${res} out of ${total} Users!`, message);
     }
 }

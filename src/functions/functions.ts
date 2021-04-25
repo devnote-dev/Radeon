@@ -1,38 +1,61 @@
+// General Functions for Radeon
+//
+// © Radeon Development 2021 (GNU GPL v3)
+// https://github.com/devnote-dev/Radeon
+
 import { botOwners, botAdmins } from "../../config.json";
-import { Permissions, SnowflakeUtil } from "discord.js";
-const { deconstruct } = SnowflakeUtil;
+import { Permissions } from "discord.js";
 
-function toDurationDefault(ts: string): string {
-    // ms = Math.abs(ms);
-    // const secs:  string = Math.floor((ms / 1000) % 60).toString();
-    // const mins:  string = Math.floor((ms / 1000 * 60) % 60).toString();
-    // const hours: string = Math.floor((ms / 1000 * 60 * 60) % 24).toString();
-    // const days:  string = Math.floor((ms / 1000 * 60 * 60 * 24) % 30).toString();
-    // return `${days} days ${hours} hours ${mins} minutes and ${secs} seconds`;
-    if (ts.length < 17 || ts.length > 19) return null;
-    let decon = deconstruct(ts);
+/**
+ * Converts a timestamp to a small humanized duration.
+ * @param ms Milliseconds to convert from.
+ * @returns string
+ */
+function toDurationDefault(ms: number): string {
+    ms = Date.now() - ms;
+    const secs:  number = Math.floor(ms / 1000) % 24;
+    const mins:  number = Math.floor(ms / 60000) % 60;
+    const hours: number = Math.floor(ms / 3600000) % 24;
+    const days:  number = Math.floor(ms / 86400000);
+    return `${days > 0 ? days +' days ' : ''}${hours} hours ${mins} minutes and ${secs} seconds ago`;
 }
 
-function toDurationLong(ms: number) {
-    const mins:   string = Math.floor((ms / 1000 * 60) % 60).toString()
-    const hours:  string = Math.floor((ms / 1000 * 60 * 60) % 24).toString()
-    const days:   string = Math.floor((ms / 1000 * 60 * 60 * 24) % 60).toString()
-    const months: string = Math.floor((ms / 1000 * 60 * 60 * 24 * 7 * 4) % 60).toString()
-    const years:  string = Math.floor((ms / 1000 * 60 * 60 * 24 * 7 * 4 * 12) % 60).toString()
-    return `${years} years ${months} months ${days} days ${hours} hours and ${mins} minutes`;
+/**
+ * Converts a timestamp to a long humanized duration.
+ * @param ms Milliseconds to convert from.
+ * @returns string
+ */
+function toDurationLong(ms: number): string {
+    ms = Date.now() - ms;
+    const hours: number = Math.floor(ms / 3600000) % 24;
+    const days:  number = Math.floor(ms / 86400000);
+    const weeks: number = Math.floor(ms / 6.048e+8);
+    const month: number = Math.floor(ms / 2.628e+9);
+    const years: number = Math.floor(ms / 3.154e+10);
+    return `${years > 0 ? years +' years ' : ''}${month > 0 ? month +' months ' : ''}${weeks > 0 ? weeks +' weeks ' : ''}${days} days and ${hours} hours ago`;
 }
 
-function toDurationDays(ms: number) {
+/**
+ * Converts a timestamp to a days string.
+ * @param ms Milliseconds to convert from.
+ * @returns string
+ */
+function toDurationDays(ms: number): string {
     const days: number = (Date.now() - ms) / 86400000;
     return `${days} days ago`;
 }
 
-function isBotStaff(id: string) {
+function isBotStaff(id: string): boolean {
     if (botOwners.includes(id) || botAdmins.includes(id)) return true; else return false;
 }
 
 function isBotOwner(id: string): boolean { return botOwners.includes(id) }
 
+/**
+ * Humanizes a Discord.Permissions bitfield to readable strings.
+ * @param permissions Permissions to convert.
+ * @returns string[]
+ */
 function humanize(permissions: Permissions): string[] {
     let perms = [];
     permissions.toArray().forEach(p => {
