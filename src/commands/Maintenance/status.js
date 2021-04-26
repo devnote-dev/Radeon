@@ -1,4 +1,4 @@
-const { version: dcversion } = require('discord.js');
+const { version: dcversion, MessageEmbed } = require('discord.js');
 const { join } = require('path');
 const { version } = require(join(process.cwd(), 'package.json'));
 const { toDurationDefault } = require('../../functions/functions');
@@ -10,7 +10,7 @@ module.exports = {
     cooldown: 3,
     run: async (client, message) => {
         const { heapUsed, heapTotal } = process.memoryUsage();
-        const embed = new Discord.MessageEmbed()
+        const embed = new MessageEmbed()
         .setTitle('Radeon Status (Total)')
         .setThumbnail(client.user.displayAvatarURL())
         .setColor(0x1e143b)
