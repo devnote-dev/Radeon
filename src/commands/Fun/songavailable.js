@@ -8,7 +8,7 @@ module.exports = {
     tag: 'Find what platforms have a song.',
     description: 'Find what platforms have a song.',
     usage: 'dare [pg|pg13|r] [d|irls]',
-    cooldown: 5,
+    cooldown: 20,
     run: async (client, message, args) => {
         if (!YoutubeKey) return client.errEmb("No youtube api key found")
         if (!args.length) return client.errEmb("Please provide a search", message)
