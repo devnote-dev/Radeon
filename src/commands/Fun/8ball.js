@@ -3,8 +3,8 @@ const { MessageEmbed } = require('discord.js');
 module.exports = {
     name: '8ball',
     aliases: ['8b'],
-    tag: 'Ask, and thy shall recieve',
-    description: 'Edits an existing embed sent by Radeon using JSON string.',
+    tag: 'Ask, and thy shall recieve.',
+    description: 'It\'s an 8ball, what do you expect?',
     usage: '8ball <question>',
     cooldown: 3,
     run: async (client, message, args) => {
