@@ -18,4 +18,3 @@ web/*.*
 src/commands/Admin/_logs.txt
 src/commands/Admin/test.js
 config.json
-package-lock.json
