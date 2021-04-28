@@ -39,5 +39,6 @@ We recommend **not** self-hosting Radeon as it is too early in development for i
 * NaruDevnote - Owner
 * tryharddeveloper - Owner
 * Piterxyz - Owner
+* Crenshaw - Contributor
 
 This repository is licensed under the GNU GPL v3 License.
