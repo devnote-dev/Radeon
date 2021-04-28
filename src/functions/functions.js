@@ -78,3 +78,22 @@ function humanize(permissions) {
     return perms;
 }
 exports.humanize = humanize;
+
+
+/**
+ * @param args args in the message
+ * @param options what you want to find
+ * @param not what the option cannot be 
+ * @returns string
+ */
+function choose(args, options, not) {
+    let choice = options[Math.floor(Math.random() * options.length)];
+    if (!args)
+        return choice;
+    for (let option of options) {
+        if (args.find(arg => option == arg && not !== arg))
+            choice = option;
+    }
+    return choice;
+}
+exports.choose = choose;
