@@ -1,4 +1,5 @@
 const { redditPost } = require('../../functions/reddit');
+const { choose } = require('../../functions/functions')
 const { MessageEmbed } = require('discord.js');
 
 module.exports = {
@@ -9,7 +10,12 @@ module.exports = {
     usage: 'meme',
     cooldown: 5,
     run: async (client, message, args) => {
-        let post = await redditPost(["jokes", "dadjokes", "antijokes", "meanjokes"]);
+
+        let options = ["jokes", "dadjokes", "antijokes", "meanjokes"]
+        if (args.length && options.includes(args[0])) options = [choose(args, options, null)]
+        else if (args.length) return client.errEmb(`Invalid subreddit, valid options are:\n${options.join(', ').slice(this.length - 2)}`, message)
+
+        let post = await redditPost(options);
         if (!post) return client.errEmb("No joke was returned", message);
 
         const embed = new MessageEmbed()
