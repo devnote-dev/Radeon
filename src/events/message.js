@@ -11,7 +11,7 @@ exports.run = async (client, message) => {
 
     const state = await Settings.findOne({ client: client.user.id });
     let lock = false;
-    if (state.maintenance) {
+    if (state && state.maintenance) {
         if (!isBotOwner(author.id)) lock = true;
     }
 

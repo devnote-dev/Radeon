@@ -1,6 +1,6 @@
 const { version: dcversion, MessageEmbed } = require('discord.js');
 const { join } = require('path');
-const { version } = require(join(process.cwd(), 'package.json'));
+const { version } = require(join(process.cwd(), 'package.json')); 
 const { toDurationDefault } = require('../../functions/functions');
 
 module.exports = {
