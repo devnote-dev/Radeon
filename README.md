@@ -31,7 +31,8 @@ We recommend **not** self-hosting Radeon as it is too early in development for i
         "guilds":"GUILDS_STATS_CHANNEL_ID",
         "users":"USERS_STATS_CHANNEL_ID"
     },
-    "MongoPath":"MONGODB_PASSWORD_KEY"
+    "MongoPath":"MONGODB_PASSWORD_KEY",
+    "YoutubeKey":"YOUTUBEv3_API_KEY"
 }
 ```
 
