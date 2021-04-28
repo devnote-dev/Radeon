@@ -5,7 +5,7 @@ module.exports = {
     name: 'meme',
     aliases: ['m'],
     tag: 'It\'s a meme...',
-    description: 'It gives you memes....',
+    description: 'Returns a random meme from reddit',
     usage: 'meme',
     cooldown: 5,
     run: async (client, message, args) => {
