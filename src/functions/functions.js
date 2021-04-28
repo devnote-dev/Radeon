@@ -5,7 +5,7 @@
 
 "use strict";
 exports.__esModule = true;
-exports.humanize = exports.isBotOwner = exports.isBotStaff = exports.toDurationDays = exports.toDurationLong = exports.toDurationDefault = void 0;
+exports.humanize = exports.isBotOwner = exports.isBotStaff = exports.toDurationDays = exports.toDurationLong = exports.toDurationDefault = exports.choose = void 0;
 var config_json_1 = require("../../config.json");
 
 /**
