@@ -9,7 +9,7 @@ module.exports = {
     usage: 'meme',
     cooldown: 5,
     run: async (client, message, args) => {
-       let post = await redditPost(["meme", "dankmeme"])
+       let post = await redditPost(['meme', 'dankmeme', 'memes', 'me_irl'])
        if (!post) return client.errEmb("No meme was found", message)
 
         const embed = new MessageEmbed()
