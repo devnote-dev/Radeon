@@ -7,8 +7,8 @@ module.exports = {
     name: 'songavailable',
     aliases: ['songav', 'sav'],
     tag: 'Find what platforms have a song.',
-    description: 'Find what platforms have a song.',
-    usage: 'songavailable [song name|-link song share link]',
+    description: 'Find what platforms have a song\n\n**Flags**\n`-link` - specify a share link',
+    usage: 'songavailable [song name|flag]',
     cooldown: 20,
     run: async (client, message, args) => {
         // flags
