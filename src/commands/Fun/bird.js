@@ -31,7 +31,7 @@ module.exports = {
         // embed
         const embed = new MessageEmbed()
         .setColor(0x1e143b)
-        .setTitle("Birf")
+        .setTitle("Bird")
         if (fox.fact) embed.setDescription(fox.fact)
         if (fox.image && fox.fact) {
             embed.setThumbnail(fox.image)
