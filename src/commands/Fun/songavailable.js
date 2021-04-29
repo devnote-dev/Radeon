@@ -58,7 +58,7 @@ module.exports = {
             {name: "_ _", value: desc.slice(splitAt).join("\n"), inline: true},
         );
         let songData = musicVideo.entitiesByUniqueId[Object.keys(musicVideo.entitiesByUniqueId)[0]]
-        embed.setThumbnail(spotifyActivity ? 'https://i.scdn.co/image/' + spotifyActivity.assets.largeImage.split(':')[1] : songData.thumbnailUrl)
+        embed.setThumbnail(songData.thumbnailUrl)
         embed.setTitle(songData.title + " by " + songData.artistName)
 
         return message.reply(embed);
