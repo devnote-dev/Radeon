@@ -17,14 +17,15 @@ module.exports = {
         ])
 
         // set search to presence
-        let spotifyActivity = message.member.presence.activities.find(activity => activity.name == 'Spotify' || activity.name.toLowerCase() == 'youtube music')
-        if (spotifyActivity && !args.length) {
+        let spotifyActivity = (message.mentions.members.first() || message.member).presence.activities.find(activity => activity.name == 'Spotify' || activity.name.toLowerCase() == 'youtube music')
+        if (spotifyActivity && (message.mentions.members.first() || !args.length)) {
             args = [spotifyActivity.details, spotifyActivity.state]
         }
 
         // Quick - error
         if (!YoutubeKey) return client.errEmb("No youtube api key found")
         if (!args.length) return client.errEmb("Please provide a search", message)
+        if (message.mentions && !spotifyActivity) return client.errEmb("That user doesn't have a music presence", message)
 
 
         // get music video
