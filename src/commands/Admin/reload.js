@@ -35,6 +35,10 @@ module.exports = {
             case 'settings':
                 category = 'Server Settings';
                 break;
+            case 'f':
+            case 'fun':
+                category = 'Fun'
+                break;
             default:
                 category = undefined;
                 break;
