@@ -9,7 +9,6 @@ module.exports = {
     description: 'Role Tools: Allows for viewing, creating, deleting, and assigning roles using the subcommands below.',
     usage: 'role <User:Mention/ID> <Role:Name/Mention/ID>\nrole c/create <Name> [Color:Hex/Decimal] [Permissions:Bitfield] [Hoisted:True/False] [Mentionable:True/False]\nrole d/delete <Role:Name/Mention/ID>',
     cooldown: 4,
-    userPerms: 268435456,
     botPerms: 268435456,
     guildOnly: true,
     run: async (client, message, args) => {
@@ -17,6 +16,7 @@ module.exports = {
         const sub = args[0].toLowerCase();
 
         if (/(?:<@!?)?\d{17,19}>?/g.test(sub)) {
+            if (!message.member.permissions.has(268435456)) return message.channel.send('You are missing the `Manage Roles` permission(s) to use this command.');
             const target = message.mentions.members.first() || message.guild.members.cache.get(args[0]);
             if (!target) return client.errEmb('Invalid Member Specified.', message);
             const role = message.mentions.roles.first()
@@ -38,6 +38,7 @@ module.exports = {
             }
 
         } else if (sub === 'c' || sub === 'create') {
+            if (!message.member.permissions.has(268435456)) return message.channel.send('You are missing the `Manage Roles` permission(s) to use this command.');
             if (!args[1]) return client.errEmb('No Name Provided.\n```\nrole create <Name> [Color:Hex/Decimal] [Permissions:Bitfield] [Hoisted:True/False] [Mentionable:True/False]\n```', message);
             const rname = parseQuotes(args.slice(1).join(' '), true);
             let rcolor = 0, rperms = 0, rhoist = false, rmention = false;
@@ -67,6 +68,7 @@ module.exports = {
             }
 
         } else if (sub === 'd' || sub === 'delete') {
+            if (!message.member.permissions.has(268435456)) return message.channel.send('You are missing the `Manage Roles` permission(s) to use this command.');
             if (!args[1]) return client.errEmb('No Role Specified.\n```\nrole delete <Role:Name/Mention/ID>\n```', message);
             const role = message.mentions.roles.first()
             || message.guild.roles.resolve(args.join(' '))

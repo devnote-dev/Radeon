@@ -25,7 +25,7 @@ module.exports = {
         // Quick - error
         if (!YoutubeKey) return client.errEmb("No youtube api key found")
         if (!args.length) return client.errEmb("Please provide a search", message)
-        if (message.mentions && !spotifyActivity) return client.errEmb("That user doesn't have a music presence", message)
+        if (message.mentions.length && !spotifyActivity) return client.errEmb("That user doesn't have a music presence", message)
 
 
         // get music video
