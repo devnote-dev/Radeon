@@ -1,20 +1,18 @@
-const { Client, Collection } = require('discord.js');
+const { Client, Collection, Intents:{ FLAGS }} = require('discord.js');
 const { readdirSync } = require('fs');
+
 const client = new Client({
     ws:{
         intents:[
-            'DIRECT_MESSAGES',
-            'GUILDS',
-            'GUILD_BANS',
-            'GUILD_EMOJIS',
-            'GUILD_INVITES',
-            'GUILD_MEMBERS',
-            'GUILD_MESSAGES',
-            'GUILD_PRESENCES'
+            FLAGS.GUILDS,
+            FLAGS.GUILD_BANS,
+            FLAGS.GUILD_INVITES,
+            FLAGS.GUILD_MEMBERS,
+            FLAGS.GUILD_MESSAGES,
+            FLAGS.GUILD_PRESENCES
         ]
     },
     partials:[
-        'CHANNEL',
         'GUILD_MEMBER',
         'MESSAGE',
         'USER'
@@ -46,7 +44,8 @@ readdirSync('./src/handlers/').forEach(handler => {
     require(`./handlers/${handler}`)(client);
 });
 
-setInterval(() => { client.rlcount = 0 }, 600000);
+// To be replaced soon:
+// setInterval(() => { client.rlcount = 0 }, 600000);
 
 client.mongoose.init();
 client.login(client.config.token);
