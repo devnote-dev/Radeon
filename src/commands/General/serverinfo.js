@@ -4,10 +4,11 @@ const { toDurationLong } = require('../../functions/functions');
 module.exports = {
     name: 'serverinfo',
     tag: 'Sends information about the server.',
+    aliases: ['si'],
     description: 'Sends information about the server.',
     cooldown: 6,
     guildOnly: true,
-    run: async (client, message) => {
+    run: async (_, message) => {
         message.channel.startTyping();
         const server = message.guild;
         const tc = server.channels.cache.filter(c => ['text','news','store'].includes(c.type));
