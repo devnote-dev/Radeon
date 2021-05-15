@@ -183,7 +183,7 @@ exports.run = async (client, message) => {
                     if (command.userPerms) {
                         if (message.member.permissions.has(command.userPerms)) {
                             if (isOnCooldown(client, author, command)) {
-                                checkRateLimit(client);
+                                await checkRateLimit(client);
                                 return message.react('⏳').catch(()=>{});
                             } else {
                                 try {
@@ -200,7 +200,7 @@ exports.run = async (client, message) => {
                         }
                     } else {
                         if (isOnCooldown(client, author, command)) {
-                            checkRateLimit(client);
+                            await checkRateLimit(client);
                             return message.react('⏳').catch(()=>{});
                         } else {
                             try {
@@ -219,7 +219,7 @@ exports.run = async (client, message) => {
             } else if (command.userPerms) {
                 if (message.member.permissions.has(command.userPerms)) {
                     if (isOnCooldown(client, author, command)) {
-                        checkRateLimit(client);
+                        await checkRateLimit(client);
                         return message.react('⏳').catch(()=>{});
                     } else {
                         try {
@@ -238,7 +238,7 @@ exports.run = async (client, message) => {
 
         } else if (command.cooldown) {
             if (isOnCooldown(client, author, command)) {
-                checkRateLimit(client);
+                await checkRateLimit(client);
                 return message.react('⏳').catch(()=>{});
             } else {
                 try {
@@ -322,7 +322,7 @@ function isOnCooldown(client, user, command) {
 function checkRateLimit(client) {
     if (client.rlcount > 4) {
         client.rlcount--;
-        return setTimeout(()=>{},500);
+        return new Promise(res => setTimeout(res, 500));
     } else {
         client.rlcount++;
         return;
