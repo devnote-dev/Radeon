@@ -14,6 +14,7 @@ module.exports = {
         let target = message.member;
         if (args.length) target = message.mentions.members.first() || message.guild.members.cache.get(args[0]);
         if (!target) return client.errEmb('Invalid Member Specified.', message);
+        if (target.partial) target = await target.fetch();
         const member = target;
         target = target.user;
 
