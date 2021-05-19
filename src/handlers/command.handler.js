@@ -9,6 +9,9 @@ module.exports = async client => {
             const command = require(`../commands/${dir}/${cmd}`);
             if (command.name) {
                 client.commands.set(command.name, command);
+                if (command.appdata) client.slash.set(command.appdata.name, command.appres);
+            } else if (command.appdata) {
+                client.slash.set(command.appdata.name, command.appres);
             } else {
                 failed.push(cmd);
             }
