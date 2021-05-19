@@ -5,9 +5,10 @@ module.exports = {
     name: 'userinfo',
     aliases: ['whois'],
     tag: 'Info about you or a specified user',
+    aliases: ['ui'],
     description: 'Sends information about a specified user, or the triggering user if none is specified.',
     usage: 'userinfo [User:Mention/ID]',
-    cooldown: 5,
+    cooldown: 7,
     guildOnly: true,
     run: async (client, message, args) => {
         let target = message.member;
@@ -28,7 +29,7 @@ module.exports = {
         if (target.presence.activities.length) {
             presence = '';
             target.presence.activities.forEach(act => {
-                if (act.type === 'CUSTOM_STATUS') presence += 'Custom: '+ act.state +'\n';
+                if (act.type === 'CUSTOM_STATUS') presence += '📄 '+ act.state +'\n';
                 if (act.type === 'PLAYING') presence += '🎮 playing '+ act.name +'\n';
                 if (act.type === 'LISTENING') {
                     let em = '🎧';

@@ -4,15 +4,16 @@ const { toDurationDefault } = require('../../functions/functions');
 module.exports = {
     name: 'roleinfo',
     tag: 'Sends information about a specific role.',
+    aliases: ['ri'],
     description: 'Sends information about a specified role.',
     usage: 'roleinfo <Role:Name/Mention/ID>',
-    cooldown: 4,
+    cooldown: 5,
     guildOnly: true,
     run: async (client, message, args) => {
         if (!args.length) return client.errEmb('No Role Specified.\n```\nroleinfo <Role:Name/Mention/ID>\n```', message);
         let role = message.mentions.roles.first()
-        || message.guild.roles.resolve(args.join(' '))
-        || message.guild.roles.cache.filter(r => r.name.toLowerCase().includes(args.join(' ').toLowerCase()));
+            || message.guild.roles.resolve(args.join(' '))
+            || message.guild.roles.cache.filter(r => r.name.toLowerCase().includes(args.join(' ').toLowerCase()));
         if (role instanceof Collection) {
             if (!role.size) return client.errEmb('Argument Specified is an Invalid Role.', message);
             if (role.size > 1) {
