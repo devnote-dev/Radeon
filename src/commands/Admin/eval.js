@@ -8,7 +8,7 @@ module.exports = {
     name: 'eval',
     guildOnly: true,
     modOnly: 1,
-    run: async (client, message, args) => {
+    async run(client, message, args) {
         if (!args.length) return client.errEmb('No Code Provided.', message);
         const path = `${message.guild.id}/${message.channel.id}`;
         let code = args.join(' ');
@@ -17,7 +17,7 @@ module.exports = {
         if (/token|(client)?\.config|while\s*\(\s*true\s*\)\s*\{\s*\}/gi.test(code)) return client.errEmb('You Can\'t Do That.', message);
         try {
             let m;
-            let evaled = await eval(code);
+            let evaled = await Promise.resolve(eval(code));
             evaled = inspect(evaled, false, 0);
             if (evaled.length > 2000) {
                 evaled = Util.splitMessage(evaled);

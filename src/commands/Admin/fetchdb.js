@@ -7,11 +7,11 @@ module.exports = {
     usage: 'fetchdb <Guild:ID>',
     guildOnly: true,
     modOnly: 4,
-    run: async (client, message, args) => {
+    async run(client, message, args) {
         if (!args.length) return client.errEmb('No Guild Specified.\n```\nfetchdb <Guild:ID>\n```', message);
         const server = client.guilds.cache.get(args[0]);
         if (!server) return client.errEmb('Unknown Guild Specified.', message);
-        const data = await Guild.findOne({guildID: server.id});
+        const data = await Guild.findOne({ guildID: server.id });
         if (!data) return client.errEmb(`Database entry for \`${server.name}\` could not be found!`, message);
         const embed = new MessageEmbed()
         .setTitle(`Guild: ${server.name}`)

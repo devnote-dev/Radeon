@@ -17,16 +17,8 @@ module.exports = {
         mongoose.set('useFindAndModify', false);
         mongoose.Promise = global.Promise;
 
-        mongoose.connection.on('connected', () => {
-            logDB('connected');
-        });
-
-        mongoose.connection.on('err', err => {
-            logDB('error', err);
-        });
-
-        mongoose.connection.on('disconnected', () => {
-            logDB('disconnected');
-        });
+        mongoose.connection.on('connected', () => logDB('connected'));
+        mongoose.connection.on('err', err => logDB('error', err));
+        mongoose.connection.on('disconnected', () => logDB('disconnected'));
     }
 }

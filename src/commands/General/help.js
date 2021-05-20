@@ -38,6 +38,10 @@ module.exports = {
                 case 'server settings':
                     search = 'Server Settings';
                     break;
+                case 'f':
+                case 'fun':
+                    search = 'Fun'
+                    break;
             }
             
             let desc = [];
@@ -90,6 +94,7 @@ module.exports = {
                 {name: '<:moderation:813778681914851421> Moderation', value: '`help mod`', inline: true},
                 {name: '⚙ Server Settings', value: '`help settings`', inline: true},
                 {name: '👮‍♂️ Anti-Raid', value: 'Coming Soon!', inline: true},
+                {name: '🎱 Fun', value: '`help fun`', inline: true},
                 {name: '🔗 Links', value: '[Bot Invite](https://discord.com/api/oauth2/authorize?client_id=762359941121048616&permissions=8&scope=bot) | [Support Server](https://discord.gg/xcZwGhSy4G) | [Github Repo](https://github.com/devnote-dev/Radeon)', inline: false}
             )
             .setColor(0x1e143b);

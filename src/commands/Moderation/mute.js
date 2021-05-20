@@ -16,11 +16,12 @@ module.exports = {
         const { muteRole, modLogs } = await Guild.findOne({ guildID: message.guild.id });
         if (!muteRole) return client.errEmb('Mute role not found/set. You can set one using the `muterole` command.', message);
         if (args.length < 2) return client.errEmb('Insufficient Arguments.\n```\nmute <User:Mention/ID> [Time:Duration] <Reason:Text>\n```', message);
-        const target = message.mentions.members.first() || message.guild.members.cache.get(args[0]);
+        let target = message.mentions.members.first() || message.guild.members.cache.get(args[0]);
+        if (!target) return client.errEmb('Invalid Member Specified.', message);
+        if (target.partial) target = await target.fetch();
         let duration = ms(args[1]);
         if (isNaN(duration) || duration > 31557600000) duration = 'inf';
         let reason = args.slice(2).join(' ');
-        if (!target) return client.errEmb('Invalid Member Specified.', message);
         if (target.user.id == message.author.id) return client.errEmb('You cant mute yourself. <:meguface:738862132493287474>', message);
         if (target.user.id == client.user.id) return client.errEmb('I can\'t mute myself.', message);
         if (!reason) reason = '(No Reason Specified)';
