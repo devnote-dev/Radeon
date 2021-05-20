@@ -1,13 +1,17 @@
-const { readdirSync } = require('fs');
+const filehound = require('filehound');
+const { parse, join } = require('path');
 
 module.exports = async client => {
     let loaded = 0;
-    readdirSync('./src/events/')
-    .filter(f => f.endsWith('.js'))
+
+    filehound.create()
+    .path(join(process.cwd(),'src','events'))
+    .ext('.js')
+    .findSync()
     .forEach(e => {
-        const event = require(`../events/${e}`);
+        const event = require(e);
         loaded++;
-        client.on(e.split('.').shift(), (...args) => {
+        client.on(parse(e).base.split('.')[0], (...args) => {
             client.stats.events++;
             event.run(client, ...args);
         });
