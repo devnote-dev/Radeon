@@ -2,16 +2,13 @@ const { Client, Collection, Intents:{ FLAGS }} = require('discord.js');
 const { readdirSync } = require('fs');
 
 const client = new Client({
-    ws:{
-        intents:[
-            FLAGS.GUILDS,
-            FLAGS.GUILD_BANS,
-            FLAGS.GUILD_INVITES,
-            FLAGS.GUILD_MEMBERS,
-            FLAGS.GUILD_MESSAGES,
-            FLAGS.GUILD_PRESENCES
-        ]
-    },
+    intents:[
+        FLAGS.GUILDS,
+        FLAGS.GUILD_BANS,
+        FLAGS.GUILD_MEMBERS,
+        FLAGS.GUILD_MESSAGES,
+        FLAGS.DIRECT_MESSAGES
+    ],
     partials:[
         'GUILD_MEMBER',
         'MESSAGE',
@@ -24,6 +21,7 @@ const client = new Client({
 
 client.commands   = new Collection();
 client.aliases    = new Collection();
+client.slash      = new Collection();
 client.ratelimits = new Collection();
 client.cmdlogs    = new Set();
 client.cooldowns  = new Map();
