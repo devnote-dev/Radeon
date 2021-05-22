@@ -1,4 +1,4 @@
-require('discord.js');
+const { Message } = require('discord.js');
 const { logAdmin } = require('../../console/consoleR');
 
 module.exports = {
@@ -8,17 +8,18 @@ module.exports = {
     usage: 'execute <Command:Name/Alias> [...args]',
     guildOnly: true,
     modOnly: 4,
-    run: async (client, message, args) => {
+    async run(client, message, args) {
         if (!args.length) return client.errEmb('No Command Specified.', message);
         const path = `${message.guild.id}/${message.channel.id}`;
         const cmd = args[0].toLowerCase();
-        const Args = args.splice(1);
+        const ARGS = args.slice(1);
         if (cmd === 'execute' || cmd === 'exec') return message.react('❌').catch(()=>{});
         let command = client.commands.get(cmd) || client.commands.get(client.aliases.get(cmd));
         if (!command) return client.errEmb(`Unknown Command \`${cmd}\``, message);
-        logAdmin('exec', path, message.author.id, command.name +' '+ Args.join(' '));
+        logAdmin('exec', path, message.author.id, command.name +' '+ ARGS.join(' '));
         try {
-            command.run(client, message, Args);
+            const ctxmsg = new Message(client, {}, message.channel);
+            await command.run(client, ctxmsg, ARGS);
         } catch (err) {
             return client.errEmb(err.message, message);
         }
