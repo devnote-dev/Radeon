@@ -1,3 +1,11 @@
+/**
+ * @author Piter <https://github.com/piterxyz>
+ * @author Tryharddeveloper <https://github.com/tryharddeveloper>
+ * @author Devonte <https://github.com/devnote-dev>
+ * @copyright Radeon Development 2021
+ */
+
+
 const { Permissions, MessageEmbed } = require('discord.js');
 const { isBotStaff, isBotOwner, humanize } = require('../functions/functions');
 const { logError } = require('../console/consoleR');

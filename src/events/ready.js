@@ -1,4 +1,10 @@
-require('discord.js');
+/**
+ * @author Piter <https://github.com/piterxyz>
+ * @author Devonte <https://github.com/devnote-dev>
+ * @copyright Radeon Development 2021
+ */
+
+
 const { botReady } = require('../console/consoleR');
 
 exports.run = async client => {
@@ -6,8 +12,8 @@ exports.run = async client => {
     client.user.setPresence({
         status: 'online',
         activity:{
-            name: '@Radeon help',
-            type: 'WATCHING'
+            name: 'Commands',
+            type: 'LISTENING'
         }
     });
     client.stats.events++;

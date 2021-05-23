@@ -1,3 +1,9 @@
+/**
+ * @author Devonte <https://github.com/devnote-dev>
+ * @copyright Radeon Development 2021
+ */
+
+
 const { logError } = require('../console/consoleR');
 
 exports.run = async (client, interaction) => {
