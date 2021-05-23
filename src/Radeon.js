@@ -1,3 +1,11 @@
+/**
+ * @author Piter <https://github.com/piterxyz>
+ * @author Devonte <https://github.com/devnote-dev>
+ * @author Tryharddeveloper <https://github.com/tryharddeveloper>
+ * @copyright Radeon Development 2021
+ */
+
+
 const { Client, Collection, Intents:{ FLAGS }} = require('discord.js');
 const { readdirSync } = require('fs');
 
@@ -41,9 +49,6 @@ readdirSync('./src/handlers/').forEach(handler => {
     if (!handler.endsWith('.handler.js')) return;
     require(`./handlers/${handler}`)(client);
 });
-
-// To be replaced soon:
-// setInterval(() => { client.rlcount = 0 }, 600000);
 
 client.mongoose.init();
 client.login(client.config.token);

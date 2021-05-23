@@ -1,3 +1,9 @@
+/**
+ * @author Tryharddeveloper <https://github.com/tryharddeveloper>
+ * @copyright Radeon Development 2021
+ */
+
+
 const mongoose = require('mongoose');
 const { MongoPath } = require('../config.json');
 const { logDB } = require('./console/consoleR');
