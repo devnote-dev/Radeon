@@ -1,11 +1,13 @@
-// Strings Parser (quotations and flags) for Radeon
-//
-// There will be NO support for the use of this file
-// except for self-hosted instances of Radeon
-// (which is not currently supported).
-//
-// © Radeon Development 2021 (GNU GPL v3)
-// https://github.com/devnote-dev/Radeon
+/**
+ * Strings Parser
+ * 
+ * There will be NO support for the use of this file
+ * except for self-hosted instances of Radeon
+ * (which is currently not supported).
+ * 
+ * @author Devonte <https://github.com/devnote-dev>
+ * @copyright Radeon Development 2021
+ */
 
 
 type FlagOptions = {

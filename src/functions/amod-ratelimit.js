@@ -1,6 +1,9 @@
-// Automod Main: ratelimiter
-// Current Issues: None
-//
+/**
+ * Automod Main: Ratelimiter
+ * @author Devonte <https://github.com/devnote-dev>
+ * @copyright Radeon Development 2021
+ */
+
 // Current Process for this:
 // client.ratelimits is a collection of guild states, inside
 // of the guild states is a collection of channel states, and
@@ -10,9 +13,6 @@
 //     id saved; check if exceeded limit -> bulkDelete & log; reset state;
 //     AFTER: save userState to channelState; save channelState to guildState;
 //     save guildState to client.ratelimits;
-//
-// Efficiency: unknown
-// © Radeon Development 2021 (GNU GPL v3)
 
 const { Collection, MessageEmbed } = require("discord.js");
 

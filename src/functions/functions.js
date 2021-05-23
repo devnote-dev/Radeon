@@ -1,7 +1,9 @@
-// General Functions for Radeon
-//
-// © Radeon Development 2021 (GNU GPL v3)
-// https://github.com/devnote-dev/Radeon
+/**
+ * Radeon General Functions
+ * @author Devonte <https://github.com/devnote-dev>
+ * @copyright Radeon Development 2021
+ */
+
 
 "use strict";
 exports.__esModule = true;

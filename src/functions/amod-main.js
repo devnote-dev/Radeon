@@ -1,6 +1,9 @@
-// Automod Main: message filter v2
-// Current Issues: None
-// © Radeon Development 2021 (GNU GPL v3)
+/**
+ * Automod Main: Message Filter v2
+ * @author Devonte <https://github.com/devnote-dev>
+ * @copyright Radeon Development 2021
+ */
+
 
 const { MessageEmbed } = require("discord.js");
 
@@ -27,7 +30,7 @@ module.exports = async (message, automod) => {
             const invites = await message.guild.fetchInvites();
             let notFromServer = false;
             if (invites.size) {
-                invites.forEach(inv => notFromServer = matches[1] == inv.code);
+                invites.forEach(inv => notFromServer = matches[1] === inv.code);
             }
             if (notFromServer) {
                 try {
