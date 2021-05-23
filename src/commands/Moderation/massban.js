@@ -1,3 +1,9 @@
+/**
+ * @author Devonte <https://github.com/devnote-dev>
+ * @copyright Radeon Development 2021
+ */
+
+
 const { parseFlags } = require('../../functions/stringParser');
 
 module.exports = {
@@ -9,7 +15,7 @@ module.exports = {
     userPerms: 8,
     botPerms: 4,
     guildOnly: true,
-    run: async (client, message, args) => {
+    async run(client, message, args) {
         if (!args.length) return client.errEmb('Insufficient Arguments.\n```\nmassban <...User:Mention/ID> [-m Reason:Text]\n```', message);
         const users = [];
         let reason = '(No Reason Specified)';

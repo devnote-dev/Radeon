@@ -1,4 +1,9 @@
-require('discord.js');
+/**
+ * @author Devonte <https://github.com/devnote-dev>
+ * @author Tryharddeveloper <https://github.com/tryharddeveloper>
+ * @copyright Radeon Development 2021
+ */
+
 
 module.exports = {
     name: 'unban',
@@ -9,7 +14,7 @@ module.exports = {
     userPerms: 4,
     botPerms: 4,
     guildOnly: true,
-    run: async (client, message, args) => {
+    async run(client, message, args) {
         if (!args.length) return client.errEmb('No User Specified.\n```\nunban <User:ID> [Reason:Text]\n```', message);
         const target = args[0];
         if (!/^\d{17,19}$/g.test(target)) return client.errEmb('Invalid User ID Specified.', message);

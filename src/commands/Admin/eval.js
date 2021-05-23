@@ -1,3 +1,9 @@
+/**
+ * @author Devonte <https://github.com/devnote-dev>
+ * @copyright Radeon Development 2021
+ */
+
+
 const Discord = require('discord.js');
 const Util = Discord.Util;
 const { inspect } = require('util');

@@ -1,3 +1,9 @@
+/**
+ * @author Crenshaw <https://github.com/Crenshaw1312>
+ * @copyright Radeon Development 2021
+ */
+
+
 const { choose } = require('../../functions/functions');
 const request = require('node-superfetch')
 const { MessageEmbed } = require('discord.js');
@@ -8,7 +14,7 @@ module.exports = {
     description: 'Returns a random dare',
     usage: 'dare [pg|pg13|r] [d|irls]',
     cooldown: 5,
-    run: async (client, message, args) => {
+    async run(client, message, args) {
         // setting rating
         let rating = await choose(args, ["pg", "pg13", "r"], null);
         let type = choose(args, ["d", "irl"], rating);

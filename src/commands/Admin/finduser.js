@@ -1,3 +1,9 @@
+/**
+ * @author Devonte <https://github.com/devnote-dev>
+ * @copyright Radeon Development 2021
+ */
+
+
 const { MessageEmbed } = require('discord.js')
 const { toDurationDefault } = require('../../functions/functions');
 
@@ -8,13 +14,14 @@ module.exports = {
     usage: 'finduser <User:Name/Mention/ID>',
     guildOnly: false,
     modOnly: 4,
-    run: async (client, message, args) => {
+    async run(client, message, args) {
         if (!args.length) return client.errEmb('No User Specified\n```\nfinduser <User:Name/Mention/ID>\n```', message);
         message.channel.startTyping();
         const q = args.join(' ');
-        let user = message.mentions.users.first()
-        || client.users.cache.get(q)
-        || client.users.cache.find(u => u.username.toLowerCase() == q.toLowerCase());
+        let user = 
+            message.mentions.users.first()
+            || client.users.cache.get(q)
+            || client.users.cache.find(u => u.username.toLowerCase() == q.toLowerCase());
 
         if (!user) {
             message.channel.stopTyping();

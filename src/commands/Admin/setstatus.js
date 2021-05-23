@@ -1,3 +1,9 @@
+/**
+ * @author Piter <https://github.com/piterxyz>
+ * @copyright Radeon Development 2021
+ */
+
+
 const activities = [
 "PLAYING",
 "STREAMING",
@@ -12,7 +18,7 @@ module.exports = {
     description: 'Sets bot\'s status.',
     guildOnly: false,
     modOnly: 4,
-    run: async (client, message, args) => { 
+    async run(client, message, args) { 
         if(args[0]) {
             const activityType = args[0].toUpperCase();
             let activityName = args.slice(1).join(" ");

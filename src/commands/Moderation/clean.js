@@ -1,6 +1,11 @@
+/**
+ * @author Devonte <https://github.com/devnote-dev>
+ * @copyright Radeon Development 2021
+ */
+
+
 const advanceClean = require('../../functions/advanceClean');
 const { parseFlags } = require('../../functions/stringParser');
-
 const flags = '`-users` - Deletes only user messages\n`-bots` - Deletes only bot messages\n`-nopin` - Deletes messages that aren\'t pinned\n`-has <Word>` - Messages that contain a specific word/char\n`-to <Message:ID>` - Messages before that message';
 
 module.exports = {
@@ -13,7 +18,7 @@ module.exports = {
     userPerms: 8192,
     botPerms: 8192,
     guildOnly: true,
-    run: async (client, message, args) => {
+    async run(client, message, args) {
         if (!args.length) return client.errEmb('No Amount Specified.\n```\nclean <Amount:Number>\nclean <Amount:Number> [User:Mention/ID]\nclean <Amount:Number> [...Flags]\n```\n**Flags:**\n'+ flags, message);
         let amount = parseInt(args[0]);
         if (isNaN(amount) || amount < 1 || amount > 100) return client.errEmb('Invalid Amount Specified. Amount must be a number between 1 and 100.', message);

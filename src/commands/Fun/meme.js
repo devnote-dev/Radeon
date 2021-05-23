@@ -1,3 +1,9 @@
+/**
+ * @author Crenshaw <https://github.com/Crenshaw1312>
+ * @copyright Radeon Development 2021
+ */
+
+
 const { redditPost } = require('../../functions/reddit');
 const { choose } = require('../../functions/functions')
 const { MessageEmbed } = require('discord.js');
@@ -9,7 +15,7 @@ module.exports = {
     description: 'Returns a random meme from reddit',
     usage: 'meme',
     cooldown: 5,
-    run: async (client, message, args) => {
+    async run(client, message, args) {
         let options = ['meme', 'dankmeme', 'memes', 'me_irl']
         if (args.length && options.includes(args[0])) options = [choose(args, options, null)]
         else if (args.length) return client.errEmb(`Invalid subreddit, valid options are:\n${options.join(', ').slice(this.length - 2)}`, message)

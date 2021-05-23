@@ -1,3 +1,10 @@
+/**
+ * @author Devonte <https://github.com/devnote-dev>
+ * @author Piter <https://github.com/piterxyz>
+ * @copyright Radeon Development 2021
+ */
+
+
 const { MessageEmbed } = require('discord.js');
 const { toDurationDefault, toDurationLong } = require('../../functions/functions');
 
@@ -10,9 +17,12 @@ module.exports = {
     usage: 'userinfo [User:Mention/ID]',
     cooldown: 7,
     guildOnly: true,
-    run: async (client, message, args) => {
+    async run(client, message, args) {
         let target = message.member;
-        if (args.length) target = message.mentions.members.first() || message.guild.members.cache.get(args[0]);
+        if (args.length) {
+            if (new RegExp(`(?:<@!?)?${client.user.id}>?`).test(args[0])) target = message.guild.me;
+            else target = message.mentions.members.first() || message.guild.members.cache.get(args[0]);
+        }
         if (!target) return client.errEmb('Invalid Member Specified.', message);
         if (target.partial) target = await target.fetch();
         const member = target;

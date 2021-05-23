@@ -1,3 +1,9 @@
+/**
+ * @author Devonte <https://github.com/devnote-dev>
+ * @copyright Radeon Development 2021
+ */
+
+
 const { Permissions } = require('discord.js');
 const { parseQuotes } = require('../../functions/stringParser');
 const ascii = require('ascii-table');
@@ -11,7 +17,7 @@ module.exports = {
     cooldown: 4,
     botPerms: 268435456,
     guildOnly: true,
-    run: async (client, message, args) => {
+    async run(client, message, args) {
         if (!args.length) return client.errEmb('No Subcommand Specified. See `help role` for more information.', message);
         const sub = args[0].toLowerCase();
 

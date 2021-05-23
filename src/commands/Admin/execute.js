@@ -1,3 +1,9 @@
+/**
+ * @author Devonte <https://github.com/devnote-dev>
+ * @copyright Radeon Development 2021
+ */
+
+
 const { Message } = require('discord.js');
 const { logAdmin } = require('../../console/consoleR');
 

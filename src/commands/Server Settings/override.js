@@ -1,3 +1,9 @@
+/**
+ * @author Devonte <https://github.com/devnote-dev>
+ * @copyright Radeon Development 2021
+ */
+
+
 const { MessageEmbed } = require('discord.js');
 const Guild = require('../../schemas/guild-schema');
 
@@ -9,8 +15,8 @@ module.exports = {
     userPerms: 32,
     guildOnly: true,
     modBypass: true,
-    run: async (client, message, args) => {
-        const data = await Guild.findOne({guildID: message.guild.id});
+    async run(client, message, args) {
+        const data = await Guild.findOne({ guildID: message.guild.id });
         if (!args.length) {
             let commands = 'None Set', channels = 'None Set';
             if (data.ignoredCommands.length) commands = `\`${data.ignoredCommands.join('`\n`')}\``;

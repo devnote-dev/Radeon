@@ -1,3 +1,9 @@
+/**
+ * @author Devonte <https://github.com/devnote-dev>
+ * @copyright Radeon Development 2021
+ */
+
+
 const { GuildMember, User } = require('discord.js');
 const { parseFlags } = require('../../functions/stringParser');
 
@@ -10,7 +16,7 @@ module.exports = {
     userPerms: 4,
     botPerms: 4,
     guildOnly: true,
-    run: async (client, message, args) => {
+    async run(client, message, args) {
         if (!args.length) return client.errEmb('Insufficient Arguments.\n```\nban <User:Mention/ID> <Reason:Text> [-dd <Number>]\n```', message);
         let target = message.mentions.users.first() || client.users.cache.get(args[0]);
         let fetched;

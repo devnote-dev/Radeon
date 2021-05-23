@@ -1,3 +1,9 @@
+/**
+ * @author Devonte <https://github.com/devnote-dev>
+ * @copyright Radeon Development 2021
+ */
+
+
 const { MessageEmbed } = require('discord.js');
 const { parseFlags } = require('../../functions/stringParser');
 
@@ -8,7 +14,7 @@ module.exports = {
     usage: 'embed <...Flags>\n-raw "message"\n-author "author message"\n-aicon "author iconURL"\n-thumb "thumbnail URL"\n-title "title message"\n-url "title URL"\n-desc "description message"\n-color "HEX/DECIMAL"\n-image "image URL"\n-footer "footer message"\n-ficon "footer iconURL"\n-ts (timestamp)',
     cooldown: 3,
     guildOnly: true,
-    run: async (client, message, args) => {
+    async run(client, message, args) {
         if (!args.length) return client.errEmb('No Arguments Provided.\n```\nembed <...Flags>\n```', message);
         const flags = parseFlags(args.join(' '), [
             {name: 'raw', type: 'string', quotes: true},

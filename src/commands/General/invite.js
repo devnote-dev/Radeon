@@ -1,3 +1,9 @@
+/**
+ * @author Devonte <https://github.com/devnote-dev>
+ * @copyright Radeon Development 2021
+ */
+
+
 const { MessageEmbed } = require('discord.js');
 
 module.exports = {
@@ -5,7 +11,7 @@ module.exports = {
     aliases: ['support'],
     tag: 'Sends Radeon\'s invite links!',
     description: 'Sends Radeon\'s invite links!',
-    run: async (client, message) => {
+    async run(client, message) {
         const e = new MessageEmbed()
         .setTitle('🔗 Invite Links')
         .setThumbnail(client.user.displayAvatarURL())

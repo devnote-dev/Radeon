@@ -1,4 +1,10 @@
-require('discord.js');
+/**
+ * @author Devonte <https://github.com/devnote-dev>
+ * @author Piter <https://github.com/piterxyz>
+ * @copyright Radeon Development 2021
+ */
+
+
 const ms = require('ms');
 
 module.exports = {
@@ -11,7 +17,7 @@ module.exports = {
     userPerms: 8192,
     botPerms: 16,
     guildOnly: true,
-    run: async (client, message, args) => {
+    async run(client, message, args) {
         if (!args.length) return client.errEmb('No Duration Specified.\n```\nslowmode <Time:Duration> [Reason:Text]\nslowmode off\n```', message);
         let time, reason = '(No Reason Specified)';
         if (args[0] === 'off') time = 0; else time = ms(args[0]) / 1000;

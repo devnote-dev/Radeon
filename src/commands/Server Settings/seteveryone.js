@@ -1,3 +1,9 @@
+/**
+ * @author Devonte <https://github.com/devnote-dev>
+ * @copyright Radeon Development 2021
+ */
+
+
 const { MessageEmbed } = require('discord.js');
 const Guild = require('../../schemas/guild-schema');
 
@@ -9,7 +15,7 @@ module.exports = {
     guildOnly: true,
     modBypass: true,
     userPerms: 32,
-    run: async (client, message, args) => {
+    async run(client, message, args) {
         if (!args.length) {
             const gData = await Guild.findOne({ guildID: message.guild.id });
             let role;

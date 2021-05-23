@@ -1,3 +1,9 @@
+/**
+ * @author Devonte <https://github.com/devnote-dev>
+ * @copyright Radeon Development 2021
+ */
+
+
 const { MessageEmbed } = require('discord.js');
 const Guild = require('../../schemas/guild-schema');
 
@@ -8,9 +14,9 @@ module.exports = {
     usage: 'muterole <Role:Name/Mention/ID>\nmuterole reset',
     guildOnly: true,
     userPerms: 32,
-    run: async (client, message, args) => {
+    async run(client, message, args) {
         if (!args.length) {
-            const data = await Guild.findOne({guildID: message.guild.id});
+            const data = await Guild.findOne({ guildID: message.guild.id });
             let res = 'There is no muted role setup for this server.';
             if (data.muteRole) res = `The muted role for this server is <@&${data.muteRole}>.`;
             const embed = new MessageEmbed()

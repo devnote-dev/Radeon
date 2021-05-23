@@ -1,3 +1,9 @@
+/**
+ * @author Devonte <https://github.com/devnote-dev>
+ * @copyright Radeon Development 2021
+ */
+
+
 const { MessageAttachment } = require('discord.js');
 const { readFileSync, writeFileSync } = require('fs');
 const { join } = require('path');

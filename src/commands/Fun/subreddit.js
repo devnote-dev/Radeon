@@ -1,3 +1,9 @@
+/**
+ * @author Crenshaw <https://github.com/Crenshaw1312>
+ * @copyright Radeon Development 2021
+ */
+
+
 const { redditPost } = require('../../functions/reddit');
 const { MessageEmbed } = require('discord.js');
 
@@ -8,7 +14,7 @@ module.exports = {
     description: 'Returns a random meme from reddit',
     usage: 'meme',
     cooldown: 5,
-    run: async (client, message, args) => {
+    async run(client, message, args) {
         if (!args.length) return client.errEmb("Please provide a subreddit to get a post from")
         let post = await redditPost([args[0]])
         if (!post) return client.errEmb(`No meme was found for r/${args[0]}`, message)

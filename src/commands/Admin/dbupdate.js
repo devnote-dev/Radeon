@@ -1,3 +1,9 @@
+/**
+ * @author Devonte <https://github.com/devnote-dev>
+ * @copyright Radeon Development 2021
+ */
+
+
 module.exports = {
     name: 'dbupdate',
     description: 'Updates the database of a specified guild to the latest schema update.',

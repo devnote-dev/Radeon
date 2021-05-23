@@ -1,4 +1,9 @@
-require('discord.js');
+/**
+ * @author Devonte <https://github.com/devnote-dev>
+ * @copyright Radeon Development 2021
+ */
+
+
 const { logAdmin } = require('../../console/consoleR');
 
 module.exports = {
@@ -8,7 +13,7 @@ module.exports = {
     usage: 'reload <Category> <Command>',
     guildOnly: true,
     modOnly: 1,
-    run: async (client, message, args) => {
+    async run(client, message, args) {
         if (args.length < 2) return client.errEmb('Insufficient Arguments\n```\nreload <Category> <Command>\n```', message);
         const cat = args[0].toLowerCase();
         const cmd = client.commands.get(args[1].toLowerCase()) || client.commands.get(client.aliases.get(args[1].toLowerCase()));

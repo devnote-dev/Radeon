@@ -1,3 +1,10 @@
+/**
+ * @author Tryharddeveloper <https://github.com/tryharddeveloper>
+ * @author Devonte <https://github.com/devnote-dev>
+ * @copyright Radeon Development 2021
+ */
+
+
 const { MessageEmbed } = require('discord.js');
 const Guild = require('../../schemas/guild-schema');
 
@@ -6,9 +13,9 @@ module.exports = {
     tag: 'Shows the current prefix for the server',
     desription: 'Shows the current prefix for the server.',
     guildOnly: true,
-    run: async (client, message) => {
+    async run(client, message) {
         try {
-            const data = await Guild.findOne({guildID: message.guild.id});
+            const data = await Guild.findOne({ guildID: message.guild.id });
             const embed = new MessageEmbed()
             .setDescription(`Current Prefix: \`${data.prefix}\`\n\nDefault Prefixes: \`r!\`, <@${client.user.id}>`)
             .setColor(0x1e143b)
