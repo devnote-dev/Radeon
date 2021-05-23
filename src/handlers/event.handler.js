@@ -1,3 +1,10 @@
+/**
+ * @author Devonte <https://github.com/devnote-dev>
+ * @author Specky <https://github.com/SpeckyYT>
+ * @copyright Radeon Development 2021
+ */
+
+
 const filehound = require('filehound');
 const { parse, join } = require('path');
 

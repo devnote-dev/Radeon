@@ -1,3 +1,9 @@
+/**
+ * @author Devonte <https://github.com/devnote-dev>
+ * @copyright Radeon Development 2021
+ */
+
+
 const { Guild, Message, MessageEmbed } = require('discord.js');
 
 module.exports = async client => {
