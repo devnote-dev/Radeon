@@ -1,3 +1,9 @@
+/**
+ * @author Devonte <https://github.com/devnote-dev>
+ * @copyright Radeon Development 2021
+ */
+
+
 const { CronJob } = require('cron');
 const { logError } = require('../console/consoleR');
 const Muted = require('../schemas/muted-schema');
@@ -13,7 +19,6 @@ module.exports = async client => {
                     if (k == null) return;
                     if (Date.now() > k) remove.push(v);
                 });
-
                 if (remove.length) {
                     const temp = GS.mutedList;
                     remove.forEach(i => temp.delete(i));
@@ -27,10 +32,21 @@ module.exports = async client => {
             });
             client.stats.background++;
         } catch (err) {
-            logError(err, __dirname);
+            logError(err, __filename);
         }
     });
 
-    // Running here
+    const scheduleStatusCron = new CronJob('* * * * 5', async () => {
+        const presences = [
+            {name: '@Radeon help', type: 'WATCHING'},
+            {name: 'Automod', type: 'PLAYING'},
+            {name: 'r!invite to invite!', type: 'PLAYING'},
+            {name: 'with Slash Commands', type: 'PLAYING'}
+        ];
+        const p = presences[Math.floor(Math.random() * presences.length)];
+        await client.user.setStatus({ name: p.name, type: p.type });
+    });
+
     scheduleUnmuteCron.start();
+    scheduleStatusCron.start();
 }
