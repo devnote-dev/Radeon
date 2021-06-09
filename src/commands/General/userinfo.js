@@ -28,14 +28,6 @@ module.exports = {
         const member = target;
         target = target.user;
 
-        switch (target.presence.status) {
-            case 'online': status = '<:status_online:782290447149432892> Online'; break;
-            case 'idle': status = '<:status_idle:782290447123873824> Idle'; break;
-            case 'dnd': status = '<:status_dnd:782290447028191243> DND'; break;
-            case 'offline': status = '<:status_offline:782290447057813524> Offline'; break;
-            default: status = 'unknown'; break;
-        }
-
         let presence = 'None or not cached.';
         if (target.presence.activities.length) {
             presence = '';
@@ -61,8 +53,8 @@ module.exports = {
         let roles = [], rest = 0;
         if (member.roles.cache.size) {
             member.roles.cache
-            .sort((a, b) => b.position - a.position)
-            .forEach(r => roles.push(r));
+                .sort((a, b) => b.position - a.position)
+                .forEach(r => { if (r.id !== message.guild.id) roles.push(r) });
             if (roles.length > 5) {
                 roles = roles.slice(0, 5);
                 rest = member.roles.cache.size - 5;
@@ -94,8 +86,8 @@ module.exports = {
         .setTitle(target.tag)
         .setDescription(totalf)
         .addField('ID', `${target.id}`, true)
-        .addField('Status', status, true)
         .addField('Avatar', `[Download Link 📥](${target.displayAvatarURL({dynamic: true})})`, true)
+        .addField('\u200b', '\u200b', true)
         .addField('Account Age', `${target.createdAt.toDateString()}\n${toDurationLong(target.createdTimestamp)}`, true)
         .addField('Server Member Age', `${member.joinedAt.toDateString()}\n${toDurationDefault(member.joinedTimestamp)}`, true)
         .addField('Presence', presence, false)
