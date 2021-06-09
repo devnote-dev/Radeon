@@ -6,7 +6,7 @@
 
 
 import { botOwners, botAdmins } from "../../config.json";
-import { Permissions } from "discord.js";
+import { PermissionResolvable, Permissions } from "discord.js";
 
 /**
  * Converts a timestamp to a small humanized duration.
@@ -58,8 +58,9 @@ function isBotOwner(id: string): boolean { return botOwners.includes(id) }
  * @param permissions Permissions to convert.
  * @returns string[]
  */
-function humanize(permissions: Permissions): string[] {
+function humanize(permissions: PermissionResolvable): string[] {
     let perms = [];
+    permissions = new Permissions(permissions);
     permissions.toArray().forEach(p => {
         let r = '';
         p.replace(/_/g, ' ').split(' ').forEach(w => {

@@ -30,15 +30,15 @@ module.exports = async (message, automod) => {
             const invites = await message.guild.fetchInvites();
             let notFromServer = false;
             if (invites.size) {
-                invites.forEach(inv => notFromServer = matches[1] === inv.code);
+                invites.forEach(i => notFromServer = matches[1] === i.code);
             }
             if (notFromServer) {
                 try {
-                    message.delete().catch(()=>{});
+                    await message.delete().catch(()=>{});
                     if (channel) {
                         channel.send(amodEmbed(`Invite Code Sent: \`${matches[1]}\``, message.author, message.channel));
                     }
-                    message.reply('Invites are not allowed here.');
+                    return message.reply('Invites are not allowed here.');
                 } catch {}
             }
         }
@@ -46,11 +46,11 @@ module.exports = async (message, automod) => {
         if (automod.massMention.active) {
             if (message.mentions.users.size) {
                 if (message.mentions.users.size >= automod.massMention.thres) {
-                    message.delete().catch(()=>{});
+                    await message.delete().catch(()=>{});
                     if (channel) {
                         channel.send(amodEmbed(`${message.mentions.users.size} Mentioned Users`, message.author, message.channel));
                     }
-                    message.reply('Avoid mass-mentioning users.');
+                    return message.reply('Avoid mass-mentioning users.');
                 }
             }
         }
