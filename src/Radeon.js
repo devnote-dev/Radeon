@@ -15,7 +15,7 @@ const client = new Client({
         FLAGS.GUILD_BANS,
         FLAGS.GUILD_MEMBERS,
         FLAGS.GUILD_MESSAGES,
-        FLAGS.DIRECT_MESSAGES
+        // FLAGS.DIRECT_MESSAGES
     ],
     partials:[
         'GUILD_MEMBER',
@@ -31,8 +31,8 @@ client.commands   = new Collection();
 client.aliases    = new Collection();
 client.slash      = new Collection();
 client.ratelimits = new Collection();
+client.cooldowns  = new Collection();
 client.cmdlogs    = new Set();
-client.cooldowns  = new Map();
 client.config     = require('../config.json');
 client.mongoose   = require('./mongo');
 client.rlcount    = 0;
