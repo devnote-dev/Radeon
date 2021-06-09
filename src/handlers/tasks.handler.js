@@ -36,7 +36,7 @@ module.exports = async client => {
         }
     });
 
-    const scheduleStatusCron = new CronJob('* * * * 5', async () => {
+    const scheduleStatusCron = new CronJob('15 * * * *', async () => {
         const presences = [
             {name: '@Radeon help', type: 'WATCHING'},
             {name: 'Automod', type: 'PLAYING'},
