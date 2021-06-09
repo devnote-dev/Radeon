@@ -13,6 +13,7 @@ exports.run = async (_, guild, user) => {
     if (!modLogs.channel || !modLogs.bans) return;
     const c = guild.channels.cache.get(modLogs.channel);
     if (!c) return;
+    if (user.partial) user = await user.fetch();
     let count = 0;
     let audit;
     while (!audit) {
