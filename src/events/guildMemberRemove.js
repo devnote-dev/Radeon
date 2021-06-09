@@ -8,24 +8,24 @@ const { MessageEmbed } = require('discord.js');
 const Guild = require('../schemas/guild-schema');
 
 exports.run = async (_, member) => {
+    if (member.partial) member = await member.fetch();
     const db = await Guild.findOne({ guildID: member.guild.id });
     const { modLogs } = db;
     if (!modLogs.channel || !modLogs.kicks) return;
     const c = member.guild.channels.cache.get(modLogs.channel);
     if (!c) return;
-    let count = 0;
-    let audit;
-    while (!audit) {
+    let count = 0, audit;
+    do {
         audit = await member.guild.fetchAuditLogs({ type: 20, limit: 2 }).catch(()=>{});
+        count++;
         if (!audit) {
-            count++;
-            if (count == 3) break;
             await new Promise(res => setTimeout(res, 3000));
         } else {
             audit = audit.entries.first();
-            break;
+            if (audit.target?.id === member.user.id) break;
+            continue;
         }
-    }
+    } while (!audit && count < 4)
     if (audit) {
         if (audit.target.id !== member.user.id) return;
         const { reason, executor } = audit;
