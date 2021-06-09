@@ -24,8 +24,11 @@ module.exports = {
         if (!command) return client.errEmb(`Unknown Command \`${cmd}\``, message);
         logAdmin('exec', path, message.author.id, command.name +' '+ ARGS.join(' '));
         try {
-            const ctxmsg = new Message(client, {}, message.channel);
-            await command.run(client, ctxmsg, ARGS);
+            const ctx = new Message(client, {
+                content: `${cmd} ${ARGS}`,
+                author: client.user
+            }, message.channel);
+            await command.run(client, ctx, ARGS);
         } catch (err) {
             return client.errEmb(err.message, message);
         }

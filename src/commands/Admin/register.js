@@ -24,8 +24,8 @@ module.exports = {
                     const command = require(`../${dir}/${cmd}`);
                     if (!command.appdata) return;
                     await client.application.commands.create(command.appdata);
-                    if (!client.slash.has(command.appdata.name)) client.slash.set(command.appdata.name, command.appres);
                     count++;
+                    if (!client.slash.has(command.appdata.name)) client.slash.set(command.appdata.name, command.appres);
                 });
             });
             return client.checkEmb(`Successfully Registered ${count} Slash Commands!`, message);
