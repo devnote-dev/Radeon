@@ -1,11 +1,20 @@
 {
-    "compilerOptions": {
-        "lib": ["ES2020"],
-        "pretty": true,
-        "module": "commonJS",
-        "moduleResolution": "Node",
-        "noUnusedLocals": true,
-        "target": "ES6",
-        "resolveJsonModule": true
-    }
+    "compilerOptions":{
+        "lib":["ESNext"],
+        "module": "commonjs",
+        "target": "ESNext",
+        "outDir": "src/dist",
+        "sourceMap": true,
+        "esModuleInterop": true,
+        "moduleResolution": "node",
+        "resolveJsonModule": true,
+        "experimentalDecorators": true,
+        "emitDecoratorMetadata": true,
+        "allowSyntheticDefaultImports": true,
+        "skipLibCheck": true,
+        "skipDefaultLibCheck": true,
+        "declaration": true
+    },
+    "include":["src/functions"],
+    "exclude":["node_modules"]
 }
