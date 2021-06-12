@@ -16,16 +16,20 @@ module.exports = async client => {
     .ext('.js')
     .findSync()
     .forEach(cmd => {
-        const command = require(cmd);
-        if (command.name) {
-            client.commands.set(command.name, command);
-            if (command.appdata) client.slash.set(command.appdata.name, command.appres);
-        } else if (command.appdata) {
-            client.slash.set(command.appdata.name, command.appres);
-        } else {
+        try {
+            const command = require(cmd);
+            if (command.name) {
+                client.commands.set(command.name, command);
+                if (command.appdata) client.slash.set(command.appdata.name, command.appres);
+            } else if (command.appdata) {
+                client.slash.set(command.appdata.name, command.appres);
+            } else {
+                failed.push(parse(cmd).base);
+            }
+            if (command.aliases && Array.isArray(command.aliases)) command.aliases.forEach(a => client.aliases.set(a, command.name));
+        } catch {
             failed.push(parse(cmd).base);
         }
-        if (command.aliases && Array.isArray(command.aliases)) command.aliases.forEach(a => client.aliases.set(a, command.name));
     });
     client.stats._failed = failed;
 }
