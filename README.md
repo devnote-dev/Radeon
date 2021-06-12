@@ -36,7 +36,6 @@ We **do not** currently support self-hsoted instances. Please do not contact a m
 ## Maintainers
 * Devnote-dev - Owner
 * tryharddeveloper - Owner
-* Piterxyz - Owner
 * Crenshaw - Contributor
 * SpeckyYT - Contributor
 
