@@ -14,7 +14,7 @@ exports.run = async (client, guild) => {
     .setDescription(`<:checkgreen:796925441771438080> Joined **${guild.name}** - Active in ${client.guilds.cache.size} Servers!`)
     .setColor(0x00d134)
     .setTimestamp();
-    client.channels.cache.get(client.config.logs.joins).send(e).catch(()=>{});
+    client.channels.cache.get(client.config.logs.joins)?.send(e).catch(()=>{});
     await new Guild({
         guildID: guild.id,
         prefix: client.config.prefix,
