@@ -4,7 +4,6 @@
  */
 
 
-const { redditPost } = require('../../functions/reddit');
 const { MessageEmbed } = require('discord.js');
 
 module.exports = {
@@ -27,5 +26,16 @@ module.exports = {
         .setImage(post.url_overridden_by_dest)
         .setFooter(`👍 ${post.ups} 👎 ${post.downs} 💬 ${post.num_comments} - ${post.subreddit_name_prefixed}`);
         return message.reply(embed);
+    }
+}
+
+async function redditPost(subReddits) {
+    try {
+        const random = subReddits[Math.floor(Math.random() * subReddits.length)];
+        const [list] = await request.get(`https://www.reddit.com/r/${random}/random/.json`).then(res => res.body)
+        const [post] = list.data.children;
+        return post.data
+    } catch (error) {
+        return
     }
 }
