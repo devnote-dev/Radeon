@@ -5,7 +5,7 @@
 
 
 const { MessageEmbed } = require('discord.js');
-const { parseFlags } = require('../../functions/stringParser');
+const { parseFlags } = require('../../dist/stringParser');
 
 module.exports = {
     name: 'embed',

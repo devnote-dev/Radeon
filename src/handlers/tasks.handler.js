@@ -5,7 +5,7 @@
 
 
 const { CronJob } = require('cron');
-const { logError } = require('../console/consoleR');
+const { logError } = require('../dist/console');
 const Muted = require('../schemas/muted-schema');
 
 module.exports = async client => {

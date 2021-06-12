@@ -5,7 +5,7 @@
 
 
 const advanceClean = require('../../functions/advanceClean');
-const { parseFlags } = require('../../functions/stringParser');
+const { parseFlags } = require('../../dist/stringParser');
 const flags = '`-users` - Deletes only user messages\n`-bots` - Deletes only bot messages\n`-nopin` - Deletes messages that aren\'t pinned\n`-has <Word>` - Messages that contain a specific word/char\n`-to <Message:ID>` - Messages before that message';
 
 module.exports = {

@@ -5,7 +5,7 @@
 
 
 const { Permissions } = require('discord.js');
-const { parseQuotes } = require('../../functions/stringParser');
+const { parseQuotes } = require('../../dist/stringParser');
 const ascii = require('ascii-table');
 
 module.exports = {

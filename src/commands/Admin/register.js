@@ -5,7 +5,7 @@
 
 
 const { readdirSync } = require('fs');
-const { logError } = require('../../console/consoleR');
+const { logError } = require('../../dist/console');
 
 module.exports = {
     name: 'register',

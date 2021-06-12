@@ -5,7 +5,7 @@
 
 
 const { MessageEmbed } = require('discord.js');
-const { logShard } = require('../console/consoleR');
+const { logShard } = require('../dist/console');
 
 exports.run = async (client, shard) => {
     logShard(client, 'create', shard);

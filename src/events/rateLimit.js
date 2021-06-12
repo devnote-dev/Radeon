@@ -5,9 +5,9 @@
 
 
 const { MessageEmbed } = require('discord.js');
-const { logError } = require('../console/consoleR');
+const { logError } = require('../dist/console');
 
-exports.run = async (client, rateLimitInfo) => {
+exports.run = (client, rateLimitInfo) => {
     const e = new MessageEmbed()
     .setTitle('RateLimit Warn')
     .addFields(

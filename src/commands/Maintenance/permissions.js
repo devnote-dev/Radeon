@@ -5,7 +5,7 @@
 
 
 const { Permissions, MessageEmbed } = require('discord.js');
-const { humanize } = require('../../functions/functions');
+const { humanize } = require('../../dist/functions');
 
 module.exports = {
     name: 'permissions',

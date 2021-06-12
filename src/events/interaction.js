@@ -4,7 +4,7 @@
  */
 
 
-const { logError } = require('../console/consoleR');
+const { logError } = require('../dist/console');
 
 exports.run = async (client, interaction) => {
     if (!interaction.isCommand()) return;

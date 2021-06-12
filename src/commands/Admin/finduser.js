@@ -5,7 +5,7 @@
 
 
 const { MessageEmbed } = require('discord.js')
-const { toDurationDefault } = require('../../functions/functions');
+const { toDurationDefault } = require('../../dist/functions');
 
 module.exports = {
     name: 'finduser',

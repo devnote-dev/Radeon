@@ -4,10 +4,10 @@
  */
 
 
-const { parseFlags } = require('../../functions/stringParser');
+const { parseFlags } = require('../../dist/stringParser');
 
 module.exports = {
-    name: 'massban',
+    // name: 'massban',
     tag: 'Mass-bans multiple users',
     description: 'Mass-bans multiple users (message optional). Reason must be in quotations, otherwise default is used.',
     usage: 'massban <...User:Mention/ID> [-m Reason:Text]',

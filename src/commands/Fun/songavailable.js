@@ -5,7 +5,7 @@
 
 
 const request = require('node-superfetch')
-const { parseFlags } = require('../../functions/stringParser');
+const { parseFlags } = require('../../dist/stringParser');
 const { MessageEmbed } = require('discord.js');
 const { YoutubeKey } = require("../../../config.json");
 

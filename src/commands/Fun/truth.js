@@ -4,7 +4,7 @@
  */
 
 
-const { choose } = require('../../functions/functions');
+const { choose } = require('../../dist/functions');
 const request = require('node-superfetch')
 const { MessageEmbed } = require('discord.js');
 

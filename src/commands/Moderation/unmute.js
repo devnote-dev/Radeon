@@ -6,7 +6,7 @@
 
 
 const { MessageEmbed } = require('discord.js');
-const { logError } = require('../../console/consoleR');
+const { logError } = require('../../dist/console');
 const Guild = require('../../schemas/guild-schema');
 const Muted = require('../../schemas/muted-schema');
 

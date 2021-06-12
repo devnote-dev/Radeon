@@ -4,7 +4,7 @@
  */
 
 
-const { logAdmin } = require('../../console/consoleR');
+const { logAdmin } = require('../../dist/console');
 
 module.exports = {
     name: 'reload',

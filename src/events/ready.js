@@ -5,9 +5,9 @@
  */
 
 
-const { botReady } = require('../console/consoleR');
+const { botReady } = require('../dist/console');
 
-exports.run = async client => {
+exports.run = client => {
     botReady(client);
     client.user.setPresence({
         status: 'online',

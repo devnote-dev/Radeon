@@ -4,8 +4,7 @@
  */
 
 
-const { redditPost } = require('../../functions/reddit');
-const { choose } = require('../../functions/functions')
+const { choose } = require('../../dist/functions')
 const { MessageEmbed } = require('discord.js');
 
 module.exports = {
@@ -31,5 +30,16 @@ module.exports = {
         .setDescription(`||${post.selftext}||`)
         .setFooter(`👍 ${post.ups} - ${post.subreddit_name_prefixed}`);
         message.reply(embed);
+    }
+}
+
+async function redditPost(subReddits) {
+    try {
+        const random = subReddits[Math.floor(Math.random() * subReddits.length)];
+        const [list] = await request.get(`https://www.reddit.com/r/${random}/random/.json`).then(res => res.body)
+        const [post] = list.data.children;
+        return post.data
+    } catch (error) {
+        return
     }
 }

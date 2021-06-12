@@ -7,7 +7,7 @@
 
 
 const { Permissions, MessageEmbed } = require('discord.js');
-const { isBotStaff, humanize } = require('../../functions/functions');
+const { isBotStaff, humanize } = require('../../dist/functions');
 const { readdirSync } = require('fs');
 
 module.exports = {
