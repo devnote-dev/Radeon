@@ -7,8 +7,8 @@
 
 
 const { MessageEmbed } = require('discord.js');
-const { isBotStaff, isBotOwner, humanize } = require('../functions/functions');
-const { logError, logWarn } = require('../console/consoleR');
+const { isBotStaff, isBotOwner, humanize } = require('../dist/functions');
+const { logError, logWarn } = require('../dist/console');
 const Guild = require('../schemas/guild-schema');
 const Settings = require('../schemas/settings-schema');
 
@@ -46,6 +46,8 @@ exports.run = async (client, message) => {
     }
 
     // Handling DM commands
+    // Disabled for the time being as intents dont work for it
+    /*
     if (!message.guild) {
         const args = message.content.trim().split(/\s+|\n+/g);
         const cmd = args.shift().toLowerCase();
@@ -80,6 +82,7 @@ exports.run = async (client, message) => {
         }
         return;
     }
+    */
 
     // Fetching server database...
     const data = await Guild.findOne(
