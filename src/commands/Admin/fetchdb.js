@@ -9,6 +9,7 @@ const Guild = require('../../schemas/guild-schema');
 
 module.exports = {
     name: 'fetchdb',
+    aliases: ['getdb'],
     description: 'Fetches the GUILD database entry for a specified server.',
     usage: 'fetchdb <Guild:ID>',
     guildOnly: true,
