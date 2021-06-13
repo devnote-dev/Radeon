@@ -13,11 +13,12 @@ module.exports = {
     tag: 'Sends information about the server.',
     aliases: ['si'],
     description: 'Sends information about the server.',
-    cooldown: 6,
+    cooldown: 12,
     guildOnly: true,
-    run(_, message) {
+    async run(_, message) {
         message.channel.startTyping();
         const server = message.guild;
+        if (server.members.cache.size < Math.round(server.memberCount / 4)) await server.members.fetch();
         const tc = server.channels.cache.filter(c => ['text','news','store'].includes(c.type));
         const vc = server.channels.cache.filter(c => c.type === 'voice');
         const roles = server.roles.cache.size;
