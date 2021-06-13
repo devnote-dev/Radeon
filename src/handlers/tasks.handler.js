@@ -7,6 +7,7 @@
 const { CronJob } = require('cron');
 const { logError } = require('../dist/console');
 const Muted = require('../schemas/muted-schema');
+const Settings = require('../schemas/settings-schema');
 
 module.exports = async client => {
     // Scheduled Mutes Handler
@@ -36,7 +37,9 @@ module.exports = async client => {
         }
     });
 
-    const scheduleStatusCron = new CronJob('15 * * * *', async () => {
+    const scheduleStatusCron = new CronJob('*/15 * * * *', async () => {
+        const state = await Settings.findOne({ client: client.user.id });
+        if (!state || !state.cycleStatus || state.maintenance) return;
         const presences = [
             {name: '@Radeon help', type: 'WATCHING'},
             {name: 'Automod', type: 'PLAYING'},
@@ -44,7 +47,7 @@ module.exports = async client => {
             {name: 'with Slash Commands', type: 'PLAYING'}
         ];
         const p = presences[Math.floor(Math.random() * presences.length)];
-        await client.user.setStatus({ name: p.name, type: p.type });
+        await client.user.setActivity({ name: p.name, type: p.type });
     });
 
     scheduleUnmuteCron.start();
