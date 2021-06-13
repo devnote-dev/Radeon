@@ -4,7 +4,6 @@
  */
 
 
-const { Message } = require('discord.js');
 const { logAdmin } = require('../../dist/console');
 
 module.exports = {
@@ -24,11 +23,7 @@ module.exports = {
         if (!command) return client.errEmb(`Unknown Command \`${cmd}\``, message);
         logAdmin('exec', path, message.author.id, command.name +' '+ ARGS.join(' '));
         try {
-            const ctx = new Message(client, {
-                content: `${cmd} ${ARGS}`,
-                author: client.user
-            }, message.channel);
-            await command.run(client, ctx, ARGS);
+            await command.run(client, message, ARGS);
         } catch (err) {
             return client.errEmb(err.message, message);
         }
