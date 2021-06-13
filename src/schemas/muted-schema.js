@@ -1,6 +1,12 @@
-const mongoose = require('mongoose');
+/**
+ * @author Tryharddeveloper <https://github.com/tryharddeveloper>
+ * @author Devonte <https://github.com/devnote-dev>
+ * @copyright Radeon Development 2021
+ */
 
-const mutedSchema = mongoose.Schema({
+const { Schema, model } = require('mongoose');
+
+const mutedSchema = Schema({
     guildID: {
         type:       String,
         required:   true
@@ -11,4 +17,4 @@ const mutedSchema = mongoose.Schema({
     }
 });
 
-module.exports = mongoose.model('MutedList', mutedSchema, 'Muted');
+module.exports = model('MutedList', mutedSchema, 'Muted');
