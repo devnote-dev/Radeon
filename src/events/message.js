@@ -23,9 +23,9 @@ const EM = {
     errMain: 'Radeon is currently undergoing maintenance and will be temporarily unavailable. For more information join the Support Server using the link below!\nhttps://discord.gg/xcZwGhSy4G',
     errNoExec: (cmd) => `Command \`${cmd}\` stopped running unexpectedly.\nIf you see this error regularly, contact support via the \`@Radeon support\` command.`,
     errNoEmbeds: 'I don\'t have permissions to send embeds here! Please enable this permission to use Radeon.',
-    errGuildOnly: (u) => baseEmbed(u, 'This command can only be used in servers.'),
-    errAdminOnly: (u) => baseEmbed(u, 'This command is for bot admins only.'),
-    errOwnerOnly: (u) => baseEmbed(u, 'This command is for bot owners only.'),
+    errGuildOnly: 'This command can only be used in servers.',
+    errAdminOnly: 'This command is for bot admins only.',
+    errOwnerOnly: 'This command is for bot owners only.',
     errNoBotPerms: (p) => `I am missing the \`${humanize(p).join('`, `')}\` permission(s) for this command.`,
     errNoUserPerms: (p) => `You am missing the \`${humanize(p).join('`, `')}\` permission(s) for this command.`
 }
@@ -147,12 +147,12 @@ exports.run = async (client, message) => {
         // Handling staff commands
         if (command.modOnly) {
             if (command.modOnly < 3) {
-                if (!isBotOwner(author)) {
-                    if (command.modOnly == 2) channel.send(EM.errOwnerOnly(author));
+                if (!isBotOwner(author.id)) {
+                    if (command.modOnly == 2) return message.reply(EM.errOwnerOnly);
                 }
-            } else if (command.modOnly > 3) {
-                if (!isBotStaff(author)) {
-                    if (command.modOnly == 4) channel.send(errAdminOnly(author));
+            } else {
+                if (!isBotStaff(author.id)) {
+                    if (command.modOnly == 4) return message.reply(EM.errAdminOnly);
                 }
             }
         }
@@ -161,12 +161,12 @@ exports.run = async (client, message) => {
         // This has been rewritten 3 times now :')
         if (command.botPerms) {
             if (!message.guild.me.permissions.has(command.botPerms)) {
-                if (command.modBypass && !isBotStaff(author)) return channel.send(EM.errNoBotPerms(command.botPerms));
+                if (command.modBypass && !isBotStaff(author.id)) return message.reply(EM.errNoBotPerms(command.botPerms));
             }
         }
         if (command.userPerms) {
             if (!message.member.permissions.has(command.userPerms)) {
-                if (command.modBypass && !isBotStaff(author)) return channel.send(EM.errNoUserPerms(command.userPerms));
+                if (command.modBypass && !isBotStaff(author.id)) return message.reply(EM.errNoUserPerms(command.userPerms));
             }
         }
 
