@@ -14,7 +14,7 @@ module.exports = {
     tag: 'Sends Radeon\'s status',
     description: 'Sends the bot\'s status for that guild.',
     cooldown: 5,
-    async run(client, message) {
+    run(client, message) {
         const { heapUsed, heapTotal } = process.memoryUsage();
         const embed = new MessageEmbed()
         .setTitle('Radeon Status (Total)')

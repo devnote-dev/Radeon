@@ -18,7 +18,7 @@ module.exports = {
     usage: 'help [Command:Name/Alias]\nhelp [Category]',
     cooldown: 3,
     guildOnly: false,
-    async run(client, message, args) {
+    run(client, message, args) {
         if (args.length) {
             let valid = false;
             let search = args.join(' ').toLowerCase();

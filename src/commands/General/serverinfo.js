@@ -15,7 +15,7 @@ module.exports = {
     description: 'Sends information about the server.',
     cooldown: 6,
     guildOnly: true,
-    async run(_, message) {
+    run(_, message) {
         message.channel.startTyping();
         const server = message.guild;
         const tc = server.channels.cache.filter(c => ['text','news','store'].includes(c.type));

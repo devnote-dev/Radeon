@@ -14,7 +14,7 @@ module.exports = {
     usage: 'shard [Guild:ID]',
     cooldown: 2,
     guildOnly: true,
-    async run(client, message, args) {
+    run(client, message, args) {
         let server = message.guild;
         if (args.length) server = client.guilds.cache.get(args[0]);
         if (!server) return client.errEmb('Invalid or Unknown Server ID.', message);

@@ -12,7 +12,7 @@ module.exports = {
     tag: 'Sends Radeon\'s privacy policy.',
     description: 'Sends Radeon\'s privacy policy and information on data collected.',
     cooldown: 2,
-    async run(_, message) {
+    run(_, message) {
         const embed = new MessageEmbed()
         .setTitle('Radeon Privacy Policy')
         .addField('What data does Radeon collect?', 'Radeon collects general user data such as your username, ID, and presence status/activity data which is visible to all users in Discord. The bot also collects general server information such as member count, roles, channels, and permissions.')

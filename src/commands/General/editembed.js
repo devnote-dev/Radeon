@@ -21,7 +21,7 @@ module.exports = {
         if (msg.author.id != client.user.id) return client.errEmb('Message was not sent by this bot.', message);
         try {
             const embed = JSON.parse(args.slice(1).join(' '));
-            await msg.edit({ embed:embed });
+            await msg.edit({ embed });
             await message.react(':checkgreen:796925441771438080').catch(()=>{});
         } catch (err) {
             return client.errEmb(err.message, message);
