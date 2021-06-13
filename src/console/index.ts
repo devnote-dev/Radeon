@@ -23,7 +23,7 @@ async function botReady(client: any) {
     if (failed && failed.length) log += ':\n\x1b[31m- '+ failed.join('\n- ') +'\x1b[0m';
     log += `\n\nConnected to ${guilds} server(s)`;
     if (client.readyAt) log += '\nReady at: '+ client.readyAt.toLocaleString();
-    log += `\nMaintenance: ${state.maintenance}`;
+    log += `\nMaintenance: ${state.maintenance}\nCycle Status: ${state.cycleStatus}\n`;
     borderBold();
     return console.log(log);
 }
@@ -66,16 +66,16 @@ function logAdmin(type: string, path: string, user: string, args: string) {
     let log: string;
     switch (type) {
         case 'eval':
-            log = `\x1b[33mEval\x1b[0m\nPath: ${path}\nUser: ${user}\n\n${args}`;
+            log = `\x1b[33mEval\x1b[0m\nPath: ${path}\nUser: ${user}\n\n${args}\n`;
             break;
         case 'exec':
-            log = `\x1b[33mExecute\x1b[0m\nPath: ${path}\nUser: ${user}\nCmd: ${args}`;
+            log = `\x1b[33mExecute\x1b[0m\nPath: ${path}\nUser: ${user}\nCmd: ${args}\n`;
             break;
         case 'reload':
-            log = `\x1b[33mReload\x1b[0m\nPath: ${path}\nUser: ${user}\nFile: ${args}.js`;
+            log = `\x1b[33mReload\x1b[0m\nPath: ${path}\nUser: ${user}\nFile: ${args}.js\n`;
             break;
         case 'status':
-            log = `\x1b[33mSetstatus\x1b[0m\nPath: ${path}\nUser: ${user}\n${args}`;
+            log = `\x1b[33mSetstatus\x1b[0m\nPath: ${path}\nUser: ${user}\n${args}\n`;
             break;
     }
     borderSmall();
