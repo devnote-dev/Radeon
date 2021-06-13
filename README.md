@@ -25,8 +25,7 @@ We **do not** currently support self-hsoted instances. Please do not contact a m
         "event":"EVENT_CHANNEL_ID",
         "error":"ERROR_CHANNEL_ID",
         "joins":"BOT_JOINS_CHANNEL_ID",
-        "guilds":"GUILDS_STATS_CHANNEL_ID",
-        "users":"USERS_STATS_CHANNEL_ID"
+        "guilds":"GUILDS_STATS_CHANNEL_ID"
     },
     "MongoPath":"MONGODB_PASSWORD_KEY",
     "YoutubeKey":"YOUTUBEv3_API_KEY"
