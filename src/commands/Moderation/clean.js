@@ -6,7 +6,7 @@
 
 const advanceClean = require('../../functions/advanceClean');
 const { parseFlags } = require('../../dist/stringParser');
-const flags = '`-users` - Deletes only user messages\n`-bots` - Deletes only bot messages\n`-nopin` - Deletes messages that aren\'t pinned\n`-has <Word>` - Messages that contain a specific word/char\n`-to <Message:ID>` - Messages before that message';
+const flags = '`-users` - Only user messages\n`-bots` - Only bot messages\n`-nopin` - Messages that aren\'t pinned\n`-has <Word>` - Messages that contain a specific word/char\n`-to <Message:ID>` - Messages before that message\n`-em` - Only messages with embeds';
 
 module.exports = {
     name: 'clean',
@@ -23,35 +23,39 @@ module.exports = {
         let amount = parseInt(args[0]);
         if (isNaN(amount) || amount < 1 || amount > 100) return client.errEmb('Invalid Amount Specified. Amount must be a number between 1 and 100.', message);
         if (args.length > 1) {
-            let target = '', flagUsers = false, flagBots = false, flagNopin = false, flagHas = '', flagTo = '';
+            let target = '', flagUsers = false, flagBots = false, flagNopin = false, flagHas = '', flagTo = '', flagEmbeds = false;
             const parsed = parseFlags(args.slice(1).join(' '), [
                 {name: 'users', type: 'bool'},
                 {name: 'bots', type: 'bool'},
                 {name: 'nopin', type: 'bool'},
-                {name: 'has', type: 'string', quotes: false},
-                {name: 'to', type: 'int'}
+                {name: 'has', type: 'string'},
+                {name: 'to', type: 'int'},
+                {name: 'em', type: 'bool'}
             ]);
             parsed.forEach(flag => {
-                if (flag.name === 'users' && flag.value) flagUsers = true;
-                if (flag.name === 'bots' && flag.value) flagBots = true;
-                if (flag.name === 'nopin' && flag.value) flagNopin = true;
-                if (flag.name === 'has' && flag.value != null) flagHas = flag.value;
-                if (flag.name === 'to' && flag.value != null) flagTo = flag.value;
+                if (!flag.value) return;
+                if (flag.name === 'users') flagUsers = true;
+                if (flag.name === 'bots') flagBots = true;
+                if (flag.name === 'nopin') flagNopin = true;
+                if (flag.name === 'has') flagHas = flag.value;
+                if (flag.name === 'to') flagTo = flag.value;
+                if (flag.name === 'em') flagEmbeds = true;
             });
             if (flagUsers && flagBots) return client.errEmb('Both Users & Bots Flags Specified, pick one.', message);
             if (flagTo && /\D+/g.test(flagTo)) return client.errEmb('Invalid Message ID for To Flag.', message);
             try {
                 await message.delete().catch(()=>{});
-                const res = await advanceClean(message, amount, {target, flagUsers, flagBots, flagNopin, flagHas, flagTo});
-                return client.checkEmb(`Deleted \`${res}\` Messages!`, message).then(m => setTimeout(() => m.delete(), 3000));
+                const res = await advanceClean(message, amount, { target, flagUsers, flagBots, flagNopin, flagHas, flagTo, flagEmbeds });
+                return client.checkEmb(`Deleted ${res} Messages!`, message).then(m => setTimeout(() => m.delete(), 3000));
             } catch (err) {
                 return client.errEmb(err.message, message);
             }
         } else {
             if (amount < 100) amount += 1;
             try {
+                await message.delete().catch(()=>{});
                 const res = await message.channel.bulkDelete(amount, true);
-                return client.checkEmb(`Deleted \`${res.size}\` Messages!`, message).then(m => setTimeout(() => m.delete(), 3000));
+                return client.checkEmb(`Deleted ${res.size} Messages!`, message).then(m => setTimeout(() => m.delete(), 3000));
             } catch (err) {
                 return client.errEmb(err.message, message);
             }

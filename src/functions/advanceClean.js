@@ -8,7 +8,7 @@
 const { Collection } = require('discord.js');
 
 module.exports = async (message, amount, options) => {
-    const { target, flagUsers, flagBots, flagNopin, flagHas, flagTo } = options;
+    const { target, flagUsers, flagBots, flagNopin, flagHas, flagTo, flagEmbeds } = options;
     let filtered = new Collection(), count = 0, messages;
     if (flagTo) {
         messages = await message.channel.messages.fetch({ limit: 100, after: flagTo });
@@ -45,13 +45,15 @@ module.exports = async (message, amount, options) => {
     }
 
     if (flagNopin) {
-        const temp = new Collection();
-        filtered.forEach(msg => { if (!msg.pinned) temp.set(msg.id, msg) });
+        const temp = filtered.filter(msg => !msg.pinned);
         filtered = temp;
     }
     if (flagHas) {
-        const temp = new Collection();
-        filtered.forEach(msg => { if (msg.content.includes(flagHas)) temp.set(msg.id, msg) });
+        const temp = filtered.filter(msg => msg.content.includes(flagHas));
+        filtered = temp;
+    }
+    if (flagEmbeds) {
+        const temp = filtered.filter(msg => msg.embeds && msg.embeds.length);
         filtered = temp;
     }
 
