@@ -15,7 +15,7 @@ module.exports = {
     aliases: ['ui'],
     description: 'Sends information about a specified user, or the triggering user if none is specified.',
     usage: 'userinfo [User:Mention/ID]',
-    cooldown: 7,
+    cooldown: 8,
     guildOnly: true,
     async run(client, message, args) {
         let target = message.member;
@@ -24,11 +24,14 @@ module.exports = {
             else target = message.mentions.members.first() || message.guild.members.cache.get(args[0]);
         }
         if (!target) return client.errEmb('Invalid Member Specified.', message);
+        message.channel.startTyping();
         if (target.partial) target = await target.fetch();
         const member = target;
         target = target.user;
 
         let presence = 'None or not cached.';
+        // Disabled as the bot doesn't have the intents so it doesn't run
+        /*
         if (target.presence.activities.length) {
             presence = '';
             target.presence.activities.forEach(act => {
@@ -49,6 +52,7 @@ module.exports = {
             });
             if (!presence.length) presence = 'Unknown Activity';
         }
+        */
 
         let roles = [], rest = 0;
         if (member.roles.cache.size) {
@@ -57,7 +61,7 @@ module.exports = {
                 .forEach(r => { if (r.id !== message.guild.id) roles.push(r) });
             if (roles.length > 5) {
                 roles = roles.slice(0, 5);
-                rest = member.roles.cache.size - 5;
+                rest = member.roles.cache.size - 6;
             }
             roles = roles.join(', ');
             if (rest) roles += `... +${rest} more`;
@@ -86,15 +90,18 @@ module.exports = {
         .setTitle(target.tag)
         .setDescription(totalf)
         .addField('ID', `${target.id}`, true)
-        .addField('Avatar', `[Download Link 📥](${target.displayAvatarURL({dynamic: true})})`, true)
+        .addField('Avatar', `[Download Link 📥](${target.displayAvatarURL({ dynamic: true })})`, true)
         .addField('\u200b', '\u200b', true)
         .addField('Account Age', `${target.createdAt.toDateString()}\n${toDurationLong(target.createdTimestamp)}`, true)
         .addField('Server Member Age', `${member.joinedAt.toDateString()}\n${toDurationDefault(member.joinedTimestamp)}`, true)
         .addField('Presence', presence, false)
         .addField('Roles', roles, false)
         .setColor(member.displayColor || 0x2f3136)
-        .setThumbnail(target.displayAvatarURL({dynamic: true}))
+        .setThumbnail(target.displayAvatarURL({ dynamic: true }))
         .setFooter(`Triggered By ${message.author.tag}`, message.author.displayAvatarURL());
-        return message.channel.send(embed);
+        setTimeout(() => {
+            message.channel.stopTyping();
+            return message.channel.send(embed);
+        }, 2000);
     }
 }
