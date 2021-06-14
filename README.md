@@ -38,6 +38,6 @@ We **do not** currently support self-hsoted instances. Please do not contact a m
 * Crenshaw - Contributor
 * SpeckyYT - Contributor
 
-This repository is licensed under the GNU GPL v3 License.
+This repository is licensed under the GNU AGPL v3 License.
 
 © Radeon Development
