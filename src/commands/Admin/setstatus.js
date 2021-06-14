@@ -1,31 +1,42 @@
+/**
+ * @author Piter <https://github.com/piterxyz>
+ * @copyright Radeon Development 2021
+ */
+
+
 const activities = [
 "PLAYING",
 "STREAMING",
 "LISTENING",
 "WATCHING",
 "CLEAR",
-]
+];
+const statuses = ['online', 'idle', 'dnd', 'offline'];
 
 module.exports = {
-    name: 'set-status',
-    aliases: ['setstatus'],
-    description: 'Sets bot\'s status.',
+    name: 'setstatus',
+    description: 'Sets Radeon\'s status.',
     guildOnly: false,
     modOnly: 4,
-    run: async (client, message, args) => { 
-        if(args[0]) {
-            const activityType = args[0].toUpperCase();
-            let activityName = args.slice(1).join(" ");
-            if(activities.includes(activityType)) {
-                if(activityType == "CLEAR") activityName = ""
-
-                client.user.setActivity(activityName, {type: activityType})
-                return client.checkEmb(`Presence has been succesfully changed!`, message)
-            } else {
-                return client.errEmb(`Activity type provided by you is wrong!\n\n**Current activity types:**\n${activities.map(a => `\`${a}\``).join('\n')}`, message)
+    async run(client, message, args) { 
+        if (args.length < 2) return client.errEmb('Insufficient Arguments\n```\nsetstatus <Type> <Name> [-online|-idle|-dnd]\n```', message);
+        if (!activities.includes(args[0].toUpperCase())) return client.errEmb('Unknown Status Type.', message);
+        const type = args[0].toUpperCase();
+        let name = args.slice(1).join(' ');
+        let status = 'online';
+        statuses.forEach(s => {
+            if (name.includes('-'+s)) {
+                status = s;
+                name = name.replace('-'+s, '');
             }
-        } else {
-            return client.errEmb(`Correct usage: \`r!set-status <type> <name>\``, message)
-        }
+        });
+        await client.user.setPresence({
+            status,
+            activities:[{
+                name,
+                type
+            }]
+        });
+        return client.checkEmb('Successfully Updated Status!', message);
     }
 }

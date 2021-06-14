@@ -1,3 +1,9 @@
+/**
+ * @author Devonte <https://github.com/devnote-dev>
+ * @copyright Radeon Development 2021
+ */
+
+
 module.exports = {
     name: 'jsonembed',
     aliases: ['jsonemb','jsemb', 'jse'],
@@ -6,7 +12,7 @@ module.exports = {
     usage: 'jsonembed <JSON:Text>\n\njsonembed { "title":"hi", "description":"hello" }',
     cooldown: 2,
     guildOnly: true,
-    run: async (client, message, args) => {
+    async run(client, message, args) {
         if (!args.length) return client.errEmb('No JSON Provided.\n```\njsonembed <JSON:Text>\n```', message);
         try {
             const embed = JSON.parse(args.join(' '));
@@ -19,7 +25,7 @@ module.exports = {
             if (embed.footer) {
                 if (embed.footer.text == undefined && embed.footer.icon_url != undefined) embed.footer.text = '\u200b';
             }
-            return await message.channel.send({embed:embed});
+            return await message.channel.send({ embed });
         } catch (err) {
             return client.errEmb(err.message, message);
         }

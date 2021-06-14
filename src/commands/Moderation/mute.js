@@ -1,5 +1,12 @@
+/**
+ * @author Devonte <https://github.com/devnote-dev>
+ * @author Tryharddeveloper <https://github.com/tryharddeveloper>
+ * @copyright Radeon Development 2021
+ */
+
+
 const { MessageEmbed } = require('discord.js');
-const { logError } = require('../../console/consoleR');
+const { logError } = require('../../dist/console');
 const ms = require('ms');
 const Guild = require('../../schemas/guild-schema');
 const Muted = require('../../schemas/muted-schema');
@@ -12,7 +19,7 @@ module.exports = {
     userPerms: 8192,
     botPerms: 268435456,
     guildOnly: true,
-    run: async (client, message, args) => { 
+    async run(client, message, args) {
         const { muteRole, modLogs } = await Guild.findOne({ guildID: message.guild.id });
         if (!muteRole) return client.errEmb('Mute role not found/set. You can set one using the `muterole` command.', message);
         if (args.length < 2) return client.errEmb('Insufficient Arguments.\n```\nmute <User:Mention/ID> [Time:Duration] <Reason:Text>\n```', message);

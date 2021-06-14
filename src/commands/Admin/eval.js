@@ -1,8 +1,14 @@
+/**
+ * @author Devonte <https://github.com/devnote-dev>
+ * @copyright Radeon Development 2021
+ */
+
+
 const Discord = require('discord.js');
 const Util = Discord.Util;
 const { inspect } = require('util');
-const { logAdmin } = require('../../console/consoleR');
-const _funcs = require('../../functions/functions');
+const { logAdmin } = require('../../dist/console');
+const _funcs = require('../../dist/functions');
 
 module.exports = {
     name: 'eval',
@@ -17,7 +23,7 @@ module.exports = {
         if (/token|(client)?\.config|while\s*\(\s*true\s*\)\s*\{\s*\}/gi.test(code)) return client.errEmb('You Can\'t Do That.', message);
         try {
             let m;
-            let evaled = await Promise.resolve(eval(code));
+            let evaled = (await eval(code));
             evaled = inspect(evaled, false, 0);
             if (evaled.length > 2000) {
                 evaled = Util.splitMessage(evaled);
@@ -29,8 +35,8 @@ module.exports = {
                 await evaled;
                 return m.edit('```js\n'+ evaled +'\n```');
             }
-        } catch (error) {
-            return message.channel.send(`\`\`\`js\n${error}\n\`\`\``);
+        } catch (err) {
+            return message.channel.send(`\`\`\`js\n${err}\n\`\`\``);
         }
     }
 }

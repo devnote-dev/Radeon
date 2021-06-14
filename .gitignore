@@ -10,6 +10,7 @@ anti-raid/
 images/
 node_modules/
 other files/
+dist/
 tests/
 web/*.*
 

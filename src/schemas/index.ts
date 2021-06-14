@@ -1,7 +1,12 @@
-// index.ts for database schemas because TypeScript
-// *cue pain expression*
+/**
+ * index.ts for database because TypeScript
+ * *cue pain expression*
+ * @author Devonte <https://github.com/devnote-dev>
+ * @copyright Radeon Development 2021
+ */
 
-import { Document, Model } from "mongoose";
+
+import { Document, Model } from 'mongoose';
 
 export const AR:       Model<Document> = require('./antiraid-schema');
 export const Bans:     Model<Document> = require('./ban-schema');

@@ -1,6 +1,12 @@
-const mongoose = require('mongoose');
+/**
+ * @author Devonte <https://github.com/devnote-dev>
+ * @copyright Radeon Development 2021
+ */
 
-const settingsSchema = mongoose.Schema({
+
+const { Schema, model } = require('mongoose');
+
+const settingsSchema = Schema({
     client:{
         type:     String,
         required: true
@@ -8,7 +14,11 @@ const settingsSchema = mongoose.Schema({
     maintenance:{
         type:    Boolean,
         default: false
+    },
+    cycleStatus:{
+        type:    Boolean,
+        default: true
     }
 });
 
-module.exports = mongoose.model('settings', settingsSchema, 'Settings');
+module.exports = model('settings', settingsSchema, 'Settings');

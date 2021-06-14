@@ -1,3 +1,9 @@
+/**
+ * @author Devonte <https://github.com/devnote-dev>
+ * @copyright Radeon Development 2021
+ */
+
+
 const { MessageEmbed } = require('discord.js');
 const Guild = require('../../schemas/guild-schema');
 
@@ -8,8 +14,8 @@ module.exports = {
     usage: 'modlogs setchannel <Channel:Mention/ID>\nmodlogs log-kicks\nmodlogs log-bans\nmodlogs reset',
     userPerms: 32,
     guildOnly: true,
-    run: async (client, message, args) => {
-        const data = await Guild.findOne({guildID: message.guild.id});
+    async run(client, message, args) {
+        const data = await Guild.findOne({ guildID: message.guild.id });
         if (!args.length) {
             switch (data.modLogs.kicks) {
                 case true: kicks = '<:checkgreen:796925441771438080>'; break;

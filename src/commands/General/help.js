@@ -1,5 +1,13 @@
+/**
+ * @author Tryharddeveloper <https://github.com/tryharddeveloper>
+ * @author Devonte <https://github.com/devnote-dev>
+ * @author Piter <https://github.com/devnote-dev>
+ * @copyright Radeon Development 2021
+ */
+
+
 const { Permissions, MessageEmbed } = require('discord.js');
-const { isBotStaff, humanize } = require('../../functions/functions');
+const { isBotStaff, humanize } = require('../../dist/functions');
 const { readdirSync } = require('fs');
 
 module.exports = {
@@ -10,7 +18,7 @@ module.exports = {
     usage: 'help [Command:Name/Alias]\nhelp [Category]',
     cooldown: 3,
     guildOnly: false,
-    run: async (client, message, args) => {
+    run(client, message, args) {
         if (args.length) {
             let valid = false;
             let search = args.join(' ').toLowerCase();

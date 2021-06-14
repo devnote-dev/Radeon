@@ -1,4 +1,10 @@
-const { choose } = require('../../functions/functions');
+/**
+ * @author Crenshaw <https://github.com/Crenshaw1312>
+ * @copyright Radeon Development 2021
+ */
+
+
+const { choose } = require('../../dist/functions');
 const request = require('node-superfetch')
 const { MessageEmbed } = require('discord.js');
 
@@ -8,7 +14,7 @@ module.exports = {
     description: 'Returns a random truth',
     usage: 'truth [pg|pg13|r]',
     cooldown: 5,
-    run: async (client, message, args) => {
+    async run(client, message, args) {
         // setting rating
         let rating = await choose(args, ["pg", "pg13", "r"], null);
 

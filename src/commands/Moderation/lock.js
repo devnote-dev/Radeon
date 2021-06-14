@@ -1,3 +1,9 @@
+/**
+ * @author Devonte <https://github.com/devnote-dev>
+ * @copyright Radeon Development 2021
+ */
+
+
 const { MessageEmbed } = require('discord.js');
 
 module.exports = {
@@ -8,7 +14,7 @@ module.exports = {
     userPerms: 16,
     botPerms: 268435456,
     guildOnly: true,
-    run: async (client, message, args) => {
+    async run(client, message, args) {
         let chan = message.channel;
         let reason = '(No Reason Specified)';
         let role = message.guild.roles.everyone;

@@ -1,3 +1,9 @@
+/**
+ * @author Devonte <https://github.com/devnote-dev>
+ * @copyright Radeon Development 2021
+ */
+
+
 const { MessageEmbed } = require('discord.js');
 const Guild = require('../schemas/guild-schema');
 
@@ -5,6 +11,8 @@ exports.run = async (_, guild, user) => {
     const db = await Guild.findOne({ guildID: guild.id });
     const { modLogs } = db;
     if (!modLogs.channel || !modLogs.bans) return;
+    const c = guild.channels.cache.get(modLogs.channel);
+    if (!c) return;
     let count = 0;
     let audit;
     while (!audit) {
@@ -22,7 +30,7 @@ exports.run = async (_, guild, user) => {
         const { reason, executor } = audit;
         const embed = new MessageEmbed()
         .setTitle('Member Unbanned')
-        .setThumbnail(user.displayAvatarURL({dynamic: true}))
+        .setThumbnail(user.displayAvatarURL({ dynamic: true }))
         .addFields(
             {name: 'User', value: `• ${user.tag}\n• ${user.id}`, inline: true},
             {name: 'Moderator', value: `• ${executor.tag}\n• ${executor.id}`, inline: true},
@@ -30,7 +38,6 @@ exports.run = async (_, guild, user) => {
         )
         .setColor('GREEN')
         .setTimestamp();
-        const c = guild.channels.cache.get(modLogs.channel);
-        if (c) c.send(embed).catch(()=>{});
+        c.send(embed).catch(()=>{});
     }
 }

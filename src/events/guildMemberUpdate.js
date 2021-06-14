@@ -1,4 +1,9 @@
-require('discord.js');
+/**
+ * @author Devonte <https://github.com/devnote-dev>
+ * @copyright Radeon Development 2021
+ */
+
+
 const Guild = require('../schemas/guild-schema');
 const Muted = require('../schemas/muted-schema');
 

@@ -1,14 +1,15 @@
-// Advanced Clean Processor
-// Current Issues: FlagTo<ID> limited functionality
-//
-// © Radeon Development 2021 (GNU GPL v3)
+/**
+ * AdvanceClean Message Processor
+ * @author Devonte <https://github.com/devnote-dev>
+ * @copyright Radeon Development 2021
+ */
+
 
 const { Collection } = require('discord.js');
 
 module.exports = async (message, amount, options) => {
-    const { target, flagUsers, flagBots, flagNopin, flagHas, flagTo } = options;
-    let filtered = new Collection(), count = 0;
-    let messages;
+    const { target, flagUsers, flagBots, flagNopin, flagHas, flagTo, flagEmbeds } = options;
+    let filtered = new Collection(), count = 0, messages;
     if (flagTo) {
         messages = await message.channel.messages.fetch({ limit: 100, after: flagTo });
     } else {
@@ -19,7 +20,7 @@ module.exports = async (message, amount, options) => {
         messages.forEach(msg => {
             if (count > amount) return;
             if (target) {
-                if (msg.author.id == target) {
+                if (msg.author.id === target) {
                     filtered.set(msg.id, msg);
                     count++;
                 }
@@ -44,13 +45,15 @@ module.exports = async (message, amount, options) => {
     }
 
     if (flagNopin) {
-        const temp = new Collection();
-        filtered.forEach(msg => { if (!msg.pinned) temp.set(msg.id, msg) });
+        const temp = filtered.filter(msg => !msg.pinned);
         filtered = temp;
     }
     if (flagHas) {
-        const temp = new Collection();
-        filtered.forEach(msg => { if (msg.content.includes(flagHas)) temp.set(msg.id, msg) });
+        const temp = filtered.filter(msg => msg.content.includes(flagHas));
+        filtered = temp;
+    }
+    if (flagEmbeds) {
+        const temp = filtered.filter(msg => msg.embeds && msg.embeds.length);
         filtered = temp;
     }
 

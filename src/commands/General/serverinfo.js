@@ -1,16 +1,24 @@
+/**
+ * @author Devonte <https://github.com/devnote-dev>
+ * @author Tryharddeveloper <https://github.com/tryharddeveloper>
+ * @copyright Radeon Development 2021
+ */
+
+
 const { MessageEmbed } = require('discord.js');
-const { toDurationLong } = require('../../functions/functions');
+const { toDurationLong } = require('../../dist/functions');
 
 module.exports = {
     name: 'serverinfo',
     tag: 'Sends information about the server.',
     aliases: ['si'],
     description: 'Sends information about the server.',
-    cooldown: 6,
+    cooldown: 12,
     guildOnly: true,
-    run: async (_, message) => {
+    async run(_, message) {
         message.channel.startTyping();
         const server = message.guild;
+        if (server.members.cache.size < Math.round(server.memberCount / 4)) await server.members.fetch();
         const tc = server.channels.cache.filter(c => ['text','news','store'].includes(c.type));
         const vc = server.channels.cache.filter(c => c.type === 'voice');
         const roles = server.roles.cache.size;
@@ -34,7 +42,7 @@ module.exports = {
         }
         const embed = new MessageEmbed()
         .setTitle(`Server: ${server.name}`)
-        .setThumbnail(server.iconURL({dynamic: true}))
+        .setThumbnail(server.iconURL({ dynamic: true }))
         .addField('Owner', `<@${server.ownerID}>`, true)
         .addField('Members', `${server.memberCount} Total Members\n${server.memberCount - bots.size} Users\n${bots.size} Bots`, true)
         .addField('Created At', `${toDurationLong(server.createdTimestamp)}`, true)

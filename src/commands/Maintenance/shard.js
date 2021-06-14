@@ -1,5 +1,11 @@
+/**
+ * @author Devonte <https://github.com/devnote-dev>
+ * @copyright Radeon Development 2021
+ */
+
+
 const { MessageEmbed } = require('discord.js');
-const { toDurationDefault } = require('../../functions/functions');
+const { toDurationDefault } = require('../../dist/functions');
 
 module.exports = {
     name: 'shard',
@@ -8,7 +14,7 @@ module.exports = {
     usage: 'shard [Guild:ID]',
     cooldown: 2,
     guildOnly: true,
-    run: async (client, message, args) => {
+    run(client, message, args) {
         let server = message.guild;
         if (args.length) server = client.guilds.cache.get(args[0]);
         if (!server) return client.errEmb('Invalid or Unknown Server ID.', message);

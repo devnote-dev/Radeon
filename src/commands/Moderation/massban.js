@@ -1,7 +1,13 @@
-const { parseFlags } = require('../../functions/stringParser');
+/**
+ * @author Devonte <https://github.com/devnote-dev>
+ * @copyright Radeon Development 2021
+ */
+
+
+const { parseFlags } = require('../../dist/stringParser');
 
 module.exports = {
-    name: 'massban',
+    // name: 'massban',
     tag: 'Mass-bans multiple users',
     description: 'Mass-bans multiple users (message optional). Reason must be in quotations, otherwise default is used.',
     usage: 'massban <...User:Mention/ID> [-m Reason:Text]',
@@ -9,7 +15,7 @@ module.exports = {
     userPerms: 8,
     botPerms: 4,
     guildOnly: true,
-    run: async (client, message, args) => {
+    async run(client, message, args) {
         if (!args.length) return client.errEmb('Insufficient Arguments.\n```\nmassban <...User:Mention/ID> [-m Reason:Text]\n```', message);
         const users = [];
         let reason = '(No Reason Specified)';

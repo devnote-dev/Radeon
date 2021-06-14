@@ -1,8 +1,14 @@
-const mongoose = require('mongoose');
+/**
+ * @author Devonte <https://github.com/devnote-dev>
+ * @copyright Radeon Development 2021
+ */
 
-const banSchema = mongoose.Schema({
+
+const { Schema, model } = require('mongoose');
+
+const banSchema = Schema({
     guilds:  [String],
     users:   [String]
 });
 
-module.exports = mongoose.model('banlist', banSchema, 'Banned');
+module.exports = model('banlist', banSchema, 'Banned');

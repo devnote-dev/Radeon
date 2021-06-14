@@ -1,6 +1,13 @@
-const { MessageEmbed } = require('discord.js');
+/**
+ * @author Devonte <https://github.com/devnote-dev>
+ * @copyright Radeon Development 2021
+ */
 
-exports.run = async (client, rateLimitInfo) => {
+
+const { MessageEmbed } = require('discord.js');
+const { logError } = require('../dist/console');
+
+exports.run = (client, rateLimitInfo) => {
     const e = new MessageEmbed()
     .setTitle('RateLimit Warn')
     .addFields(
@@ -11,5 +18,11 @@ exports.run = async (client, rateLimitInfo) => {
         {name: 'Source (Route)', value: `\`\`\`\n${rateLimitInfo.route}\n\`\`\``, inline: false}
     )
     .setTimestamp();
-    client.channels.cache.get(client.config.logs.error).send(e).catch(console.error);
+    client.channels.cache.get(client.config.logs.error).send(e).catch(() => {
+        logError(`Ratelimit
+        Limit: ${rateLimitInfo.limit}
+        Method: ${rateLimitInfo.method}
+        Source: ${rateLimitInfo.source}
+        `, rateLimitInfo.path);
+    });
 }

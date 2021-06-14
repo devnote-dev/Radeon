@@ -1,6 +1,12 @@
-const mongoose = require('mongoose');
+/**
+ * @author Devonte <https://github.com/devnote-dev>
+ * @copyright Radeon Development 2021
+ */
 
-const warnSchema = mongoose.Schema({
+
+const { Schema, model } = require('mongoose');
+
+const warnSchema = Schema({
     guildID:{
         type:      String,
         required:  true
@@ -11,4 +17,4 @@ const warnSchema = mongoose.Schema({
     date:          Date
 });
 
-module.exports = mongoose.model('Warns', warnSchema, 'Warns');
+module.exports = model('Warns', warnSchema, 'Warns');

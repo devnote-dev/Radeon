@@ -1,5 +1,12 @@
+/**
+ * @author Devonte <https://github.com/devnote-dev>
+ * @author Piter <https://github.com/piterxyz>
+ * @copyright Radeon Development 2021
+ */
+
+
 const { MessageEmbed } = require('discord.js');
-const { toDurationDefault, toDurationLong } = require('../../functions/functions');
+const { toDurationDefault, toDurationLong } = require('../../dist/functions');
 
 module.exports = {
     name: 'userinfo',
@@ -8,25 +15,23 @@ module.exports = {
     aliases: ['ui'],
     description: 'Sends information about a specified user, or the triggering user if none is specified.',
     usage: 'userinfo [User:Mention/ID]',
-    cooldown: 7,
+    cooldown: 8,
     guildOnly: true,
-    run: async (client, message, args) => {
+    async run(client, message, args) {
         let target = message.member;
-        if (args.length) target = message.mentions.members.first() || message.guild.members.cache.get(args[0]);
+        if (args.length) {
+            if (new RegExp(`(?:<@!?)?${client.user.id}>?`).test(args[0])) target = message.guild.me;
+            else target = message.mentions.members.first() || message.guild.members.cache.get(args[0]);
+        }
         if (!target) return client.errEmb('Invalid Member Specified.', message);
+        message.channel.startTyping();
         if (target.partial) target = await target.fetch();
         const member = target;
         target = target.user;
 
-        switch (target.presence.status) {
-            case 'online': status = '<:status_online:782290447149432892> Online'; break;
-            case 'idle': status = '<:status_idle:782290447123873824> Idle'; break;
-            case 'dnd': status = '<:status_dnd:782290447028191243> DND'; break;
-            case 'offline': status = '<:status_offline:782290447057813524> Offline'; break;
-            default: status = 'unknown'; break;
-        }
-
         let presence = 'None or not cached.';
+        // Disabled as the bot doesn't have the intents so it doesn't run
+        /*
         if (target.presence.activities.length) {
             presence = '';
             target.presence.activities.forEach(act => {
@@ -47,15 +52,16 @@ module.exports = {
             });
             if (!presence.length) presence = 'Unknown Activity';
         }
+        */
 
         let roles = [], rest = 0;
         if (member.roles.cache.size) {
             member.roles.cache
-            .sort((a, b) => b.position - a.position)
-            .forEach(r => roles.push(r));
+                .sort((a, b) => b.position - a.position)
+                .forEach(r => { if (r.id !== message.guild.id) roles.push(r) });
             if (roles.length > 5) {
                 roles = roles.slice(0, 5);
-                rest = member.roles.cache.size - 5;
+                rest = member.roles.cache.size - 6;
             }
             roles = roles.join(', ');
             if (rest) roles += `... +${rest} more`;
@@ -84,15 +90,18 @@ module.exports = {
         .setTitle(target.tag)
         .setDescription(totalf)
         .addField('ID', `${target.id}`, true)
-        .addField('Status', status, true)
-        .addField('Avatar', `[Download Link 📥](${target.displayAvatarURL({dynamic: true})})`, true)
+        .addField('Avatar', `[Download Link 📥](${target.displayAvatarURL({ dynamic: true })})`, true)
+        .addField('\u200b', '\u200b', true)
         .addField('Account Age', `${target.createdAt.toDateString()}\n${toDurationLong(target.createdTimestamp)}`, true)
         .addField('Server Member Age', `${member.joinedAt.toDateString()}\n${toDurationDefault(member.joinedTimestamp)}`, true)
         .addField('Presence', presence, false)
         .addField('Roles', roles, false)
         .setColor(member.displayColor || 0x2f3136)
-        .setThumbnail(target.displayAvatarURL({dynamic: true}))
+        .setThumbnail(target.displayAvatarURL({ dynamic: true }))
         .setFooter(`Triggered By ${message.author.tag}`, message.author.displayAvatarURL());
-        return message.channel.send(embed);
+        setTimeout(() => {
+            message.channel.stopTyping();
+            return message.channel.send(embed);
+        }, 2000);
     }
 }

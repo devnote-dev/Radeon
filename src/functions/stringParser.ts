@@ -1,11 +1,13 @@
-// Strings Parser (quotations and flags) for Radeon
-//
-// There will be NO support for the use of this file
-// except for self-hosted instances of Radeon
-// (which is not currently supported).
-//
-// © Radeon Development 2021 (GNU GPL v3)
-// https://github.com/devnote-dev/Radeon
+/**
+ * Strings Parser
+ * 
+ * There will be NO support for the use of this file
+ * except for self-hosted instances of Radeon
+ * (which is currently not supported).
+ * 
+ * @author Devonte <https://github.com/devnote-dev>
+ * @copyright Radeon Development 2021
+ */
 
 
 type FlagOptions = {
@@ -34,25 +36,24 @@ function parseQuotes(str: string, stripQuotes: boolean=false): string {
     const split:  string[] = str.split('');
     const parsed: string[] = [];
     let start = false;
-
-    split.forEach((char, i) => {
-        if (char == '"' && !start) {
+    let i = 0;
+    for (const char of split) {
+        if (char === '"' && !start) {
             parsed.push(char);
             start = true;
-        } else if (char == '"' && start) {
+        } else if (char === '"' && start) {
             if (split[i-1] == '\\') {
                 parsed.push(char);
             } else {
                 parsed.push(char);
-                start = false;
+                break;
             }
-        } else if (char == ' ' && start) {
+        } else if (/ +/.test(char) && start) {
             parsed.push(char);
         } else if (start) {
             parsed.push(char);
         }
-    });
-
+    }
     if (parsed.length) {
         if (stripQuotes) {
             return parsed.join('').replace(/^"|"$/g, '');
@@ -72,7 +73,7 @@ function parseQuotes(str: string, stripQuotes: boolean=false): string {
  */
 function parseFlags(str: string, flags: FlagOptions[]): Readonly<Flag[]> {
     const parsed: Flag[] = [];
-    const split = str.split(' ');
+    let split = str.split(' ');
 
     flags.forEach(flag => {
         if (flag.type == 'string') {
@@ -85,6 +86,7 @@ function parseFlags(str: string, flags: FlagOptions[]): Readonly<Flag[]> {
                     const res = parseQuotes(split.slice(holder).join(' '));
                     if (res.length) {
                         parsed.push({name: flag.name, value: res});
+                        split = split.slice(holder+1);
                     } else {
                         parsed.push({name: flag.name, value: null});
                     }

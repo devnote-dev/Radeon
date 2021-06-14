@@ -1,5 +1,12 @@
+/**
+ * @author Devonte <https://github.com/devnote-dev>
+ * @author Tryharddeveloper <https://github.com/tryharddeveloper>
+ * @copyright Radeon Development 2021
+ */
+
+
 const { MessageEmbed } = require('discord.js');
-const { logError } = require('../../console/consoleR');
+const { logError } = require('../../dist/console');
 const Guild = require('../../schemas/guild-schema');
 const Muted = require('../../schemas/muted-schema');
 
@@ -11,7 +18,7 @@ module.exports = {
     userPerms: 8192,
     botPerms: 268435456,
     guildOnly: true,
-    run: async (client, message, args) => {
+    async run(client, message, args) {
         const { muteRole, modLogs } = await Guild.findOne({ guildID: message.guild.id });
         if (!muteRole) return client.errEmb('Mute role not found/set. You can set one using the `muterole` command.', message);
         if (!args.length) return client.errEmb('Insufficient Arguments.\n```\nunmute <User:Mention/ID> [Reason:Text]\n```', message);
@@ -77,6 +84,6 @@ module.exports._selfexec = async (client, guild, user) => {
             return GS.channels.cache.get(modLogs.channel).send(embed).catch(()=>{});
         }
     } catch (err) {
-        logError(err, __dirname);
+        logError(err, __filename);
     }
 }

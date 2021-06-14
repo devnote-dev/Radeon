@@ -1,14 +1,20 @@
+/**
+ * @author Devonte <https://github.com/devnote-dev>
+ * @copyright Radeon Development 2021
+ */
+
+
 const { version: dcversion, MessageEmbed } = require('discord.js');
 const { join } = require('path');
 const { version } = require(join(process.cwd(), 'package.json')); 
-const { toDurationDefault } = require('../../functions/functions');
+const { toDurationDefault } = require('../../dist/functions');
 
 module.exports = {
     name: 'status',
     tag: 'Sends Radeon\'s status',
     description: 'Sends the bot\'s status for that guild.',
-    cooldown: 3,
-    run: async (client, message) => {
+    cooldown: 5,
+    run(client, message) {
         const { heapUsed, heapTotal } = process.memoryUsage();
         const embed = new MessageEmbed()
         .setTitle('Radeon Status (Total)')

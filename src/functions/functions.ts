@@ -1,15 +1,17 @@
-// General Functions for Radeon
-//
-// © Radeon Development 2021 (GNU GPL v3)
-// https://github.com/devnote-dev/Radeon
+/**
+ * Radeon General Functions
+ * @author Devonte <https://github.com/devnote-dev>
+ * @copyright Radeon Development 2021
+ */
 
-import { botOwners, botAdmins } from "../../config.json";
-import { Permissions } from "discord.js";
+
+import { botOwners, botAdmins } from '../../config.json';
+import { PermissionResolvable, Permissions } from 'discord.js';
 
 /**
  * Converts a timestamp to a small humanized duration.
- * @param ms Milliseconds to convert from.
- * @returns string
+ * @param {number} ms Milliseconds to convert from.
+ * @returns {string}
  */
 function toDurationDefault(ms: number): string {
     ms = Date.now() - ms;
@@ -22,8 +24,8 @@ function toDurationDefault(ms: number): string {
 
 /**
  * Converts a timestamp to a long humanized duration.
- * @param ms Milliseconds to convert from.
- * @returns string
+ * @param {number} ms Milliseconds to convert from.
+ * @returns {string}
  */
 function toDurationLong(ms: number): string {
     ms = Date.now() - ms;
@@ -37,8 +39,8 @@ function toDurationLong(ms: number): string {
 
 /**
  * Converts a timestamp to a days string.
- * @param ms Milliseconds to convert from.
- * @returns string
+ * @param {number} ms Milliseconds to convert from.
+ * @returns {string}
  */
 function toDurationDays(ms: number): string {
     const days: number = (Date.now() - ms) / 86400000;
@@ -53,11 +55,12 @@ function isBotOwner(id: string): boolean { return botOwners.includes(id) }
 
 /**
  * Humanizes a Discord.Permissions bitfield to readable strings.
- * @param permissions Permissions to convert.
- * @returns string[]
+ * @param {PermissionResolvable} permissions Permissions to convert.
+ * @returns {string[]}
  */
-function humanize(permissions: Permissions): string[] {
+function humanize(permissions: PermissionResolvable): string[] {
     let perms = [];
+    permissions = new Permissions(permissions);
     permissions.toArray().forEach(p => {
         let r = '';
         p.replace(/_/g, ' ').split(' ').forEach(w => {
@@ -68,11 +71,29 @@ function humanize(permissions: Permissions): string[] {
     return perms;
 }
 
+/**
+ * @param {string[]} args args in the message
+ * @param {?object} options what you want to find
+ * @param {?string} not what the option cannot be 
+ * @returns {string}
+ */
+function choose(args: string[], options?: string[], not?: string|null): string {
+    let choice = options[Math.floor(Math.random() * options.length)];
+    if (!args)
+        return choice;
+    for (let option of options) {
+        if (args.find(arg => option == arg && not !== arg))
+            choice = option;
+    }
+    return choice;
+}
+
 export {
     toDurationDefault,
     toDurationLong,
     toDurationDays,
     isBotStaff,
     isBotOwner,
-    humanize
+    humanize,
+    choose
 }

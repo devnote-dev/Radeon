@@ -1,5 +1,10 @@
-import { Shard } from "discord.js";
-import Settings from "../schemas/settings-schema";
+/**
+ * @author Devonte <https://github.com/devnote-dev>
+ * @copyright Radeon Development 2021
+ */
+
+import { Shard } from 'discord.js';
+import Settings from '../schemas/settings-schema';
 
 function borderBold() {
     return console.log('==================================');
@@ -9,16 +14,16 @@ function borderSmall() {
 }
 
 async function botReady(client: any) {
+    const events = client.stats._events;
     const loaded = client.commands.size;
     const failed = client.stats._failed;
-    const events = client.stats._events;
     const guilds = client.guilds.cache.size;
-    const state = await Settings.findOne({ client: client.user.id });
-    let log = `\x1b[35mRadeon is Ready!\x1b[0m\n\n\x1b[32m${loaded}\x1b[0m Loaded Commands\n\x1b[31m${failed ? failed.length : 0}\x1b[0m Failed Commands\n\x1b[36m${events}\x1b[0m Loaded Events`;
-    if (failed && failed.length) log += ':\n\x1b[31m'+ failed.join('\n') +'\x1b[0m';
-    log += `\n\nConnected to ${guilds} servers`;
+    const state: any = await Settings.findOne({ client: client.user.id });
+    let log = `\x1b[35mRadeon is Ready!\x1b[0m\n\n\x1b[36m${events}\x1b[0m Loaded Events\n\x1b[32m${loaded}\x1b[0m Loaded Commands\n\x1b[31m${failed ? failed.length : 0}\x1b[0m Failed Commands`;
+    if (failed && failed.length) log += ':\n\x1b[31m- '+ failed.join('\n- ') +'\x1b[0m';
+    log += `\n\nConnected to ${guilds} server(s)`;
     if (client.readyAt) log += '\nReady at: '+ client.readyAt.toLocaleString();
-    log += `\nMaintenance: ${state.maintenance}`;
+    log += `\nMaintenance: ${state.maintenance}\nCycle Status: ${state.cycleStatus}\n`;
     borderBold();
     return console.log(log);
 }
@@ -38,7 +43,6 @@ function logShard(client: any, type: string, shard: number) {
         case 'resume': log += 'Resumed'; break;
         default: log += `Unknown: Invalid Log Request\nPath: ${__dirname}`; break;
     }
-    borderSmall();
     return console.log(log);
 }
 
@@ -55,7 +59,6 @@ function logDB(type: string, data?: any) {
             log = `\x1b[31mMONGO\x1b[0m | Disconnected\nServers may be temporarily unavailable.`;
             break;
     }
-    borderSmall();
     return console.log(log);
 }
 
@@ -63,16 +66,16 @@ function logAdmin(type: string, path: string, user: string, args: string) {
     let log: string;
     switch (type) {
         case 'eval':
-            log = `\x1b[33mEval\x1b[0m\nPath: ${path}\nUser: ${user}\n\n${args}`;
+            log = `\x1b[33mEval\x1b[0m\nPath: ${path}\nUser: ${user}\n\n${args}\n`;
             break;
         case 'exec':
-            log = `\x1b[33mExecute\x1b[0m\nPath: ${path}\nUser: ${user}\nCmd: ${args}`;
+            log = `\x1b[33mExecute\x1b[0m\nPath: ${path}\nUser: ${user}\nCmd: ${args}\n`;
             break;
         case 'reload':
-            log = `\x1b[33mReload\x1b[0m\nPath: ${path}\nUser: ${user}\nFile: ${args}.js`;
+            log = `\x1b[33mReload\x1b[0m\nPath: ${path}\nUser: ${user}\nFile: ${args}.js\n`;
             break;
         case 'status':
-            log = `\x1b[33mSetstatus\x1b[0m\nPath: ${path}\nUser: ${user}\n${args}`;
+            log = `\x1b[33mSetstatus\x1b[0m\nPath: ${path}\nUser: ${user}\n${args}\n`;
             break;
     }
     borderSmall();

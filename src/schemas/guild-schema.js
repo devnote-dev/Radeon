@@ -1,6 +1,13 @@
-const mongoose = require('mongoose');
+/**
+ * @author Tryharddeveloper <https://github.com/tryharddeveloper>
+ * @author Devonte <https://github.com/devnote-dev>
+ * @copyright Radeon Development 2021
+ */
 
-const guildSchema = mongoose.Schema({
+
+const { Schema, model } = require('mongoose');
+
+const guildSchema = Schema({
     guildID: {
         type:               String,
         required:           true
@@ -49,4 +56,4 @@ const guildSchema = mongoose.Schema({
     }
 });
 
-module.exports = mongoose.model('Guild', guildSchema, 'Guilds');
+module.exports = model('Guild', guildSchema, 'Guilds');

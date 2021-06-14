@@ -1,5 +1,11 @@
+/**
+ * @author Devonte <https://github.com/devnote-dev>
+ * @copyright Radeon Development 2021
+ */
+
+
 const { Permissions, MessageEmbed } = require('discord.js');
-const { humanize } = require('../../functions/functions');
+const { humanize } = require('../../dist/functions');
 
 module.exports = {
     name: 'permissions',
@@ -8,7 +14,7 @@ module.exports = {
     description: 'Permissions Tools: can send the permissions of a specified user or triggering user, and permissions in a specified channel.',
     usage:'permissions [User:Mention/ID]\npermissions <User:Mention/ID> in <Channel:Mention/ID>\npermissions in <Channel:Mention/ID>\npermissions create <Permission:Name>; ...;\npermissions resolve <Bitfield:Number>',
     guildOnly: true,
-    run: async (client, message, args) => {
+    async run(client, message, args) {
         if (args.length) {
             if (args[0].toLowerCase() == 'create') {
                 if (!args[1]) return client.errEmb('No Permissions Specified.\nMake sure each permission is separated by **;**.\n```\npermissions create <Permission:Name>; ...;\n```', message);

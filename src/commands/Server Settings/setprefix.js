@@ -1,4 +1,9 @@
-require('discord.js');
+/**
+ * @author Devonte <https://github.com/devnote-dev>
+ * @copyright Radeon Development 2021
+ */
+
+
 const Guild = require('../../schemas/guild-schema');
 
 module.exports = {
@@ -9,7 +14,7 @@ module.exports = {
     userPerms: 32,
     guildOnly: true,
     modBypass: true,
-    run: async (client, message, args) => {
+    async run(client, message, args) {
         if (!args.length) return client.errEmb('No Prefix Specified.\n```\nsetprefix <new-prefix>\n```', message);
         let newPrefix = args.join(' ').toLowerCase();
         const blocked = new RegExp(/[^a-zA-Z!\?+-~'\^*`;,:.<>@&%\\/$()£#]+/gi);

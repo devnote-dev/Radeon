@@ -1,5 +1,11 @@
+/**
+ * @author Crenshaw <https://github.com/Crenshaw1312>
+ * @copyright Radeon Development 2021
+ */
+
+
 const request = require('node-superfetch')
-const { parseFlags } = require('../../functions/stringParser');
+const { parseFlags } = require('../../dist/stringParser');
 const { MessageEmbed } = require('discord.js');
 const { YoutubeKey } = require("../../../config.json");
 
@@ -10,7 +16,7 @@ module.exports = {
     description: 'Find what platforms have a song\n\n**Flags**\n`-link` - specify a share link',
     usage: 'songavailable [song name|flag]',
     cooldown: 20,
-    run: async (client, message, args) => {
+    async run(client, message, args) {
         // flags
         let flags = parseFlags(args.join(" "), [
             {name: 'link', type: 'string', quotes: false},

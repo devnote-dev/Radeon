@@ -1,13 +1,19 @@
+/**
+ * @author Devonte <https://github.com/devnote-dev>
+ * @copyright Radeon Development 2021
+ */
+
+
 const Warns = require('../../schemas/warn-schema');
 
 module.exports = {
-    name: 'warn',
+    // name: 'warn',
     tag: 'Warns a specified user',
     description: 'Warns a specified user.',
     usage: 'warn <User:Mention/ID> <Reason:Text>',
     userPerms: 8192,
     guildOnly: true,
-    run: async (client, message, args) => {
+    async run(client, message, args) {
         if (!args.length) return client.errEmb('Insufficient Arguments.\n```\nwarn <User:Mention/ID> <Reason:Text>\n```', message);
         const target = message.mentions.members.first() || message.guild.members.cache.get(args[0]);
         if (!target) return client.errEmb('Invalid Member Specified.', message);

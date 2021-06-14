@@ -1,3 +1,9 @@
+/**
+ * @author Crenshaw <https://github.com/Crenshaw1312>
+ * @copyright Radeon Development 2021
+ */
+
+
 const { MessageEmbed } = require('discord.js');
 const request = require('node-superfetch')
 
@@ -7,7 +13,7 @@ module.exports = {
     description: 'Fox image and fact',
     usage: 'Fox [image|fact]',
     cooldown: 5,
-    run: async (client, message, args) => {
+    async run(client, message, args) {
 
         let fox = {}
         switch (args[0] || null) {
