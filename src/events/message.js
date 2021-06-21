@@ -6,17 +6,10 @@
  */
 
 
-const { MessageEmbed } = require('discord.js');
 const { isBotStaff, isBotOwner, humanize } = require('../dist/functions');
 const { logError, logWarn } = require('../dist/console');
 const Guild = require('../schemas/guild-schema');
 const Settings = require('../schemas/settings-schema');
-
-const baseEmbed = (author, msg) => {
-    return new MessageEmbed()
-    .setDescription(msg).setColor(0x1e143b)
-    .setFooter(author.tag, author.displayAvatarURL({ dynamic: true }));
-}
 
 // Base Error Messages
 const EM = {
@@ -46,9 +39,8 @@ exports.run = async (client, message) => {
     }
 
     // Handling DM commands
-    // Disabled for the time being as intents dont work for it
-    /*
     if (!message.guild) {
+        if (message.channel.partial) await message.channel.fetch();
         const args = message.content.trim().split(/\s+|\n+/g);
         const cmd = args.shift().toLowerCase();
         if (!cmd.length) return;
@@ -56,7 +48,7 @@ exports.run = async (client, message) => {
         if (!command) return;
         if (lock) return channel.send(EM.errMain);
         if (command.guildOnly) {
-            return channel.send(EM.errGuildOnly(author));
+            return channel.send(EM.errGuildOnly);
         } else if (command.modOnly) {
             if (isBotStaff(author.id)) {
                 try {
@@ -68,7 +60,7 @@ exports.run = async (client, message) => {
                     return channel.send(EM.errNoExec(command.name));
                 }
             } else if (command.modOnly === 'warn') {
-                return channel.send(EM.errOwnerOnly(author));
+                return channel.send(EM.errOwnerOnly);
             } else if (command.modOnly === 'void') return;
         } else {
             try {
@@ -82,7 +74,6 @@ exports.run = async (client, message) => {
         }
         return;
     }
-    */
 
     // Fetching server database...
     const data = await Guild.findOne(
@@ -183,7 +174,7 @@ exports.run = async (client, message) => {
     } else {
         // Processing for automod
         if (!automod.active) return;
-        if (!channel.permissionsFor(message.guild.me).has(10240)) return;
+        if (!channel.permissionsFor(message.guild.me).has(10240)) return; // 26624
         if (automod.invites || automod.massMention.active) {
             try {
                 await require('../functions/amod-main')(message, automod);
