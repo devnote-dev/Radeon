@@ -19,7 +19,7 @@ module.exports = {
     guildOnly: true,
     async run(client, message, args) {
         let target = message.member;
-        if (args.length) target = message.mentions.members.first() || message.guild.members.fetch(args[0]);
+        if (args.length) target = message.mentions.members.first() || await message.guild.members.fetch(args[0]);
         if (!target) return client.errEmb('Invalid Member Specified.', message);
         message.channel.startTyping();
         if (target.partial) target = await target.fetch();
