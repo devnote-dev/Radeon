@@ -150,8 +150,8 @@ exports.run = async (client, message) => {
         if (ignoredCommands.includes(command.name)) return;
 
         // Checks for servers with shitty channel perms
-        if (!channel.permissionsFor(message.guild.me).has(2048)) return;
-        if (!channel.permissionsFor(message.guild.me).has(16384)) return channel.send(EM.errNoEmbeds);
+        if (!channel.permissionsFor(message.guild.me).has(2048n)) return;
+        if (!channel.permissionsFor(message.guild.me).has(16384n)) return channel.send(EM.errNoEmbeds);
 
         // Simplify handling cooldowns down to one line
         if (runCooldown(client, message, command)) return;
@@ -202,7 +202,7 @@ exports.run = async (client, message) => {
     } else {
         // Processing for automod
         if (!automod.active) return;
-        if (!channel.permissionsFor(message.guild.me).has(10240)) return; // 26624
+        if (!channel.permissionsFor(message.guild.me).has(10240n)) return; // 26624
         if (automod.invites || automod.massMention.active) {
             try {
                 await require('../functions/amod-main')(message, automod);

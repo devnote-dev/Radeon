@@ -42,9 +42,9 @@ module.exports = {
         
         } else if (sub == 'resolve') {
             if (!args[1]) return client.errEmb('No Permission Bitfield Provided.\n```\npermissions resolve <Bitfield:Number>\n```', message);
-            const bit = parseInt(args[1]);
-            if (isNaN(bit)) return client.errEmb('Invalid Bitfield Provided.', message);
-            const res = new Permissions(BigInt(bit));
+            if (/[^0-9]+n?/gm.test(args[1])) return client.errEmb('Invalid Bitfield Provided.', message);
+            const bit = BigInt(args[1]);
+            const res = new Permissions(bit);
             const embed = new MessageEmbed()
             .setTitle('Permissions')
             .setDescription(`Resovled from Bitfield **\`${bit}\`**\n\`\`\`\n${checkAdmin(res)}\n\`\`\``)
