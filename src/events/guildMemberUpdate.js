@@ -4,14 +4,11 @@
  */
 
 
-const Guild = require('../schemas/guild-schema');
-const Muted = require('../schemas/muted-schema');
-
-exports.run = async (_, oldMem, newMem) => {
+exports.run = async (client, oldMem, newMem) => {
     const { guild } = oldMem;
-    const gData = await Guild.findOne({ guildID: guild.id }).catch(()=>{});
+    const gData = await client.db('guild').get(guild.id);
     if (!gData || !gData.muteRole) return;
-    const mData = await Muted.findOne({ guildID: guild.id }).catch(()=>{});
+    const mData = await client.db('muted').get(guild.id);
     if (!mData.mutedList.length) return;
     if (newMem.partial) newMem = await newMem.fetch();
     if (

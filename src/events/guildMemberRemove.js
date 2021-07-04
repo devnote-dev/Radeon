@@ -5,10 +5,9 @@
 
 
 const { MessageEmbed } = require('discord.js');
-const Guild = require('../schemas/guild-schema');
 
-exports.run = async (_, member) => {
-    const db = await Guild.findOne({ guildID: member.guild.id });
+exports.run = async (client, member) => {
+    const db = await client.db('guild').get(member.guild.id);
     const { modLogs } = db;
     if (!modLogs.channel || !modLogs.kicks) return;
     const c = member.guild.channels.cache.get(modLogs.channel);

@@ -8,8 +8,6 @@
 
 const { isBotStaff, isBotOwner, humanize } = require('../dist/functions');
 const { logError, logWarn } = require('../dist/console');
-const Guild = require('../schemas/guild-schema');
-const Settings = require('../schemas/settings-schema');
 
 // Base Error Messages
 const EM = {
@@ -45,7 +43,7 @@ exports.run = async (client, message) => {
     const path = `${message.guild ? message.guild.id +'/' : ''}${channel.id}`;
 
     // maintenance mode checks
-    const state = await Settings.findOne({ client: client.user.id });
+    const state = await client.db('settings').get(client.user.id);
     let lock = false;
     if (state && state.maintenance) {
         if (!isBotOwner(author.id)) lock = true;
@@ -89,19 +87,13 @@ exports.run = async (client, message) => {
     }
 
     // Fetching server database...
-    const gData = await Guild.findOne(
-        { guildID: message.guild.id },
-        (err, guild) => {
-            // fallback for guildCreate event failure,
-            // basically this should never happen
-            if (!guild) {
-                client.emit('guildCreate', message.guild);
-                logWarn(`MessageEvent guildCreate fired\n\nServer: ${message.guild.id}`);
-            } else if (err) {
-                logError(err, path);
-            }
-        }
-    );
+    const gData = await client.db('guild').get(message.guild.id);
+    if (!gData) {
+        // fallback for servers joined while offline/during downtime
+        client.emit('guildCreate', message.guild);
+        // might remove logging later
+        logWarn(`MessageEvent guildCreate fired\n\nServer: ${message.guild.id}`);
+    }
 
     // extracting all the necessary info
     const {
@@ -122,18 +114,10 @@ exports.run = async (client, message) => {
         || message.content.toLowerCase().startsWith(client.config.prefix)
         || new RegExp(`^<@!?${client.user.id}>\s+`, 'gi').test(message.content)
     ) {
-        // I hate this mess but it works,
-        // please ignore it for the time being.
+        // Getting arguments, much cleaner now :D
         let args;
         if (message.mentions.users.size) {
-            let user = message.mentions.users.first();
-            if (user.id === client.user.id) {
-                args = message.content.trim().split(/\s+|\n+/g).splice(1);
-            } else if (message.content.toLowerCase().startsWith(client.config.prefix)) {
-                args = message.content.slice(client.config.prefix.length).trim().split(/\s+|\n+/g);
-            } else {
-                args = message.content.slice(prefix.length).trim().split(/\s+|\n+/g);
-            }
+            args = message.content.trim().split(/\s+|\n+/g).slice();
         } else if (message.content.toLowerCase().startsWith(client.config.prefix)) {
             args = message.content.slice(client.config.prefix.length).trim().split(/\s+|\n+/g);
         } else {
@@ -160,11 +144,13 @@ exports.run = async (client, message) => {
         if (command.modOnly) {
             if (command.modOnly < 3) {
                 if (!isBotOwner(author.id)) {
-                    if (command.modOnly === 2) return message.reply(EM.errOwnerOnly);
+                    if (command.modOnly === 2) message.reply(EM.errOwnerOnly);
+                    return;
                 }
             } else {
                 if (!isBotStaff(author.id)) {
-                    if (command.modOnly === 4) return message.reply(EM.errAdminOnly);
+                    if (command.modOnly === 4) message.reply(EM.errAdminOnly);
+                    return;
                 }
             }
         }

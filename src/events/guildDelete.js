@@ -5,8 +5,8 @@
  */
 
 const { MessageEmbed } = require('discord.js');
-const Guild = require('../schemas/guild-schema');
-const Muted = require('../schemas/muted-schema');
+const Guild = require('../schemas/guild');
+const Muted = require('../schemas/muted');
 
 exports.run = async (client, guild) => {
     const e = new MessageEmbed()
@@ -14,7 +14,7 @@ exports.run = async (client, guild) => {
     .setColor(0xd10000)
     .setTimestamp();
     client.channels.cache.get(client.config.logs.joins)?.send(e).catch(()=>{});
-    await Guild.findOneAndDelete({ guildID: guild.id });
-    await Muted.findOneAndDelete({ guildID: guild.id });
+    await client.db('guild').delete(guild.id);
+    await client.db('muted').delete(guild.id);
     console.log(`MONGO | Guild Removed: ${guild.name}`);
 }
