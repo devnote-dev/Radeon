@@ -37,7 +37,7 @@ client.cooldowns  = new Collection();
 client.cmdlogs    = new Set();
 client.config     = require('../config.json');
 client.mongoose   = require('./mongo');
-client.rlcount    = 0;
+client.db         = require('./schemas/manager');
 client.stats      = {
     events:     0,
     commands:   0,
@@ -48,7 +48,7 @@ client.stats      = {
 };
 
 readdirSync('./src/handlers/').forEach(handler => {
-    if (!handler.endsWith('.handler.js')) return;
+    if (!handler.endsWith('.h.js')) return;
     require(`./handlers/${handler}`)(client);
 });
 
