@@ -4,8 +4,6 @@
  */
 
 
-const Guild = require('../../schemas/guild-schema');
-
 module.exports = {
     name: 'kick',
     tag: 'Kicks a member from the server',
@@ -22,8 +20,8 @@ module.exports = {
         if (!target) return client.errEmb('User is not a member of this server.', message);
         if (target.user.id === message.author.id) return client.errEmb('You can\'t kick yourself.', message);
         if (target.user.id === client.user.id) return client.errEmb('I can\'t kick myself.', message);
-        const data = await Guild.findOne({ guildID: message.guild.id }).catch(()=>{});
-        if (!data) return client.errEmb('Unkown: Failed Connecting To Server Database. Try contacting support.', message);
+        const data = await client.db('guild').get(message.guild.id);
+        if (!data) return client.errEmb('Unknown: Failed Connecting To Server Database. Try contacting support.', message);
         let reason = '(No Reason Specified)';
         if (args.length > 1) reason = args.slice(1).join(' ');
         if (data.requireKickReason && reason === '(No Reason Specified)') {

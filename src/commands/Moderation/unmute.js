@@ -7,8 +7,8 @@
 
 const { MessageEmbed } = require('discord.js');
 const { logError } = require('../../dist/console');
-const Guild = require('../../schemas/guild-schema');
-const Muted = require('../../schemas/muted-schema');
+const Guild = require('../../schemas/guild');
+const Muted = require('../../schemas/muted');
 
 module.exports = {
     name: 'unmute',
@@ -20,10 +20,11 @@ module.exports = {
     guildOnly: true,
     roleBypass: true,
     async run(client, message, args) {
-        const { muteRole, modLogs } = await Guild.findOne({ guildID: message.guild.id });
+        const data = await client.db('guild').get(message.guild.id);
+        const { modLogs, muteRole } = data;
         if (!muteRole) return client.errEmb('Mute role not found/set. You can set one using the `muterole` command.', message);
         if (!args.length) return client.errEmb('Insufficient Arguments.\n```\nunmute <User:Mention/ID> [Reason:Text]\n```', message);
-        const target = message.mentions.members.first() || await message.guild.members.fetch(args[0]);
+        const target = message.mentions.members.first() || await message.guild.members.fetch(args[0]).catch(()=>{});
         if (!target) return client.errEmb('User is not a member of this server.', message);
         if (!target.roles.cache.has(muteRole)) return client.errEmb(`\`${target.user.tag}\` is not muted.`, message);
         let reason = '(No Reason Specified)';
@@ -32,11 +33,7 @@ module.exports = {
             const mData = await Muted.findOne({ guildID: message.guild.id });
             if (mData.mutedList.has(target.user.id)) {
                 mData.mutedList.delete(target.user.id);
-                await Muted.findOneAndUpdate(
-                    { guildID: message.guild.id },
-                    { $set:{ mutedList: mData }},
-                    { new: true }
-                );
+                await client.db('muted').update(message.guild.id, { mutedList: mData });
             }
             await target.roles.remove(muteRole);
             const dmEmb = new MessageEmbed()
@@ -70,7 +67,7 @@ module.exports._selfexec = async (client, guild, user) => {
     const MS = await GS.members.fetch(user);
     if (!MS) return;
     try {
-        const { muteRole, modLogs } = await Guild.findOne({ guildID: GS.id });
+        const { muteRole, modLogs } = await client.db('guild').get(GS.id);
         await MS.roles.remove(muteRole);
         if (modLogs.channel && GS.channels.cache.has(modLogs.channel)) {
             const embed = new MessageEmbed()

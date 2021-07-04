@@ -17,7 +17,7 @@ module.exports = {
     userPerms: 32n,
     guildOnly: true,
     async run(client, message, args) {
-        const data = await Guild.findOne({ guildID: message.guild.id });
+        const data = await client.db('guild').get(message.guild.id);
         const { modLogs } = data;
         if (!args.length) {
             let modlogChan = 'None Set', actionlogChan = 'None Set';
@@ -66,11 +66,13 @@ module.exports = {
                 if (args[1].toLowerCase() === 'remove') {
                     if (!modLogs.channel) return client.infoEmb('There is no modlogs channel set.', message);
                     try {
-                        await Guild.findOneAndUpdate(
-                            { guildID: message.guild.id },
-                            { $set:{ modLogs:{ channel: '', kicks: modLogs.kicks, bans: modLogs.bans }}},
-                            { new: true }
-                        );
+                        await client.db('guild').update(message.guild.id, {
+                            modLogs:{
+                                channel: '',
+                                kicks: modLogs.kicks,
+                                bans: modLogs.bans
+                            }
+                        });
                         return client.checkEmb('Successfully Removed Modlogs Channel!', message);
                     } catch {
                         return client.errEmb('Unknown: Failed Updating `ModLogs:Channel`. Try contacting support.', message);
@@ -81,11 +83,13 @@ module.exports = {
                 if (chan.type != 'text') return client.errEmb('Channel is not a Default Text Channel', message);
                 if (!chan.permissionsFor(message.guild.me).has(2048n)) return client.errEmb('Missing Send Message and Embed Links Permissions For That Channel.', message);
                 try {
-                    await Guild.findOneAndUpdate(
-                        { guildID: message.guild.id },
-                        { $set:{ modLogs:{ channel: chan.id, kicks: modLogs.kicks, bans: modLogs.bans }}},
-                        { new: true }
-                    );
+                    await client.db('guild').update(message.guild.id, {
+                        modLogs:{
+                            channel: chan.id,
+                            kicks: modLogs.kicks,
+                            bans: modLogs.bans
+                        }
+                    });
                     return client.checkEmb(`Successfully Updated Modlogs Channel to ${chan}!`, message);
                 } catch {
                     return client.errEmb('Unknown: Failed Updating `ModLogs:Channel`. Try contacting support.', message);
@@ -93,11 +97,13 @@ module.exports = {
             
             } else if (sub === 'kicks') {
                 try {
-                    await Guild.findOneAndUpdate(
-                        { guildID: message.guild.id },
-                        { $set:{ modLogs:{ channel: modLogs.channel, kicks: !modLogs.kicks, bans: modLogs.bans }}},
-                        { new: true }
-                    );
+                    await client.db('guild').update(message.guild.id, {
+                        modLogs:{
+                            channel: '',
+                            kicks: !modLogs.kicks,
+                            bans: modLogs.bans
+                        }
+                    });
                     return client.checkEmb(`Successfully ${modLogs.kicks ? 'Disabled' : 'Enabled'} Kick Logs!`, message);
                 } catch {
                     return client.errEmb('Unknown: Failed Updating `ModLogs:Kicks`. Try contacting support.', message);
@@ -105,11 +111,13 @@ module.exports = {
             
             } else if (sub === 'bans') {
                 try {
-                    await Guild.findOneAndUpdate(
-                        { guildID: message.guild.id },
-                        { $set:{ modLogs:{ channel: modLogs.channel, kicks: modLogs.kicks, bans: !modLogs.bans }}},
-                        { new: true }
-                    );
+                    await client.db('guild').update(message.guild.id, {
+                        modLogs:{
+                            channel: '',
+                            kicks: modLogs.kicks,
+                            bans: !modLogs.bans
+                        }
+                    });
                     return client.checkEmb(`Successfully ${modLogs.bans ? 'Disabled' : 'Enabled'} Ban Logs!`, message);
                 } catch {
                     return client.errEmb('Unknown: Failed Updating `ModLogs:Bans`. Try contacting support.', message);
@@ -119,22 +127,18 @@ module.exports = {
                 if (!args[1]) return client.errEmb('Insufficient Arguments\n```\nmodlogs reasons <kicks|bans>\n```', message);
                 if (args[1].toLowerCase() === 'kicks') {
                     try {
-                        await Guild.findOneAndUpdate(
-                            { guildID: message.guild.id },
-                            { $set:{ requireKickReason: !data.requireKickReason }},
-                            { new: true }
-                        );
+                        await client.db('guild').update(message.guild.id, {
+                            requireKickReason: !data.requireKickReason
+                        });
                         return client.checkEmb(`Successfully ${data.requireKickReason ? 'Disabled' : 'Enabled'} Kick Command Reasons!`, message);
                     } catch {
                         return client.errEmb('Unknown: Failed Updating ``. Try contacting support.', message);
                     }
                 } else if (args[1].toLowerCase() === 'bans') {
                     try {
-                        await Guild.findOneAndUpdate(
-                            { guildID: message.guild.id },
-                            { $set:{ requireBanReason: !data.requireBanReason }},
-                            { new: true }
-                        );
+                        await client.db('guild').update(message.guild.id, {
+                            requireBanReason: !data.requireBanReason
+                        });
                         return client.checkEmb(`Successfully ${data.requireBanReason ? 'Disabled' : 'Enabled'} Ban Command Reasons!`, message);
                     } catch {
                         return client.errEmb('Unknown: Failed Updating ``. Try contacting support.', message);
@@ -149,11 +153,7 @@ module.exports = {
                     return message.channel.send(`**Server Ban Message:**\n\n${data.banMessage}`);
                 } else if (args[1].toLowerCase() === 'remove') {
                     try {
-                        await Guild.findOneAndUpdate(
-                            { guildID: message.guild.id },
-                            { $set:{ banMessage: '' }},
-                            { new: true }
-                        );
+                        await client.db('guild').update(message.guild.id, { banMessage: '' });
                         return client.checkEmb('Successfully Removed Ban Message!', message);
                     } catch {
                         return client.errEmb('Unknown: Failed Updating ``. Try contacting support.', message);
@@ -162,11 +162,7 @@ module.exports = {
                     const msg = args.slice(2).join(' ');
                     if (!msg || msg.length < 20) return client.errEmb('Ban Message is Too Short (must be 20+ characters).', message);
                     try {
-                        await Guild.findOneAndUpdate(
-                            { guildID: message.guild.id },
-                            { $set:{ banMessage: msg }},
-                            { new: true }
-                        );
+                        await client.db('guild').update(message.guild.id, { banMessage: msg });
                         return client.checkEmb('Successfully Set Ban Message! You can view it with the `modlogs banmessage` command.', message);
                     } catch {
                         return client.errEmb('Unknown: Failed Updating `BanMessage`. Try contacting support.', message);
@@ -175,11 +171,13 @@ module.exports = {
             
             } else if (sub === 'reset') {
                 try {
-                    await Guild.findOneAndUpdate(
-                        { guildID: message.guild.id },
-                        { $set:{ modLogs:{ channel: '', kicks: false, bans: false }}},
-                        { new: true }
-                    );
+                    await client.db('guild').update(message.guild.id, {
+                        modLogs:{
+                            channel: '',
+                            kicks: false,
+                            bans: false
+                        }
+                    });
                     return client.checkEmb('Successfully Reset Modlogs Settings!', message);
                 } catch {
                     return client.errEmb('Unknown: Failed Updating `ModLogs`. Try contacting support.', message);

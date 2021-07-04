@@ -6,7 +6,6 @@
 
 
 const { MessageEmbed } = require('discord.js');
-const Guild = require('../../schemas/guild-schema');
 
 module.exports = {
     name: 'prefix',
@@ -15,7 +14,7 @@ module.exports = {
     guildOnly: true,
     async run(client, message) {
         try {
-            const data = await Guild.findOne({ guildID: message.guild.id });
+            const data = await client.db('guild').get(message.guild.id);
             const embed = new MessageEmbed()
             .setDescription(`Current Prefix: \`${data.prefix}\`\n\nDefault Prefixes: \`r!\`, <@${client.user.id}>`)
             .setColor(0x1e143b)

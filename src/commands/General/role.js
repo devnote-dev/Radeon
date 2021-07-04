@@ -13,7 +13,7 @@ module.exports = {
     aliases: ['r'],
     tag: 'Role Tools: subcommands for roles.',
     description: 'Role Tools: Allows for viewing, creating, deleting, and assigning roles using the subcommands below.',
-    usage: 'role <User:Mention/ID> <Role:Name/Mention/ID>\nrole c/create <Name> [Color:Hex/Decimal] [Permissions:Bitfield] [Hoisted:True/False] [Mentionable:True/False]\nrole d/delete <Role:Name/Mention/ID>',
+    usage: 'role <User:Mention/ID> <Role:Name/Mention/ID>\nrole c/create <Name> [Color:Hex/Decimal] [Permissions:Bitfield] [Hoisted:True/False] [Mentionable:True/False]\nrole d/delete <Role:Name/Mention/ID>\nrole i/info <Role:Name/Mention/ID>\nrole l/list [Role:Name/Mention/ID]',
     cooldown: 4,
     botPerms: 268435456n,
     guildOnly: true,
@@ -24,12 +24,24 @@ module.exports = {
 
         if (/(?:<@!?)?\d{17,19}>?/g.test(sub)) {
             if (!message.member.permissions.has(268435456n)) return message.channel.send('You are missing the `Manage Roles` permission(s) to use this command.');
-            const target = message.mentions.members.first() || await message.guild.members.fetch(args[0]);
+            const target = message.mentions.members.first() || await message.guild.members.fetch(args[0]).catch(()=>{});
             if (!target) return client.errEmb('Invalid Member Specified.', message);
-            const role = message.mentions.roles.first()
+            let role = message.mentions.roles.first()
                 || message.guild.roles.resolve(args.slice(1).join(' '))
-                || message.guild.roles.cache.find(r => r.name.toLowerCase() == args.slice(1).join(' ').toLowerCase());
-            if (!role) return client.errEmb('Unknown Role Specified.', message);
+                || message.guild.roles.cache.filter(r => r.name.toLowerCase().includes(args.slice(1).join(' ').toLowerCase()));
+            if (role instanceof Collection) {
+                if (!role.size) return client.errEmb('Role Not Found!', message);
+                if (role.size > 1) {
+                    const temp = role.find(r => r.name.toLowerCase() === args.join(' ').toLowerCase());
+                    if (temp) {
+                        role = temp;
+                    } else {
+                        let rmap = role.map(r => `• ${r.name} (ID ${r.id})`).join('\n');
+                        return client.infoEmb(`More than one role found with similar names:\n\n${rmap}`, message);
+                    }
+                } else role = role.first();
+            }
+            if (!role) return client.errEmb('Role Not Found!', message);
             if (role.managed) return client.errEmb('Cannot Manage Integration/Service Roles.', message);
             if (role.comparePositionTo(message.guild.me.roles.highest) >= 0) return client.errEmb('Cannot Manage Roles Higher or Equal to Radeon.', message);
             try {
@@ -51,8 +63,8 @@ module.exports = {
             let rcolor = 0, rperms = 0, rhoist = false, rmention = false;
             if (args[2]) rcolor = args[2];
             if (args[3]) rperms = BigInt(args[3]);
-            if (args[4]) rhoist = Boolean(args[4]);
-            if (args[5]) rmention = Boolean(args[5]);
+            if (args[4]) rhoist = args[4].toLowerCase() === 'true' ? true : false;
+            if (args[5]) rmention = args[5].toLowerCase() === 'true' ? true : false;
             if (isNaN(rperms)) {
                 client.infoEmb('Permissions provided is an invalid Bitfield. The role will be made with default permissions instead.', message);
                 rperms = 0;
@@ -68,7 +80,7 @@ module.exports = {
                         permissions: rperms,
                         mentionable: rmention
                     },
-                    reason: `Created By ${message.author.tag}`
+                    reason: `Created By ${message.author.tag} (${message.author.id})`
                 }).then(r => client.checkEmb(`Successfully Created the Role ${r}!`, message));
             } catch (err) {
                 return client.errEmb(err.message, message);
@@ -90,6 +102,10 @@ module.exports = {
                 return client.errEmb(err.message, message);
             }
 
+        } else if (sub === 'i' || sub === 'info') {
+            if (!args[1]) return client.errEmb('No Role Specified.\n```\nrole info <Role:Name/Mention/ID>\n```', message);
+            require('./roleinfo').run(client, message, args.slice(1));
+
         } else if (sub === 'l' || sub === 'list') {
             if (message.guild.roles.cache.size) {
                 const table = new ascii('Role List');
@@ -97,7 +113,7 @@ module.exports = {
                 message.guild.roles.cache
                 .sort((a, b) => b.position - a.position)
                 .forEach(r => table.addRow(r.name, r.id));
-                return message.channel.send(table.toString(), {code: true, split: true});
+                return message.channel.send(table.toString(), { code: true, split: true });
             } else {
                 return message.channel.send('This server has no roles.');
             }

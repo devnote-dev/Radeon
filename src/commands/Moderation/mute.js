@@ -8,8 +8,6 @@
 const { MessageEmbed } = require('discord.js');
 const { logError } = require('../../dist/console');
 const ms = require('ms');
-const Guild = require('../../schemas/guild-schema');
-const Muted = require('../../schemas/muted-schema');
 
 module.exports = {
     name: 'mute',
@@ -21,8 +19,8 @@ module.exports = {
     guildOnly: true,
     roleBypass: true,
     async run(client, message, args) {
-        const data = await Guild.findOne({ guildID: message.guild.id }).catch(()=>{});
-        if (!data) return client.errEmb('Unkown: Failed Connecting To Server Database. Try contacting support.', message);
+        const data = await client.db('guild').get(message.guild.id);
+        if (!data) return client.errEmb('Unknown: Failed Connecting To Server Database. Try contacting support.', message);
         const { muteRole, modLogs } = data;
         if (!muteRole) return client.errEmb('Mute role not found/set. You can set one using the `muterole` command.', message);
         if (args.length < 2) return client.errEmb('Insufficient Arguments.\n```\nmute <User:Mention/ID> [Time:Duration] <Reason:Text>\n```', message);
@@ -37,17 +35,13 @@ module.exports = {
         if (target.permissions.has(8n)) return client.errEmb('Unable to Mute: That user is an Administrator.', message);
         if (message.guild.me.roles.highest.comparePositionTo(muteRole) <= 0) return client.errEmb('Unable to Mute: Cannot Manage Roles Higher or Equal to Radeon', message);
         try {
-            const mData = await Muted.findOne({ guildID: message.guild.id });
+            const mData = await client.db('muted').get(message.guild.id);
             if (duration != 'inf') {
                 mData.mutedList.set(target.user.id, Date.now() + duration);
             } else {
                 mData.mutedList.set(target.user.id, null);
             }
-            await Muted.findOneAndUpdate(
-                { guildID: message.guild.id },
-                { $set:{ mutedList: mData.mutedList }},
-                { new: true }
-            );
+            await client.db('muted').update(message.guild.id, { mutedList: mData.mutedList });
             await target.roles.add(muteRole);
             const dmEmb = new MessageEmbed()
             .setTitle('You have been Muted!')
@@ -67,7 +61,7 @@ module.exports = {
                 )
                 .setFooter(`Duration: ${ms(duration, { long: true })}`)
                 .setColor('GREY').setTimestamp();
-                message.guild.channels.cache.get(modLogs.channel).send(embed).catch(()=>{});
+                message.guild.channels.cache.get(modLogs.channel)?.send(embed).catch(()=>{});
             }
         } catch (err) {
             logError(err, `${message.guild.id}/${message.channel.id}`);

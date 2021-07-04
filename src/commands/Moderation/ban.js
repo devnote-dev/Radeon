@@ -5,7 +5,6 @@
 
 
 const { parseFlags } = require('../../dist/stringParser');
-const Guild = require('../../schemas/guild-schema');
 
 module.exports = {
     name: 'ban',
@@ -19,12 +18,12 @@ module.exports = {
     roleBypass: true,
     async run(client, message, args) {
         if (!args.length) return client.errEmb('Insufficient Arguments.\n```\nban <User:Mention/ID> <Reason:Text> [-dd <Number>]\n```', message);
-        const target = message.mentions.users.first() || await client.users.fetch(args[0]);
+        const target = message.mentions.users.first() || await client.users.fetch(args[0]).catch(()=>{});
         if (!target) return client.errEmb('User Not Found', message);
         if (target.id === message.author.id) return client.errEmb('You can\'t ban yourself.', message);
         if (target.id === client.user.id) return client.errEmb('I can\'t ban myself.', message);
-        const data = await Guild.findOne({ guildID: message.guild.id }).catch(()=>{});
-        if (!data) return client.errEmb('Unkown: Failed Connecting To Server Database. Try contacting support.', message);
+        const data = await client.db('guild').get(message.guild.id);
+        if (!data) return client.errEmb('Unknown: Failed Connecting To Server Database. Try contacting support.', message);
         let reason = '(No Reason Specified)', ddays = 0;
         if (args.length > 2) reason = args.slice(1).join(' ');
         if (data.requireBanReason) {
@@ -50,7 +49,7 @@ module.exports = {
     }
 }
 
-function getMemberBannable(GS, US) {
+async function getMemberBannable(GS, US) {
     try {
         return await client.guilds.cache
             .get(GS.id)

@@ -5,7 +5,6 @@
 
 
 const { MessageEmbed } = require('discord.js');
-const Guild = require('../../schemas/guild-schema');
 
 module.exports = {
     name: 'automod',
@@ -16,7 +15,7 @@ module.exports = {
     guildOnly: true,
     modBypass: true,
     async run(client, message, args) {
-        const data = await Guild.findOne({ guildID: message.guild.id }).catch(console.error);
+        const data = await client.db('guild').get(message.guild.id);
         if (!data) return client.errEmb('Unknown: Failed Connecting to `Automod`. Try contacting support.', message);
         const { automod } = data;
 
@@ -181,18 +180,16 @@ module.exports = {
                 return client.infoEmb('No changes were made to Automod settings.', message);
             } else {
                 try {
-                    await Guild.findOneAndUpdate(
-                        { guildID: message.guild.id },
-                        { $set:{ automod:{
+                    await client.db('guild').update(message.guild.id, {
+                        automod:{
                             active: _active,
                             channel: _channel,
                             invites: _invites,
                             rateLimit: _ratelimit,
                             massMention: _mentions,
                             filter: _filter
-                        }}},
-                        { new: true }
-                    );
+                        }
+                    });
                     return client.checkEmb('Successfully Updated Automod Settings!', message);
                 } catch (err) {
                     console.error(err);

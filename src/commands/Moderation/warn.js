@@ -4,7 +4,7 @@
  */
 
 
-const Warns = require('../../schemas/warn-schema');
+const Warns = require('../../schemas/warnings');
 
 module.exports = {
     // name: 'warn',

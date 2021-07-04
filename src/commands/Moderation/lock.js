@@ -5,7 +5,6 @@
 
 
 const { MessageEmbed } = require('discord.js');
-const Guild = require('../../schemas/guild-schema');
 
 module.exports = {
     name: 'lock',
@@ -19,7 +18,7 @@ module.exports = {
     async run(client, message, args) {
         let chan = message.channel;
         let reason = '(No Reason Specified)';
-        const data = await Guild.findOne({ guildID: message.guild.id }).catch(()=>{});
+        const data = await client.db('guild').get(message.guild.id);
         if (!data) return client.errEmb('Unkown: Failed Connecting To Server Database. Try contacting support.', message);
         const role = message.guild.roles.resolve(data.everyoneRole) || message.guild.roles.everyone;
         if (args.length) {
