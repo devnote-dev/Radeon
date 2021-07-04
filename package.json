@@ -1,6 +1,6 @@
 {
   "name": "radeon",
-  "version": "5.5.2",
+  "version": "6.0.0",
   "description": "Radeon is a multi-functional moderation bot with a cross-server anti-raid system!",
   "main": "src/index.js",
   "scripts": {
@@ -17,7 +17,7 @@
     "url": "github:devnote-dev/Radeon"
   },
   "private": true,
-  "license": "GNU General Public License v3",
+  "license": "GNU Affero General Public License v3",
   "dependencies": {
     "ascii-table": "0.0.9",
     "cron": "^1.8.2",
