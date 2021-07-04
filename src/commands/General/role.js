@@ -4,7 +4,7 @@
  */
 
 
-const { Permissions } = require('discord.js');
+const { Permissions, Collection } = require('discord.js');
 const { parseQuotes } = require('../../dist/stringParser');
 const ascii = require('ascii-table');
 

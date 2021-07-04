@@ -12,8 +12,6 @@ module.exports = {
     description: 'Registers Radeon\'s global slash commands into Discord.',
     modOnly: 2,
     async run(client, message) {
-        // temporary fix until client.application.owner returns an actual object
-        if (message.author.id !== '622146791659405313') return client.errEmb('Restricted to Application Owner Only.', message);
         try {
             let count = 0;
             readdirSync('./src/commands/')

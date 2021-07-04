@@ -4,7 +4,6 @@
  */
 
 
-const Settings = require('../../schemas/settings-schema');
 const { logWarn } = require('../../dist/console');
 
 module.exports = {
