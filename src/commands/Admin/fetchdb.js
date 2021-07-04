@@ -5,7 +5,6 @@
 
 
 const { MessageEmbed } = require('discord.js');
-const Guild = require('../../schemas/guild-schema');
 
 module.exports = {
     name: 'fetchdb',
@@ -18,7 +17,7 @@ module.exports = {
         if (!args.length) return client.errEmb('No Guild Specified.\n```\nfetchdb <Guild:ID>\n```', message);
         const server = client.guilds.cache.get(args[0]);
         if (!server) return client.errEmb('Unknown Guild Specified.', message);
-        const data = await Guild.findOne({ guildID: server.id });
+        const data = await client.db('guild').get(server.id);
         if (!data) return client.errEmb(`Database entry for \`${server.name}\` could not be found!`, message);
         const embed = new MessageEmbed()
         .setTitle(`Guild: ${server.name}`)

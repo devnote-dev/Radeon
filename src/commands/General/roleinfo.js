@@ -17,19 +17,22 @@ module.exports = {
     guildOnly: true,
     async run(client, message, args) {
         if (!args.length) return client.errEmb('No Role Specified.\n```\nroleinfo <Role:Name/Mention/ID>\n```', message);
-        let role = 
-            message.mentions.roles.first()
-                || message.guild.roles.resolve(args.join(' '))
-                || message.guild.roles.cache.filter(r => r.name.toLowerCase().includes(args.join(' ').toLowerCase()));
+        let role = message.mentions.roles.first()
+            || message.guild.roles.resolve(args.join(' '))
+            || message.guild.roles.cache.filter(r => r.name.toLowerCase().includes(args.join(' ').toLowerCase()));
         if (role instanceof Collection) {
-            if (!role.size) return client.errEmb('Argument Specified is an Invalid Role.', message);
+            if (!role.size) return client.errEmb('Role Not Found!', message);
             if (role.size > 1) {
-                let rmap = role.map(r => `• ${r.name} (ID ${r.id})`).join('\n');
-                return client.infoEmb(`More than one role found with similar names:\n\n${rmap}`, message);
-            }
-            role = role.first();
+                const temp = role.find(r => r.name.toLowerCase() === args.join(' ').toLowerCase());
+                if (temp) {
+                    role = temp;
+                } else {
+                    let rmap = role.map(r => `• ${r.name} (ID ${r.id})`).join('\n');
+                    return client.infoEmb(`More than one role found with similar names:\n\n${rmap}`, message);
+                }
+            } else role = role.first();
         }
-        if (!role) return client.errEmb('Argument Specified is an Invalid Role.', message);
+        if (!role) return client.errEmb('Role Not Found!', message);
         message.channel.startTyping();
         const embed = new MessageEmbed()
         .setTitle(`Role: ${role.name}`)
