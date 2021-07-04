@@ -12,8 +12,7 @@ exports.run = async (client, shard, guilds) => {
     const c = client.channels.cache.get(client.config.logs.event);
     if (!c) return;
     const e = new MessageEmbed()
-    .setTitle('Radeon')
     .setDescription(`Shard ${shard} / ${client.shard.count} - Ready${guilds ? '\n'+ guilds.join('\n') : ''}`)
-    .setColor('GREEN');
+    .setColor(3066993);
     c.send(e).catch(()=>{});
 }

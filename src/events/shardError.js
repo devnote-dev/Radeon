@@ -13,8 +13,7 @@ exports.run = async (client, error, shard) => {
     const c = client.channels.cache.get(client.config.logs.event);
     if (!c) return;
     const e = new MessageEmbed()
-    .setTitle('Radeon')
-    .setDescription(`Shard ${shard} / ${client.shard.count} - Error\n${error.message}`)
-    .setColor('DARK_RED');
+    .setDescription(`Shard ${shard} / ${client.shard.count} - Error\n\n${error.message}`)
+    .setColor(10038562);
     c.send(e).catch(()=>{});
 }
