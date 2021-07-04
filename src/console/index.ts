@@ -4,7 +4,7 @@
  */
 
 import { Shard } from 'discord.js';
-import Settings from '../schemas/settings-schema';
+import Settings from '../schemas/settings';
 
 function borderBold() {
     return console.log('==================================');
@@ -56,7 +56,7 @@ function logDB(type: string, data?: any) {
             log = `\x1b[33mMONGO\x1b[0m | Error\n${data ? data : 'Data Unavailable'}`;
             break;
         case 'disconnected':
-            log = `\x1b[31mMONGO\x1b[0m | Disconnected\nServers may be temporarily unavailable.`;
+            log = `\x1b[31mMONGO\x1b[0m | Disconnected`;
             break;
     }
     return console.log(log);
