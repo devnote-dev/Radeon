@@ -5,7 +5,6 @@
 
 
 const { MessageEmbed } = require('discord.js');
-const Guild = require('../../schemas/guild-schema');
 
 module.exports = {
     name: 'seteveryone',
@@ -17,7 +16,7 @@ module.exports = {
     userPerms: 32,
     async run(client, message, args) {
         if (!args.length) {
-            const gData = await Guild.findOne({ guildID: message.guild.id });
+            const gData = await client.db('guild').get(message.guild.id);
             let role;
             if (gData.everyoneRole.length) {
                 role = message.guild.roles.cache.get(gData.everyoneRole);
@@ -33,11 +32,7 @@ module.exports = {
             return message.channel.send(embed);
         } else {
             if (args[0].toLowerCase() == 'reset') {
-                await Guild.findOneAndUpdate(
-                    { guildID: message.guild.id },
-                    { $set:{ everyoneRole: '' }},
-                    { new: true }
-                );
+                await client.db('guild').update(message.guild.id, { everyoneRole: '' });
                 return client.checkEmb('Everyone Role was Successfully Reset!', message);
             } else {
                 const role = message.mentions.roles.first()
@@ -45,11 +40,7 @@ module.exports = {
                 || message.guild.roles.cache.find(r => r.name.toLowerCase() == args[0].toLowerCase());
                 if (!role) return client.errEmb('Argument Specified is an Invalid Role.', message);
                 if (role.id === message.guild.roles.everyone.id) return client.infoEmb('No changes made. Did you mean `seteveryone reset`?', message);
-                await Guild.findOneAndUpdate(
-                    { guildID: message.guild.id },
-                    { $set:{ everyoneRole: role.id }},
-                    { new: true }
-                );
+                await client.db('guild').update(message.guild.id, { everyoneRole: role.id });
                 return client.checkEmb(`Everyone Role was Successfully Set to ${role}!`, message);
             }
         }

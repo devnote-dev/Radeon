@@ -5,7 +5,6 @@
 
 
 const { MessageEmbed } = require('discord.js');
-const Guild = require('../../schemas/guild-schema');
 
 const ENABLED = '<:checkgreen:796925441771438080> enabled';
 const DISABLED = '<:crossred:796925441490681889> disabled';

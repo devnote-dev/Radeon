@@ -5,7 +5,7 @@
 
 
 const { MessageEmbed } = require('discord.js');
-const Guild = require('../../schemas/guild-schema');
+const Guild = require('../../schemas/guild');
 
 module.exports = {
     name: 'override',
