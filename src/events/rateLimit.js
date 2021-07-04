@@ -7,22 +7,22 @@
 const { MessageEmbed } = require('discord.js');
 const { logError } = require('../dist/console');
 
-exports.run = (client, rateLimitInfo) => {
+exports.run = (client, ratelimit) => {
     const e = new MessageEmbed()
-    .setTitle('RateLimit Warn')
+    .setTitle('RateLimit Warning')
     .addFields(
-        {name: 'Timeout', value: `${rateLimitInfo.timeout}ms`, inline: true},
-        {name: 'Limit', value: `${rateLimitInfo.limit}`, inline: true},
-        {name: 'Method', value: rateLimitInfo.method, inline: true},
-        {name: 'Path', value: `\`\`\`\n${rateLimitInfo.path}\n\`\`\``, inline: false},
-        {name: 'Source (Route)', value: `\`\`\`\n${rateLimitInfo.route}\n\`\`\``, inline: false}
+        {name: 'Timeout', value: `${ratelimit.timeout}ms`, inline: true},
+        {name: 'Limit', value: `${ratelimit.limit}`, inline: true},
+        {name: 'Method', value: ratelimit.method, inline: true},
+        {name: 'Path', value: `\`\`\`\n${ratelimit.path}\n\`\`\``, inline: false},
+        {name: 'Source (Route)', value: `\`\`\`\n${ratelimit.route}\n\`\`\``, inline: false}
     )
     .setTimestamp();
     client.channels.cache.get(client.config.logs.error).send(e).catch(() => {
         logError(`Ratelimit
-        Limit: ${rateLimitInfo.limit}
-        Method: ${rateLimitInfo.method}
-        Source: ${rateLimitInfo.source}
-        `, rateLimitInfo.path);
+        Limit: ${ratelimit.limit}
+        Method: ${ratelimit.method}
+        Source: ${ratelimit.source}
+        `, ratelimit.path);
     });
 }

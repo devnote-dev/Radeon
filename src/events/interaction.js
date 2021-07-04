@@ -6,13 +6,13 @@
 
 const { logError } = require('../dist/console');
 
-exports.run = async (client, interaction) => {
-    if (!interaction.isCommand()) return;
+exports.run = async (client, int) => {
+    if (!int.isCommand()) return;
     try {
-        if (client.slash.has(interaction.commandName)) {
-            await client.slash.get(interaction.commandName)(client, interaction);
+        if (client.slash.has(int.commandName)) {
+            await client.slash.get(int.commandName)(client, int);
         }
     } catch (err) {
-        logError(err, __filename, interaction.user?.id);
+        logError(err, __filename, int?.user.id);
     }
 }
