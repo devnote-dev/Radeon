@@ -25,9 +25,11 @@ module.exports = {
             const embed = new MessageEmbed().setColor(0x1e143b)
             .setFooter('Use "help [Command]" to get info on a specific command.');
             switch (search) {
+                case 'a':
                 case 'admin':
                     search = 'Admin';
                     break;
+                case 'g':
                 case 'gen':
                 case 'general':
                     search = 'General';
@@ -60,6 +62,7 @@ module.exports = {
                     readdirSync(`./src/commands/${dir}/`).forEach(f => {
                         if (!f.endsWith('.js')) return;
                         const pull = require(`../${dir}/${f}`);
+                        if (!pull.name) return;
                         desc.push(`**${pull.name}**\n> ${pull.tag || 'No Additional Info.'}\n`);
                     });
                     valid = true;
@@ -77,8 +80,8 @@ module.exports = {
                     let alias = '', desc = '', use = '';
                     if (cmd.aliases) alias = `**Aliases:** \`${cmd.aliases.join('`, `')}\`\n`;
                     if (cmd.description) desc = `**Description:**\n${cmd.description}\n`;
-                    if (cmd.usage) use = `**Usage:**\n\`\`\`\n${cmd.usage}\n\`\`\`\n`;
-                    let footer = `\n**Guild Only:** ${cmd.guildOnly ?? 'false'}
+                    if (cmd.usage) use = `\n**Usage:**\n\`\`\`\n${cmd.usage}\n\`\`\`\n`;
+                    let footer = `**Guild Only:** ${cmd.guildOnly ?? 'false'}
                     **User Perms:** ${cmd.userPerms ? humanize(new Permissions(cmd.userPerms)).join(', ') : 'None'}
                     **Bot Perms:** ${cmd.botPerms ? humanize(new Permissions(cmd.botPerms)).join(', ') : 'None'}`;
                     embed.setTitle(`Command: ${cmd.name}`)
