@@ -112,20 +112,20 @@ exports.run = async (client, message) => {
     if (
         message.content.toLowerCase().startsWith(prefix)
         || message.content.toLowerCase().startsWith(client.config.prefix)
-        || new RegExp(`^<@!?${client.user.id}>\s+`, 'gi').test(message.content)
+        || new RegExp(`^<@!?${client.user.id}>\\s+`, 'gi').test(message.content)
     ) {
         // Getting arguments, much cleaner now :D
         let args;
         if (message.mentions.users.size) {
-            args = message.content.trim().split(/\s+|\n+/g).slice();
+            args = message.content.trim().split(/\s+|\\?\n+/g).slice(1);
         } else if (message.content.toLowerCase().startsWith(client.config.prefix)) {
-            args = message.content.slice(client.config.prefix.length).trim().split(/\s+|\n+/g);
+            args = message.content.slice(client.config.prefix.length).trim().split(/\s+|\\?\n+/g);
         } else {
-            args = message.content.slice(prefix.length).trim().split(/\s+|\n+/g);
+            args = message.content.slice(prefix?.length).trim().split(/\s+|\\?\n+/g);
         }
 
         // Command processing
-        if (!args.length) return;
+        if (!args?.length) return;
         const cmd = args.shift().toLowerCase();
         if (!cmd.length) return;
         let command = client.commands.get(cmd) || client.commands.get(client.aliases.get(cmd));
