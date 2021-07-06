@@ -11,10 +11,10 @@ const warnSchema = Schema({
         type:      String,
         required:  true
     },
-    userid:        String,
-    reason:        String,
-    mod:           String,
-    date:          Date
+    warnList:{
+        type:       Map,
+        default:    new Map()
+    }
 });
 
 module.exports = model('Warns', warnSchema, 'Warns');
