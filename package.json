@@ -24,6 +24,7 @@
     "discord.js": "github:discordjs/discord.js",
     "express": "^4.17.1",
     "filehound": "^1.17.4",
+    "keypress": "^0.2.1",
     "mongoose": "^5.11.14",
     "ms": "^2.1.3",
     "node-superfetch": "^0.1.10",
