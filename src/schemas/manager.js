@@ -8,8 +8,8 @@
 const Bans = require('./bans');
 const Guild = require('./guild');
 const Muted = require('./muted');
+const Warnings = require('./warns');
 const Settings = require('./settings');
-const Warnings = require('./warnings');
 
 const DB = {
     bans: Bans,
@@ -46,7 +46,12 @@ class DBManager {
         }
     }
 
-    create(id, data, result=false) {}
+    async create(data, result=false) {
+        if (typeof id !== 'string') throw new TypeError('Guild ID must be a string.');
+        if (typeof data !== 'object') throw new TypeError('Database data must be an object.');
+        const d = await new this._conn(data).save();
+        return result ? d : null;
+    }
 
     async update(id, data, result=false) {
         if (typeof id !== 'string') throw new TypeError('Guild ID must be a string.');
