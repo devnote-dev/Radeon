@@ -6,10 +6,7 @@
 
 
 const { MessageEmbed } = require('discord.js');
-const Guild = require('../schemas/guild');
-const Muted = require('../schemas/muted');
-const Warns = require('../schemas/warnings');
-const Presets = require('../schemas/presets');
+const { guildPreset } = require('../schemas/presets');
 
 exports.run = async (client, guild) => {
     if (!client.guilds.cache.has(guild.id)) {
@@ -19,8 +16,8 @@ exports.run = async (client, guild) => {
         .setTimestamp();
         client.channels.cache.get(client.config.logs.joins)?.send(e).catch(()=>{});
     }
-    console.log(`MONGO | Guild Added: ${guild.name}`);
-    await new Guild(Presets.guildPreset(guild.id)).save();
-    await new Muted({ guildID: guild.id }).save();
-    await new Warns({ guildID: guild.id }).save();
+    console.log(`MONGO | Guild Added: ${guild.name} (${guild.id})`);
+    await client.db('guild').create(guildPreset(guild.id));
+    await client.db('muted').create({ guildID: guild.id });
+    await client.db('warns').create({ guildID: guild.id });
 }

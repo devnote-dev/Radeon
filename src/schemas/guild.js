@@ -9,58 +9,88 @@ const { Schema, model } = require('mongoose');
 
 const guildSchema = Schema({
     guildID: {
-        type:               String,
-        required:           true
+        type:                   String,
+        required:               true
     },
-    prefix:                 String,
-    actionLog:              String,
-    deleteAfterExec:        Boolean,
-    requireKickReason:      Boolean,
-    requireBanReason:       Boolean,
-    banMessage:             String,
-    cmdRoleBypass:{
-        type:               Map,
-        default:            new Map()
-    },
+    prefix:                     String,
+    muteRole:                   String,
+    everyoneRole:               String,
+    deleteAfterExec:            Boolean,
+    actionLog:                  String,
     modLogs:{
-        channel:            String,
+        channel:                String,
         kicks:{
-            type:           Boolean,
-            default:        false
+            type:               Boolean,
+            default:            false
         },
         bans:{
-            type:           Boolean,
-            default:        false
+            type:               Boolean,
+            default:            false
+        },
+        kickReason:{
+            type:               Boolean,
+            default:            false
+        },
+        banReason:{
+            type:               Boolean,
+            default:            true
         }
     },
-    muteRole:               String,
-    everyoneRole:           String,
-    ignoredCommands:{
-        type:               [String],
-        default:            []
-    },
-    ignoredChannels:{
-        type:               [String],
-        default:            []
-    },
     automod:{
-        active:             Boolean,
-        channel:            String,
-        invites:            Boolean,
-        rateLimit:          Boolean,
-        massMention:{
-            active:         Boolean,
+        active:                 Boolean,
+        channel:                String,
+        invites:                Boolean,
+        ratelimit:              Boolean,
+        mentions:{
+            active:             Boolean,
             threshold:{
-                type:       Number,
-                default:    5
+                type:           Number,
+                default:        5
+            },
+            unique:{
+                type:           Boolean,
+                default:        false
             }
         },
         filter:{
-            active:         Boolean,
+            active:             Boolean,
             list:{
-                type:       [String],
-                default:    []
+                type:           [String],
+                default:        []
             }
+        },
+        zalgo:{
+            active:             Boolean,
+            threshold:{
+                type:           Number,
+                default:        50
+            }
+        },
+        rulesets:{
+            type:               Map,
+            default:            new Map()
+        }
+    },
+    overrides:{
+        roleBypass:{
+            type:               Map,
+            default:            new Map()
+        },
+        ignoredLogChannels:{
+            type:               [String],
+            default:            []
+        },
+        ignoredAutomodChannels:{
+            type:               [String],
+            default:            []
+        },
+        ignoredCmdChannels:{
+            type:               [String],
+            default:            []
+        },
+        ignoredCommands:{
+            type:               [String],
+            default:            []
         }
     }
 });

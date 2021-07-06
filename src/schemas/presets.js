@@ -9,20 +9,18 @@ const { prefix } = require('../../config.json');
 exports.guildPreset = guildID => { return {
     guildID,
     prefix,
-    actionLog: '',
-    deleteAfterExec: false,
-    requireKickReason: false,
-    requireBanReason: true,
-    banMessage: '',
-    modLogs:{ channel: '' },
     muteRole: '',
     everyoneRole: '',
+    deleteAfterExec: false,
+    actionLog: '',
+    modLogs:{ channel: '' },
     automod:{
         active: false,
         channel: '',
         invites: false,
-        rateLimit: false,
-        massMention:{ active: false },
-        filter:{ active: false }
+        ratelimit: false,
+        mentions:{ active: false },
+        filter:{ active: false },
+        zalgo:{ active: false }
     }
 }}
