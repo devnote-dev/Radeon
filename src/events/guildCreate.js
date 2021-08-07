@@ -16,8 +16,8 @@ exports.run = async (client, guild) => {
         .setTimestamp();
         client.channels.cache.get(client.config.logs.joins)?.send(e).catch(()=>{});
     }
-    console.log(`MONGO | Guild Added: ${guild.name} (${guild.id})`);
-    await client.db('guild').create(guildPreset(guild.id));
-    await client.db('muted').create({ guildID: guild.id });
-    await client.db('warns').create({ guildID: guild.id });
+    console.log(`\nMONGO | Guild Added: ${guild.name} (${guild.id})`);
+    await client.db('guild').create(guild.id, guildPreset(guild.id));
+    await client.db('muted').create(guild.id, { guildID: guild.id });
+    await client.db('warns').create(guild.id, { guildID: guild.id });
 }
