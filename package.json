@@ -21,7 +21,7 @@
   "dependencies": {
     "ascii-table": "0.0.9",
     "cron": "^1.8.2",
-    "discord.js": "github:discordjs/discord.js",
+    "discord.js": "^13.0.0-dev.d433fe8.1626004976",
     "express": "^4.17.1",
     "filehound": "^1.17.4",
     "keypress": "^0.2.1",
