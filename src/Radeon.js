@@ -38,6 +38,10 @@ client.cmdlogs    = new Set();
 client.config     = require('../config.json');
 client.mongoose   = require('./mongo');
 client.db         = require('./schemas/manager');
+client.hooks      = {
+    cache:          new Collection(),
+    digest:         new Map()
+};
 client.stats      = {
     events:     0,
     commands:   0,
