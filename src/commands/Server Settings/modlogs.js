@@ -17,11 +17,11 @@ module.exports = {
     guildOnly: true,
     async run(client, message, args) {
         const data = await client.db('guild').get(message.guild.id);
-        const { modLogs } = data;
+        const { modLogs, actionLog } = data;
         if (!args.length) {
-            let modlogChan = 'None Set', actionlogChan = 'None Set';
-            if (message.guild.channels.cache.has(modLogs.channel)) modlogChan = `<#${modLogs.channel}>`;
-            if (message.guild.channels.cache.has(data.actionLog)) actionlogChan = `<#${data.actionLog}>`;
+            let modlogschan = 'None Set', actionlogchan = 'None Set';
+            if (message.guild.channels.cache.has(modLogs.channel)) modlogschan = `<#${modLogs.channel}>`;
+            if (message.guild.channels.cache.has(actionLog)) actionlogchan = `<#${actionLog}>`;
             switch (modLogs.kicks) {
                 case true: kicks = ENABLED; break;
                 case false: kicks = DISABLED; break;
@@ -32,28 +32,27 @@ module.exports = {
                 case false: bans = DISABLED; break;
                 default: bans = '⚠'; break;
             }
-            switch (data.requireKickReason) {
+            switch (modLogs.kickReason) {
                 case true: kickrs = ENABLED; break;
                 case false: kickrs = DISABLED; break;
                 default: kickrs = '⚠'; break;
             }
-            switch (data.requireBanReason) {
+            switch (modLogs.banReason) {
                 case true: banrs = ENABLED; break;
                 case false: banrs = DISABLED; break;
                 default: banrs = '⚠'; break;
             }
-            let reasons = 'Kicks: '+ data.requireKickReason ? ENABLED : DISABLED;
-            reasons += '\nBans: '+ data.requireBanReason ? ENABLED : DISABLED;
+            let reasons = `Kicks: ${modLogs.kickReason ? ENABLED : DISABLED}\nBans: ${modLogs.banReason ? ENABLED : DISABLED}`;
             const embed = new MessageEmbed()
             .setTitle('Server Modlogs')
             .setDescription('You can edit the modlogs settings by using `modlogs <setting> [option]`.\nSee `help modlogs` for information on the options.')
             .addFields(
                 {name: 'Modlogs Channel', value: modlogChan, inline: true},
                 {name: 'Actionlog Channel', value: actionlogChan, inline: true},
+                {name: 'Ban Messge', value: modLogs.banMessage ? ENABLED : DISABLED, inline: true},
                 {name: 'Log Kicks', value: kicks, inline: true},
                 {name: 'Log Bans', value: bans, inline: true},
-                {name: 'Reasons', value: reasons, inline: true},
-                {name: 'Ban Messge', value: data.banMessage ? ENABLED : DISABLED, inline: true}
+                {name: 'Reasons', value: reasons, inline: true}
             )
             .setColor(0x1e143b)
             .setFooter(`Triggered By ${message.author.tag}`, message.author.displayAvatarURL());
@@ -148,11 +147,17 @@ module.exports = {
             
             } else if (sub === 'banmessage') {
                 if (!args[1]) {
-                    if (!data.banMessage) return client.infoEmb('No ban message has been set. You can set one with the `modlogs banmessage <Message>` command.', message);
+                    if (!modLogs.banMessage) return client.infoEmb('No ban message has been set. You can set one with the `modlogs banmessage <Message>` command.', message);
                     return message.channel.send(`**Server Ban Message:**\n\n${data.banMessage}`);
                 } else if (args[1].toLowerCase() === 'remove') {
                     try {
-                        await client.db('guild').update(message.guild.id, { banMessage: '' });
+                        await client.db('guild').update(message.guild.id, {
+                            modLogs:{
+                                banMessage: '',
+                                kicks: modLogs.kicks,
+                                bans: modLogs.bans
+                            }
+                        });
                         return client.checkEmb('Successfully Removed Ban Message!', message);
                     } catch {
                         return client.errEmb('Unknown: Failed Updating ``. Try contacting support.', message);
@@ -161,7 +166,13 @@ module.exports = {
                     const msg = args.slice(2).join(' ');
                     if (!msg || msg.length < 20) return client.errEmb('Ban Message is Too Short (must be 20+ characters).', message);
                     try {
-                        await client.db('guild').update(message.guild.id, { banMessage: msg });
+                        await client.db('guild').update(message.guild.id, {
+                            modLogs:{
+                                banMessage: msg,
+                                kicks: modLogs.kicks,
+                                bans: modLogs.bans
+                            }
+                        });
                         return client.checkEmb('Successfully Set Ban Message! You can view it with the `modlogs banmessage` command.', message);
                     } catch {
                         return client.errEmb('Unknown: Failed Updating `BanMessage`. Try contacting support.', message);
@@ -173,8 +184,11 @@ module.exports = {
                     await client.db('guild').update(message.guild.id, {
                         modLogs:{
                             channel: '',
+                            banMessage: '',
                             kicks: false,
-                            bans: false
+                            bans: false,
+                            kickReason: false,
+                            banReason: true
                         }
                     });
                     return client.checkEmb('Successfully Reset Modlogs Settings!', message);
