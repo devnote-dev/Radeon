@@ -12,9 +12,9 @@ module.exports = async client => {
         .setDescription('<:checkgreen:796925441771438080> '+ msg)
         .setColor(0x00d134);
         if (ctx instanceof Message) {
-            return ctx.channel.send(e);
+            return ctx.channel.send({ embeds: [e] });
         } else {
-            return ctx.send(e);
+            return ctx.send({ embeds: [e] });
         }
     }
 
@@ -23,9 +23,9 @@ module.exports = async client => {
         .setDescription('<:crossred:796925441490681889> '+ msg)
         .setColor(0xd10000);
         if (ctx instanceof Message) {
-            return ctx.channel.send(e);
+            return ctx.channel.send({ embeds: [e] });
         } else {
-            return ctx.send(e);
+            return ctx.send({ embeds: [e] });
         }
     }
 
@@ -34,9 +34,9 @@ module.exports = async client => {
         .setDescription('<:info:846179402773168159> '+ msg)
         .setColor(0x0054d1);
         if (ctx instanceof Message) {
-            return ctx.channel.send(e);
+            return ctx.channel.send({ embeds: [e] });
         } else {
-            return ctx.send(e);
+            return ctx.send({ embeds: [e] });
         }
     }
 
