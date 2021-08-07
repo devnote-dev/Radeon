@@ -8,6 +8,7 @@
 
 const { isBotStaff, isBotOwner, humanize } = require('../dist/functions');
 const { logError, logWarn } = require('../dist/console');
+const { handleActionLog } = require('../automod');
 
 // Base Error Messages
 const EM = {
@@ -98,16 +99,14 @@ exports.run = async (client, message) => {
     // extracting all the necessary info
     const {
         prefix,
-        actionLog,
         deleteAfterExec,
-        cmdRoleBypass,
-        ignoredCommands,
-        ignoredChannels,
-        automod
+        actionLog,
+        automod,
+        overrides
     } = gData;
 
     // pretty self-explanatory
-    if (ignoredChannels.includes(channel.id)) return;
+    if (overrides.ignoredCmdChannels.includes(channel.id)) return;
     client.stats.messages++;
     if (
         message.content.toLowerCase().startsWith(prefix)
@@ -121,17 +120,17 @@ exports.run = async (client, message) => {
         } else if (message.content.toLowerCase().startsWith(client.config.prefix)) {
             args = message.content.slice(client.config.prefix.length).trim().split(/\s+|\\?\n+/g);
         } else {
-            args = message.content.slice(prefix?.length).trim().split(/\s+|\\?\n+/g);
+            args = message.content.slice(prefix.length).trim().split(/\s+|\\?\n+/g);
         }
 
         // Command processing
-        if (!args?.length) return;
+        if (!args.length) return;
         const cmd = args.shift().toLowerCase();
         if (!cmd.length) return;
         let command = client.commands.get(cmd) || client.commands.get(client.aliases.get(cmd));
         if (!command) return;
         if (lock) return channel.send(EM.errNoExec(command.name));
-        if (ignoredCommands.includes(command.name)) return;
+        if (overrides.ignoredCommands.includes(command.name)) return;
 
         // Checks for servers with shitty channel perms
         if (!channel.permissionsFor(message.guild.me).has(2048n)) return;
@@ -158,8 +157,8 @@ exports.run = async (client, message) => {
         // Handling commands with perms
         // This has been rewritten 3 times now :')
         let bypass = false;
-        if (command.roleBypass && cmdRoleBypass.has(command.name)) {
-            const allowed = cmdRoleBypass.get(command.name);
+        if (command.roleBypass && overrides.roleBypass.has(command.name)) {
+            const allowed = overrides.roleBypass.get(command.name);
             bypass = message.member.roles.cache.some(r => allowed.includes(r.id));
         }
         if (command.botPerms) {
@@ -178,7 +177,7 @@ exports.run = async (client, message) => {
             logcmd(client, author, command, channel);
             client.stats.commands++;
             await command.run(client, message, args);
-            if (actionLog) logActionCmd(command.name, message, actionLog);
+            handleActionLog(actionLog, args, message);
             if (deleteAfterExec && ACTION_CMDS.includes(command.name)) message.delete().catch(()=>{});
         } catch (err) {
             logError(err, path, author.id);
@@ -188,21 +187,28 @@ exports.run = async (client, message) => {
     } else {
         // Processing for automod
         if (!automod.active) return;
+        // permissions shit again
         if (!channel.permissionsFor(message.guild.me).has(10240n)) return; // 26624
-        if (automod.invites || automod.massMention.active) {
+        // Make sure we dont trigger on ignored roles
+        const bypass = message.member.roles.cache.some(r => overrides.ignoredAutomodRoles.includes(r.id));
+        if (bypass) return;
+        if (automod.invites || automod.mentions.active) {
             try {
-                await require('../functions/amod-main')(message, automod);
+                await require('../automod/main')(message, automod);
             } catch (err) {
                 logError(err, path);
             }
         }
-        if (automod.rateLimit) {
+        if (automod.ratelimit) {
             try {
-                await require('../functions/amod-ratelimit')(client, message, automod);
+                await require('../automod/ratelimit')(client, message, automod);
             } catch (err) {
                 logError(err, path);
             }
         }
+        // if (automod.filter.active || automod.zalgo.active) {
+            // Coming soon ;)
+        // }
     }
 }
 
@@ -218,18 +224,6 @@ function logcmd(client, user, command, channel) {
         time:       new Date().toLocaleString()
     });
     return;
-}
-
-// Action command logging
-function logActionCmd(cmd, ctx, log) {
-    if (!ACTION_CMDS.includes(log)) return;
-    const c = ctx.guild.channels.cache.get(log);
-    if (!c) return;
-    const e = new MessageEmbed()
-    .setAuthor(`${ctx.author.tag} (ID ${ctx.author.id})`, ctx.author.displayAvatarURL())
-    .setDescription(`Command Ran: ${cmd} - ${ctx.channel} (ID ${ctx.channel.id})`)
-    .setTimestamp();
-    return c.send(e).catch(()=>{});
 }
 
 // Command cooldown handling
