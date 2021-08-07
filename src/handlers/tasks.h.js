@@ -6,6 +6,7 @@
 
 const { CronJob } = require('cron');
 const { logError } = require('../dist/console');
+const { fetchHook } = require('../automod');
 
 module.exports = async client => {
     // Scheduled Mutes Handler
@@ -44,6 +45,19 @@ module.exports = async client => {
         await client.user.setActivity({ name: p.name, type: p.type });
     });
 
+    const scheduleWHooksCron = new CronJob('*/20 * * * *', async () => {
+        if (!client.hooks.digest.size) return;
+        for (const [id, embeds] of client.hooks.digest) {
+            const hook = await fetchHook(id, client);
+            await hook.send('Radeon Automod Logs', {
+                avatarURL: client.user.avatarURL(),
+                embeds
+            });
+            client.hooks.digest.delete(id);
+        }
+    });
+
     scheduleUnmuteCron.start();
     scheduleStatusCron.start();
+    scheduleWHooksCron.start();
 }
