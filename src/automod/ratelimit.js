@@ -14,19 +14,8 @@
 //     AFTER: save userState to channelState; save channelState to guildState;
 //     save guildState to client.ratelimits;
 
-const { Collection, MessageEmbed } = require("discord.js");
-
-function amodEmbed(message, user, channel) {
-    return new MessageEmbed()
-    .setTitle('Automod Triggered')
-    .addFields(
-        {name: 'Rule', value: message, inline: false},
-        {name: 'User', value: `• ${user.tag}\n• ${user.id}`, inline: true},
-        {name: 'Channel', value: `• ${channel}\n• ${channel.id}`, inline: true}
-    )
-    .setColor('ORANGE')
-    .setTimestamp();
-}
+const { Collection } = require("discord.js");
+const { AmodEmbed } = require('.');
 
 module.exports = async (client, message, automod) => {
     const { author } = message;
@@ -46,7 +35,7 @@ module.exports = async (client, message, automod) => {
                         try {
                             await message.channel.bulkDelete(userState.cache);
                             console.log(`${message.guild.id}: amod clean`);
-                            if (channel) channel.send(amodEmbed(`Sent ${total} Messages in ${(userState.limit - userState.last) / 1000} Seconds`, author, message.channel));
+                            if (channel) channel.send(AmodEmbed(`Sent ${total} Messages in ${(userState.limit - userState.last) / 1000} Seconds`, author, message.channel));
                         } catch {}
                     }
                     userState.cache = [];

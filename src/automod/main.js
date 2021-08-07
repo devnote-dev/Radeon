@@ -5,34 +5,23 @@
  */
 
 
-const { MessageEmbed } = require('discord.js');
-
-function amodEmbed(message, ctx) {
-    return new MessageEmbed()
-    .setTitle('Automod Triggered')
-    .addFields(
-        {name: 'Rule', value: message, inline: false},
-        {name: 'User', value: `• ${ctx.author.tag}\n• ${ctx.author.id}`, inline: true},
-        {name: 'Channel', value: `• ${ctx.channel}\n• ${ctx.channel.id}`, inline: true}
-    )
-    .setColor('ORANGE')
-    .setTimestamp();
-}
+const { AmodEmbed } = require('.');
 
 module.exports = async (message, automod) => {
     let channel;
     if (automod.channel) channel = message.guild.channels.cache.get(automod.channel);
 
     if (automod.invites) {
-        const re = /(?:https?)?di?sc(?:ord)?\.(?:gg|com|invite)\/([\/\w-]+)/gmi;
+        const re = /(?:https?:\/\/)?di?sc(?:ord(?:app)?)?\.(?:com|gg)\/(?:invite\/)?([a-zA-Z0-9]+)/gmi;
         const matches = re.exec(message.content);
         if (matches && matches.length) {
+            if (matches[1] === 'channels') return;
             const invites = await message.guild.fetchInvites();
             if (!invites.some(i => i.code === matches[1])) {
                 try {
                     await message.delete().catch(()=>{});
                     if (channel) {
-                        channel.send(amodEmbed(`Invite Code Sent: \`${matches[1]}\``, message));
+                        channel.send(AmodEmbed(`Invite Code Sent: \`${matches[1]}\``, message));
                     }
                     return message.channel.send(`${message.author} Invites are not allowed here.`);
                 } catch {}
@@ -45,9 +34,9 @@ module.exports = async (message, automod) => {
             if (message.mentions.users.size >= automod.massMention.thres) {
                 await message.delete().catch(()=>{});
                 if (channel) {
-                    channel.send(amodEmbed(`${message.mentions.users.size} Mentioned Users`, message));
+                    channel.send(AmodEmbed(`${message.mentions.users.size} Mentioned Users`, message));
                 }
-                return message.reply(`${message.author} Avoid mass-mentioning users.`);
+                return message.reply(`${message.author} Avoid mass-mentioning users.`).catch(()=>{});
             }
         }
     }
