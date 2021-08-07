@@ -20,3 +20,6 @@ src/commands/Admin/_logs.txt
 src/commands/Admin/test.js
 config.json
 setup.js
+
+# Testing / Broken Files
+*/override.js
