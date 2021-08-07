@@ -8,15 +8,15 @@
 const Bans = require('./bans');
 const Guild = require('./guild');
 const Muted = require('./muted');
-const Warnings = require('./warns');
+const Warns = require('./warns');
 const Settings = require('./settings');
 
 const DB = {
     bans: Bans,
     guild: Guild,
     muted: Muted,
-    settings: Settings,
-    warnings: Warnings
+    warns: Warns,
+    settings: Settings
 }
 
 function Database(type) {
@@ -46,7 +46,7 @@ class DBManager {
         }
     }
 
-    async create(data, result=false) {
+    async create(id, data, result=false) {
         if (typeof id !== 'string') throw new TypeError('Guild ID must be a string.');
         if (typeof data !== 'object') throw new TypeError('Database data must be an object.');
         const d = await new this._conn(data).save();
@@ -64,14 +64,31 @@ class DBManager {
         return result ? d : null;
     }
 
-    async delete(id, data, result=false) {
+    async push(id, data, result=false) {
         if (typeof id !== 'string') throw new TypeError('Guild ID must be a string.');
         if (typeof data !== 'object') throw new TypeError('Database data must be an object.');
-        const d = await this._conn.findOneAndDelete(
+        const d = await this._conn.findOneAndUpdate(
             { guildID: id },
-            { $set: data },
+            { $push: data },
             { new: true }
         );
+        return result ? d : null;
+    }
+
+    async pull(id, data, result=false) {
+        if (typeof id !== 'string') throw new TypeError('Guild ID must be a string.');
+        if (typeof data !== 'object') throw new TypeError('Database data must be an object.');
+        const d = await this._conn.findOneAndUpdate(
+            { guildID: id },
+            { $pull: data },
+            { new: true }
+        );
+        return result ? d : null;
+    }
+
+    async delete(id, result=false) {
+        if (typeof id !== 'string') throw new TypeError('Guild ID must be a string.');
+        const d = await this._conn.findOneAndDelete({ guildID: id });
         return result ? d : null;
     }
 }
