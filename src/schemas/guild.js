@@ -66,6 +66,7 @@ const guildSchema = Schema({
                 default:        50
             }
         },
+        displayNames:           Boolean,
         rulesets:{
             type:               Map,
             default:            new Map()
@@ -81,6 +82,10 @@ const guildSchema = Schema({
             default:            []
         },
         ignoredAutomodChannels:{
+            type:               [String],
+            default:            []
+        },
+        ignoredAutomodRoles:{
             type:               [String],
             default:            []
         },
