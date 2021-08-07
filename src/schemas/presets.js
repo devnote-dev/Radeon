@@ -21,6 +21,7 @@ exports.guildPreset = guildID => { return {
         ratelimit: false,
         mentions:{ active: false },
         filter:{ active: false },
-        zalgo:{ active: false }
+        zalgo:{ active: false },
+        displayNames: false
     }
 }}
