@@ -29,9 +29,9 @@ module.exports = async (message, automod) => {
         }
     }
 
-    if (automod.massMention.active) {
+    if (automod.mentions.active) {
         if (message.mentions.users.size) {
-            if (message.mentions.users.size >= automod.massMention.thres) {
+            if (message.mentions.users.size >= automod.mentions.threshold) {
                 await message.delete().catch(()=>{});
                 if (channel) {
                     channel.send(AmodEmbed(`${message.mentions.users.size} Mentioned Users`, message));
