@@ -3,7 +3,6 @@
  * @copyright Radeon Development 2021
  */
 
-
 const request = require('node-superfetch')
 const { parseFlags } = require('../../dist/stringParser');
 const { MessageEmbed } = require('discord.js');
@@ -68,6 +67,6 @@ module.exports = {
         embed.setThumbnail(songData.thumbnailUrl)
         embed.setTitle(songData.title + " by " + songData.artistName)
 
-        return message.reply(embed);
+        return message.reply({ embeds: [embed] });
     }
 }

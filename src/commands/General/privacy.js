@@ -4,7 +4,6 @@
  * @copyright Radeon Development 2021
  */
 
-
 const { MessageEmbed } = require('discord.js');
 
 module.exports = {
@@ -22,6 +21,6 @@ module.exports = {
         .addField('How do I remove my data?', 'Please join the [Support Server](https://discord.gg/xcZwGhSy4G) for more information on removing your data.')
         .setColor(0x1e143b)
         .setFooter(`Triggered By ${message.author.tag}`, message.author.displayAvatarURL());
-        return message.channel.send(embed);
+        return message.channel.send({ embeds: [embed] });
     }
 }

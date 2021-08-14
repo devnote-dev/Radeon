@@ -3,7 +3,6 @@
  * @copyright Radeon Development 2021
  */
 
-
 const { Permissions, Collection } = require('discord.js');
 const { parseQuotes } = require('../../dist/stringParser');
 const ascii = require('ascii-table');
@@ -60,28 +59,27 @@ module.exports = {
             if (!message.member.permissions.has(268435456n)) return message.channel.send('You are missing the `Manage Roles` permission(s) to use this command.');
             if (!args[1]) return client.errEmb('No Name Provided.\n```\nrole create <Name> [Color:Hex/Decimal] [Permissions:Bitfield] [Hoisted:True/False] [Mentionable:True/False]\n```', message);
             const rname = parseQuotes(args.slice(1).join(' '), true);
-            let rcolor = 0, rperms = 0, rhoist = false, rmention = false;
+            let rcolor = 0, rperms = Permissions.DEFAULT, rhoist = false, rmention = false;
             if (args[2]) rcolor = args[2];
             if (args[3]) rperms = BigInt(args[3]);
             if (args[4]) rhoist = args[4].toLowerCase() === 'true' ? true : false;
             if (args[5]) rmention = args[5].toLowerCase() === 'true' ? true : false;
-            if (isNaN(rperms)) {
+            if (isNaN(parseInt(rperms))) {
                 client.infoEmb('Permissions provided is an invalid Bitfield. The role will be made with default permissions instead.', message);
-                rperms = 0;
+                rperms = Permissions.DEFAULT;
             } else {
                 rperms = new Permissions(rperms);
             }
             try {
-                message.guild.roles.create({
-                    data:{
-                        name:        rname,
-                        color:       rcolor,
-                        hoist:       rhoist,
-                        permissions: rperms,
-                        mentionable: rmention
-                    },
+                const r = await message.guild.roles.create({
+                    name:        rname,
+                    color:       rcolor,
+                    hoist:       rhoist,
+                    permissions: rperms,
+                    mentionable: rmention,
                     reason: `Created By ${message.author.tag} (${message.author.id})`
-                }).then(r => client.checkEmb(`Successfully Created the Role ${r}!`, message));
+                });
+                return client.checkEmb(`Successfully Created the Role ${r}!`, message);
             } catch (err) {
                 return client.errEmb(err.message, message);
             }
@@ -113,7 +111,7 @@ module.exports = {
                 message.guild.roles.cache
                 .sort((a, b) => b.position - a.position)
                 .forEach(r => table.addRow(r.name, r.id));
-                return message.channel.send(table.toString(), { code: true, split: true });
+                return message.channel.send(`\`\`\`\n${table.toString()}\n\`\`\``, { split: true });
             } else {
                 return message.channel.send('This server has no roles.');
             }

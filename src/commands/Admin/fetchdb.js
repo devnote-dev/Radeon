@@ -3,7 +3,6 @@
  * @copyright Radeon Development 2021
  */
 
-
 const { MessageEmbed } = require('discord.js');
 
 module.exports = {
@@ -25,6 +24,6 @@ module.exports = {
         .setTitle(`Guild: ${server.name}`)
         .setDescription(`\`\`\`js\n${data}\n\`\`\``)
         .setColor(0x1e143b);
-        return message.channel.send(embed);
+        return message.channel.send({ embeds: [embed] });
     }
 }

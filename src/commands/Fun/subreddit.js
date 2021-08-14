@@ -3,7 +3,6 @@
  * @copyright Radeon Development 2021
  */
 
-
 const { MessageEmbed } = require('discord.js');
 
 module.exports = {
@@ -25,7 +24,7 @@ module.exports = {
         .setColor(0x1e143b)
         .setImage(post.url_overridden_by_dest)
         .setFooter(`👍 ${post.ups} 👎 ${post.downs} 💬 ${post.num_comments} - ${post.subreddit_name_prefixed}`);
-        return message.reply(embed);
+        return message.reply({ embeds: [embed] });
     }
 }
 

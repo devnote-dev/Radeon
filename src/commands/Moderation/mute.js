@@ -4,7 +4,6 @@
  * @copyright Radeon Development 2021
  */
 
-
 const { MessageEmbed } = require('discord.js');
 const { logError } = require('../../dist/console');
 const ms = require('ms');
@@ -29,7 +28,7 @@ module.exports = {
         let duration = ms(args[1]);
         if (isNaN(duration) || duration > 31557600000) duration = 'inf';
         let reason = args.slice(2).join(' ');
-        if (target.user.id === message.author.id) return client.errEmb('You cant mute yourself. <:meguface:738862132493287474>', message);
+        if (target.user.id === message.author.id) return client.errEmb('You cant mute yourself.', message);
         if (target.user.id === client.user.id) return client.errEmb('I can\'t mute myself.', message);
         if (!reason) reason = '(No Reason Specified)';
         if (target.permissions.has(8n)) return client.errEmb('Unable to Mute: That user is an Administrator.', message);
@@ -48,7 +47,7 @@ module.exports = {
             .addField('Reason', reason, false).addField('Duration', `${ms(duration, { long: true })}`, false)
             .setColor(0x1e143b).setFooter(`Sent from ${message.guild.name}`, message.guild.iconURL({ dynamic: true }))
             .setTimestamp();
-            target.user.send(dmEmb).catch(()=>{});
+            target.user.send({ embeds: [dmEmb] }).catch(()=>{});
             client.checkEmb(`\`${target.user.tag}\` was muted!`, message);
             if (modLogs.channel) {
                 const embed = new MessageEmbed()
@@ -61,7 +60,7 @@ module.exports = {
                 )
                 .setFooter(`Duration: ${ms(duration, { long: true })}`)
                 .setColor('GREY').setTimestamp();
-                message.guild.channels.cache.get(modLogs.channel)?.send(embed).catch(()=>{});
+                message.guild.channels.cache.get(modLogs.channel)?.send({ embeds: [embed] }).catch(()=>{});
             }
         } catch (err) {
             logError(err, `${message.guild.id}/${message.channel.id}`);

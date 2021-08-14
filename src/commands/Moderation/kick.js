@@ -3,7 +3,6 @@
  * @copyright Radeon Development 2021
  */
 
-
 module.exports = {
     name: 'kick',
     tag: 'Kicks a member from the server',

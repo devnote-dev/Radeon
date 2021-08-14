@@ -3,7 +3,6 @@
  * @copyright Radeon Development 2021
  */
 
-
 module.exports = {
     name: 'jsonembed',
     aliases: ['jsonemb','jsemb', 'jse'],

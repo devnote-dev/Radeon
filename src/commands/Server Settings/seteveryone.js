@@ -3,7 +3,6 @@
  * @copyright Radeon Development 2021
  */
 
-
 const { MessageEmbed } = require('discord.js');
 
 module.exports = {
@@ -13,7 +12,7 @@ module.exports = {
     usage: 'seteveryone <Role:Name/Mention/ID>\nseteveryone reset',
     guildOnly: true,
     modBypass: true,
-    userPerms: 32,
+    userPerms: 32n,
     async run(client, message, args) {
         if (!args.length) {
             const gData = await client.db('guild').get(message.guild.id);
@@ -29,7 +28,7 @@ module.exports = {
             .setDescription(`The everyone role for this server is ${role}. To set a new everyone role use the \`seteveryone <Role:Name/Mention/ID>\` command.`)
             .setColor(0x1e143b)
             .setFooter(`Triggered By ${message.author.tag}`, message.author.displayAvatarURL());
-            return message.channel.send(embed);
+            return message.channel.send({ embeds: [embed] });
         } else {
             if (args[0].toLowerCase() == 'reset') {
                 await client.db('guild').update(message.guild.id, { everyoneRole: '' });

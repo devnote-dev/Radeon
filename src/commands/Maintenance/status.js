@@ -3,7 +3,6 @@
  * @copyright Radeon Development 2021
  */
 
-
 const { version: dcversion, MessageEmbed } = require('discord.js');
 const { join } = require('path');
 const { version } = require(join(process.cwd(), 'package.json')); 
@@ -24,14 +23,14 @@ module.exports = {
         .addField('Version', version, true)
         .addField('Discord.js', dcversion, true)
         .addField('NodeJS', process.version, true)
-        .addField('Shards', client.shard.count, true)
-        .addField('Servers', client.guilds.cache.size, true)
-        .addField('Channels', client.channels.cache.size, true)
-        .addField('Users', client.users.cache.size, true)
+        .addField('Shards', client.shard.count.toString(), true)
+        .addField('Servers', client.guilds.cache.size.toString(), true)
+        .addField('Channels', client.channels.cache.size.toString(), true)
+        .addField('Users', client.users.cache.size.toString(), true)
         .addField('Stats', `${client.stats.commands} Commands ran\n${client.stats.events} Events processed\n${client.stats.messages} Messages seen\n${client.stats.background} Background Tasks ran`, true)
-        .addField('Uptime', toDurationDefault(Date.now() - client.uptime).replace('ago', ''), false)
-        .addField('Memory', `${Math.floor(heapUsed / 1024)}/${Math.floor(heapTotal / 1024)} MB (${Math.floor((heapUsed / heapTotal) * 100)}%)`)
+        .addField('Uptime', toDurationDefault(Date.now() - client.uptime).replace('ago', ''), true)
+        .addField('Memory', `${Math.floor(heapUsed / 1024)}/${Math.floor(heapTotal / 1024)} MB (${Math.floor((heapUsed / heapTotal) * 100)}%)`, true)
         .setFooter(`Triggered By ${message.author.tag}`, message.author.displayAvatarURL());
-        return message.channel.send(embed);
+        return message.channel.send({ embeds: [embed] });
     }
 }

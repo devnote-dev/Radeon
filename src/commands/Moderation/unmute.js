@@ -4,10 +4,8 @@
  * @copyright Radeon Development 2021
  */
 
-
 const { MessageEmbed } = require('discord.js');
 const { logError } = require('../../dist/console');
-const Guild = require('../../schemas/guild');
 const Muted = require('../../schemas/muted');
 
 module.exports = {
@@ -41,7 +39,7 @@ module.exports = {
             .addField('Reason', reason, false)
             .setColor(0x1e143b).setFooter(`Sent from ${message.guild.name}`, message.guild.iconURL({ dynamic: true }))
             .setTimestamp();
-            target.user.send(dmEmb).catch(()=>{});
+            target.user.send({ embeds: [dmEmb] }).catch(()=>{});
             client.checkEmb(`\`${target.user.tag}\` was unmuted!`, message);
             if (modLogs.channel && message.guild.channels.cache.has(modLogs.channel)) {
                 const embed = new MessageEmbed()
@@ -53,7 +51,7 @@ module.exports = {
                     {name: 'Reason', value: reason, inline: false}
                 )
                 .setColor('BLUE').setTimestamp();
-                return message.guild.channels.cache.get(modLogs.channel).send(embed).catch(()=>{});
+                return message.guild.channels.cache.get(modLogs.channel)?.send({ embeds: [embed] }).catch(()=>{});
             }
         } catch (err) {
             logError(err, `${message.guild.id}/${message.channel.id}`, message.author.id);
@@ -79,7 +77,7 @@ module.exports._selfexec = async (client, guild, user) => {
                 {name: 'Reason', value: 'Auto: Mute Expired', inline: false}
             )
             .setColor('BLUE').setTimestamp();
-            return GS.channels.cache.get(modLogs.channel).send(embed).catch(()=>{});
+            return GS.channels.cache.get(modLogs.channel)?.send({ embeds: [embed] }).catch(()=>{});
         }
     } catch (err) {
         logError(err, __filename);

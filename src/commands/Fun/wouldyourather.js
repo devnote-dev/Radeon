@@ -3,7 +3,6 @@
  * @copyright Radeon Development 2021
  */
 
-
 const { choose } = require('../../dist/functions');
 const request = require('node-superfetch')
 const { MessageEmbed } = require('discord.js');
@@ -28,6 +27,6 @@ module.exports = {
         .setColor(0x1e143b)
         .setFooter(`Rating: ${rating}`)
         .setDescription(wyr.replace("Would you rather ", ""));
-        return message.reply(embed);
+        return message.reply({ embeds: [embed] });
     }
 }

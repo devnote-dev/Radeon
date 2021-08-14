@@ -3,7 +3,6 @@
  * @copyright Radeon Development 2021
  */
 
-
 const { MessageEmbed } = require('discord.js');
 
 const ENABLED = '<:checkgreen:796925441771438080> enabled';
@@ -12,7 +11,7 @@ const DISABLED = '<:crossred:796925441490681889> disabled';
 module.exports = {
     name: 'modlogs',
     description: 'Shows the current modlogs settings and allows for editing using the specified settings/options below (in usage). "log-kicks" and "log-bans" will update the logging to the opposite of what it was. "reset" will reset all modlogs settings.',
-    usage: 'modlogs logchannel <Channel:Mention/ID>\nmodlogs logchannel remove\nmodlogs kicks\nmodlogs bans\nmodlogs reasons <kicks|bans>\nmodlogs banmessage [Message]\nmodlogs banmessage remove\nmodlogs reset',
+    usage: 'modlogs channel <Channel:Mention/ID>\nmodlogs channel remove\nmodlogs kicks\nmodlogs bans\nmodlogs reasons <kicks|bans>\nmodlogs banmessage [Message]\nmodlogs banmessage remove\nmodlogs reset',
     userPerms: 32n,
     guildOnly: true,
     async run(client, message, args) {
@@ -47,8 +46,8 @@ module.exports = {
             .setTitle('Server Modlogs')
             .setDescription('You can edit the modlogs settings by using `modlogs <setting> [option]`.\nSee `help modlogs` for information on the options.')
             .addFields(
-                {name: 'Modlogs Channel', value: modlogChan, inline: true},
-                {name: 'Actionlog Channel', value: actionlogChan, inline: true},
+                {name: 'Modlogs Channel', value: modlogschan, inline: true},
+                {name: 'Actionlog Channel', value: actionlogchan, inline: true},
                 {name: 'Ban Messge', value: modLogs.banMessage ? ENABLED : DISABLED, inline: true},
                 {name: 'Log Kicks', value: kicks, inline: true},
                 {name: 'Log Bans', value: bans, inline: true},
@@ -56,10 +55,10 @@ module.exports = {
             )
             .setColor(0x1e143b)
             .setFooter(`Triggered By ${message.author.tag}`, message.author.displayAvatarURL());
-            return message.channel.send(embed);
+            return message.channel.send({ embeds: [embed] });
         } else {
             const sub = args[0].toLowerCase();
-            if (sub === 'logchannel') {
+            if (sub === 'channel') {
                 if (!args[1]) return client.errEmb('Insufficient Arguments.\n```\nmoglogs logchannel <Channel:Mention/ID>\nmodlogs logchannel remove\n```', message);
                 if (args[1].toLowerCase() === 'remove') {
                     if (!modLogs.channel) return client.infoEmb('There is no modlogs channel set.', message);
@@ -78,7 +77,7 @@ module.exports = {
                 }
                 const chan = message.mentions.channels.first() || message.guild.channels.cache.get(args[1]);
                 if (!chan) return client.errEmb('Invalid Channel Specified', message);
-                if (chan.type != 'text') return client.errEmb('Channel is not a Default Text Channel', message);
+                if (chan.type !== 'GUILD_TEXT') return client.errEmb('Channel is not a Default Text Channel', message);
                 if (!chan.permissionsFor(message.guild.me).has(2048n)) return client.errEmb('Missing Send Message and Embed Links Permissions For That Channel.', message);
                 try {
                     await client.db('guild').update(message.guild.id, {

@@ -3,7 +3,6 @@
  * @copyright Radeon Development 2021
  */
 
-
 const { MessageEmbed } = require('discord.js');
 const request = require('node-superfetch')
 
@@ -43,7 +42,7 @@ module.exports = {
         } else {
             embed.setImage(fox.image)
         }
-        return message.reply(embed)
+        return message.reply({ embeds: [embed] })
 
         // just make them functions, keep it clean
         async function getFact() {

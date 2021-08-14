@@ -3,7 +3,6 @@
  * @copyright Radeon Development 2021
  */
 
-
 const { MessageEmbed } = require('discord.js');
 const { toDurationDefault } = require('../../dist/functions');
 
@@ -51,13 +50,13 @@ module.exports = {
         .setTitle('Shard Info')
         .addFields(
             {name: 'Guild', value: `${server.name} (ID ${server.id})`, inline: false},
-            {name: 'Shard ID', value: shard.id, inline: true},
+            {name: 'Shard ID', value: shard.id.toString(), inline: true},
             {name: 'Status', value: sstatus, inline: true},
             {name: 'Ping', value: `${shard.ping}ms`, inline: true},
             {name: 'Last Ping', value: toDurationDefault(shard.lastPingTimestamp), inline: true}
         )
         .setColor(0x1e143b)
         .setFooter(`Triggered by ${message.author.tag}`, message.author.displayAvatarURL());
-        return message.channel.send(embed);
+        return message.channel.send({ embeds: [embed] });
     }
 }

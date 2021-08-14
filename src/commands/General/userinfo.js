@@ -4,15 +4,13 @@
  * @copyright Radeon Development 2021
  */
 
-
 const { MessageEmbed } = require('discord.js');
 const { toDurationDefault, toDurationLong } = require('../../dist/functions');
 
 module.exports = {
     name: 'userinfo',
-    aliases: ['whois'],
     tag: 'Info about you or a specified user',
-    aliases: ['ui'],
+    aliases: ['whois', 'useri', 'ui'],
     description: 'Sends information about a specified user, or the triggering user if none is specified.',
     usage: 'userinfo [User:Mention/ID]',
     cooldown: 8,
@@ -59,14 +57,13 @@ module.exports = {
         .addField('\u200b', '\u200b', true)
         .addField('Account Age', `${target.createdAt.toDateString()}\n${toDurationLong(target.createdTimestamp)}`, true)
         .addField('Server Member Age', `${member.joinedAt.toDateString()}\n${toDurationDefault(member.joinedTimestamp)}`, true)
-        .addField('Presence', 'None or not cached.', false)
         .addField('Roles', roles, false)
         .setColor(member.displayColor || 0x2f3136)
         .setThumbnail(target.displayAvatarURL({ dynamic: true }))
         .setFooter(`Triggered By ${message.author.tag}`, message.author.displayAvatarURL());
         setTimeout(() => {
             message.channel.stopTyping();
-            return message.channel.send(embed);
+            return message.channel.send({ embeds: [embed] });
         }, 2000);
     }
 }

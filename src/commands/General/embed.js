@@ -3,7 +3,6 @@
  * @copyright Radeon Development 2021
  */
 
-
 const { MessageEmbed } = require('discord.js');
 const { parseFlags } = require('../../dist/stringParser');
 
@@ -16,7 +15,7 @@ module.exports = {
     usage,
     cooldown: 3,
     guildOnly: true,
-    run(client, message, args) {
+    async run(client, message, args) {
         if (!args.length) return client.errEmb(`No Arguments Provided.\n\`\`\`\n${usage}\n\`\`\``, message);
         const flags = parseFlags(args.join(' '), [
             {name: 'raw', type: 'string', quotes: true},
@@ -33,7 +32,7 @@ module.exports = {
             {name: 'ts', type: 'bool'}
         ]);
         const embed = new MessageEmbed();
-        let content = '';
+        let content;
         if (flags.length) {
             let _author, _aicon, _footer, _ficon;
             flags.forEach(flag => {
@@ -72,7 +71,7 @@ module.exports = {
                 embed.setFooter('\u200b', _ficon);
             }
             try {
-                return message.channel.send(content, embed);
+                return await message.channel.send({ content, embeds: [embed] });
             } catch (err) {
                 return client.errEmb(err.message, message);
             }

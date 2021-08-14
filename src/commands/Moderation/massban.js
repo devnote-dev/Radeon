@@ -3,7 +3,6 @@
  * @copyright Radeon Development 2021
  */
 
-
 const { parseFlags } = require('../../dist/stringParser');
 
 module.exports = {

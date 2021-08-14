@@ -4,7 +4,6 @@
  * @copyright Radeon Development 2021
  */
 
-
 const ms = require('ms');
 
 module.exports = {

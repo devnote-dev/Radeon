@@ -3,7 +3,6 @@
  * @copyright Radeon Development 2021
  */
 
-
 const { MessageEmbed } = require('discord.js')
 const { toDurationDefault } = require('../../dist/functions');
 const { logError } = require('../../dist/console');
@@ -51,7 +50,7 @@ module.exports = {
         .setFooter(`Triggered By ${message.author.tag}`, message.author.displayAvatarURL());
         setTimeout(() => {
             message.channel.stopTyping()
-            return message.channel.send(embed)
+            return message.channel.send({ embeds: [embed] })
         }, 2000);
     }
 }

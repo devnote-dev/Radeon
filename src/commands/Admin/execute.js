@@ -3,7 +3,6 @@
  * @copyright Radeon Development 2021
  */
 
-
 const { logAdmin } = require('../../dist/console');
 
 module.exports = {

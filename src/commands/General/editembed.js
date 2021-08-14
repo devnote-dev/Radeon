@@ -3,7 +3,6 @@
  * @copyright Radeon Development 2021
  */
 
-
 module.exports = {
     name: 'editembed',
     aliases: ['editemb'],
@@ -20,8 +19,8 @@ module.exports = {
         if (!msg) return client.errEmb('Invalid Message.\nEither the message ID provided was invalid or the message is not in the bot\'s cache.', message);
         if (msg.author.id != client.user.id) return client.errEmb('Message was not sent by this bot.', message);
         try {
-            const embed = JSON.parse(args.slice(1).join(' '));
-            await msg.edit({ embed });
+            const embeds = JSON.parse(args.slice(1).join(' '));
+            await msg.edit({ embeds: [embeds] });
             await message.react(':checkgreen:796925441771438080').catch(()=>{});
         } catch (err) {
             return client.errEmb(err.message, message);

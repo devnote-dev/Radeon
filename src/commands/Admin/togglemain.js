@@ -3,7 +3,6 @@
  * @copyright Radeon Development 2021
  */
 
-
 const { logWarn } = require('../../dist/console');
 
 module.exports = {
@@ -11,9 +10,10 @@ module.exports = {
     description: 'Toggles Radeon\'s maintenance mode (disables all commands, functions).',
     modOnly: 1,
     async run(client, message) {
-        const state = await client.db('settings').get(client.user.id);
-        await client.db('settings').update(client.user.id, { maintenance: !state.maintenance });
-        logWarn(`Maintenance Mode Updated to ${state.maintenance}`);
-        return client.checkEmb(`Maintenance Mode Successfully ${state.maintenance ? 'Enabled' : 'Disabled'}!`, message);
+        const db = client.db('settings');
+        const state = await db.get(client.user.id);
+        await db.update(client.user.id, { maintenance: !state.maintenance });
+        logWarn(`Maintenance Mode Updated to ${!state.maintenance}`);
+        return client.checkEmb(`Maintenance Mode Successfully ${state.maintenance ? 'Disabled' : 'Enabled'}!`, message);
     }
 }

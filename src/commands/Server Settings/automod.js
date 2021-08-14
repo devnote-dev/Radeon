@@ -3,13 +3,12 @@
  * @copyright Radeon Development 2021
  */
 
-
 const { MessageEmbed } = require('discord.js');
 
 module.exports = {
     name: 'automod',
     description: 'Shows the current automod config and allows for them to be edited using the subcommands below.',
-    usage: 'automod <enable|disable> <all|invites|anti-spam|mass-mention|badwords>\nautomod logchannel <Channel:Mention/ID>\nautomod logchannel remove\nautomod mentions <Number>\nautomod mentions reset\nautomod filter list\nautomod filter <add|remove> [...words]',
+    usage: 'automod <enable|disable> <all|invites|anti-spam|mass-mention|badwords>\nautomod channel <Channel:Mention/ID>\nautomod logchannel remove\nautomod mentions <Number>\nautomod mentions reset\nautomod filter list\nautomod filter <add|remove> [...words]',
     cooldown: 3,
     userPerms: 32n,
     guildOnly: true,
@@ -27,12 +26,12 @@ module.exports = {
                 case false: invites = '<:crossred:796925441490681889> disabled'; break;
                 default: invites = '⚠'; break;
             }
-            switch (automod.rateLimit) {
+            switch (automod.ratelimit) {
                 case true: rateLimit = '<:checkgreen:796925441771438080> enabled'; break;
                 case false: rateLimit = '<:crossred:796925441490681889> disabled'; break;
                 default: rateLimit = '⚠'; break;
             }
-            switch (automod.massMention.active) {
+            switch (automod.mentions.active) {
                 case true: mentions = '<:checkgreen:796925441771438080> enabled'; break;
                 case false: mentions = '<:crossred:796925441490681889> disabled'; break;
                 default: mentions = '⚠'; break;
@@ -49,20 +48,20 @@ module.exports = {
                 {name: 'Log Channel', value: logchannel, inline: true},
                 {name: 'Anti-Invites', value: invites, inline: true},
                 {name: 'Anti-Spam', value: rateLimit, inline: true},
-                {name: 'Mass-Mentions', value: `${mentions}\nThreshold: ${automod.massMention.threshold}`, inline: true},
+                {name: 'Mass-Mentions', value: `${mentions}\nThreshold: ${automod.mentions.threshold}`, inline: true},
                 {name: 'Word Filter', value: `${filter}\nType \`automod filter list\` to view current ones.`, inline: true}
             )
             .setColor(0x1e143b)
             .setFooter(`Triggered By ${message.author.tag}`, message.author.displayAvatarURL());
-            return message.channel.send(embed);
+            return message.channel.send({ embeds: [embed] });
 
         } else {
             const sub = args[0].toLowerCase();
             let _active    = handleBool(automod.active),
                 _channel   = automod.channel,
                 _invites   = handleBool(automod.invites),
-                _ratelimit = handleBool(automod.rateLimit),
-                _mentions  = automod.massMention,
+                _ratelimit = handleBool(automod.ratelimit),
+                _mentions  = automod.mentions,
                 _filter    = automod.filter;
 
             if (sub === 'enable') {
@@ -107,15 +106,15 @@ module.exports = {
                     return client.errEmb('Unknown Plugin. See `help automod` for subcommands, plugins and options.', message);
                 }
 
-            } else if (sub === 'logchannel') {
-                if (!args[1]) return client.errEmb('No Option Specified.\n```\nautomod logchannel <Channel:Mention/ID>\nautomod logchannel remove\n```', message);
+            } else if (sub === 'channel') {
+                if (!args[1]) return client.errEmb('No Option Specified.\n```\nautomod channel <Channel:Mention/ID>\nautomod channel remove\n```', message);
                 if (args[1].toLowerCase() === 'remove') {
                     if (!automod.channel) return client.infoEmb('There is no Automod log channel setup.', message);
                     _channel = '';
                 } else {
                     const chan = message.mentions.channels.first() || message.guild.channels.cache.get(args[1]);
                     if (!chan) return client.errEmb('Unknown Channel Specified.', message);
-                    if (chan.type != 'text') return client.errEmb('Specified Channel is not a default Text Channel.', message);
+                    if (chan.type !== 'GUILD_TEXT') return client.errEmb('Specified Channel is not a default Text Channel.', message);
                     if (!chan.permissionsFor(message.guild.me).has(2048n)) return client.errEmb('I am missing `Send Messages` permissions for that channel.', message);
                     _channel = chan.id;
                 }
@@ -171,9 +170,9 @@ module.exports = {
                 automod.active === handleBool(_active)
                 && automod.channel === _channel
                 && automod.invites === handleBool(_invites)
-                && automod.rateLimit === handleBool(_ratelimit)
-                && automod.massMention.active === _mentions.active
-                && automod.massMention.threshold === _mentions.threshold
+                && automod.ratelimit === handleBool(_ratelimit)
+                && automod.mentions.active === _mentions.active
+                && automod.mentions.threshold === _mentions.threshold
                 && automod.filter.active === _filter.active
                 && _filter.list.every(w => automod.filter.list.includes(w))
             ) {
@@ -185,8 +184,8 @@ module.exports = {
                             active: _active,
                             channel: _channel,
                             invites: _invites,
-                            rateLimit: _ratelimit,
-                            massMention: _mentions,
+                            ratelimit: _ratelimit,
+                            mentions: _mentions,
                             filter: _filter
                         }
                     });

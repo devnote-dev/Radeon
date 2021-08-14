@@ -3,13 +3,12 @@
  * @copyright Radeon Development 2021
  */
 
-
 const { Permissions, MessageEmbed } = require('discord.js');
 const { humanize } = require('../../dist/functions');
 
 module.exports = {
     name: 'permissions',
-    aliases: ['perms'],
+    aliases: ['permsof', 'perms'],
     tag: 'Permissions Tools: subcommands for permissions',
     description: 'Permissions Tools: can send the permissions of a specified user or triggering user, and permissions in a specified channel.',
     usage:'permissions [User:Mention/ID]\npermissions <User:Mention/ID> in <Channel:Mention/ID>\npermissions in <Channel:Mention/ID>\npermissions create <Permission:Name>; ...;\npermissions resolve <Bitfield:Number>',
@@ -20,7 +19,7 @@ module.exports = {
             .setAuthor(`Permissions of ${message.author.tag}`, message.author.displayAvatarURL())
             .setDescription(`\`\`\`\n${checkAdmin(message.member.permissions)}\n\`\`\`\n**Bitfield:** ${message.member.permissions.bitfield}`)
             .setColor(0x1e143b).setFooter(`Triggered By ${message.author.tag}`, message.author.displayAvatarURL());
-            return message.channel.send(embed);
+            return message.channel.send({ embeds: [embed] });
         }
         
         const sub = args[0].toLowerCase();
@@ -38,7 +37,7 @@ module.exports = {
                 const embed = new MessageEmbed()
                 .setTitle('Permissions').setDescription(`Generated Permission Bitfield: **${newPerms.bitfield}**`)
                 .setColor(0x1e143b).setFooter(`Triggered By ${message.author.tag}`, message.author.displayAvatarURL());
-                return message.channel.send(embed);
+                return message.channel.send({ embeds: [embed] });
         
         } else if (sub == 'resolve') {
             if (!args[1]) return client.errEmb('No Permission Bitfield Provided.\n```\npermissions resolve <Bitfield:Number>\n```', message);
@@ -49,7 +48,7 @@ module.exports = {
             .setTitle('Permissions')
             .setDescription(`Resovled from Bitfield **\`${bit}\`**\n\`\`\`\n${checkAdmin(res)}\n\`\`\``)
             .setColor(0x1e143b).setFooter(`Triggered By ${message.author.tag}`, message.author.displayAvatarURL());
-            return message.channel.send(embed);
+            return message.channel.send({ embeds: [embed] });
         
         } else if (sub == 'in') {
             if (!args[1]) return client.errEmb('No Channel Specified.\n```\npermissions in <Channel:Mention/ID>\n```', message);
@@ -59,7 +58,7 @@ module.exports = {
             .setTitle(`Permissions in ${chan.name}`)
             .setDescription(`\`\`\`\n${checkAdmin(chan.permissionsFor(message.author))}\n\`\`\`\n**Bitfield:** \`${chan.permissionsFor(message.author).bitfield}\``)
             .setColor(0x1e143b).setFooter(`Triggered By ${message.author.tag}`, message.author.displayAvatarURL());
-            return message.channel.send(embed);
+            return message.channel.send({ embeds: [embed] });
         
         } else {
             const target = message.mentions.members.first() || await message.guild.members.fetch(args[0]);
@@ -72,19 +71,19 @@ module.exports = {
                 .setAuthor(`Permissions for ${target.user.tag} in ${chan.name}`, target.user.displayAvatarURL())
                 .setDescription(`\`\`\`\n${checkAdmin(chan.permissionsFor(message.author))}\n\`\`\`\n**Bitfield:** \`${chan.permissionsFor(target).bitfield}\``)
                 .setColor(0x1e143b).setFooter(`Triggered By ${message.author.tag}`, message.author.displayAvatarURL());
-                return message.channel.send(embed);
+                return message.channel.send({ embeds: [embed] });
             } else {
                 const embed = new MessageEmbed()
                 .setAuthor(`Permissions of ${target.user.tag}`, target.user.displayAvatarURL())
                 .setDescription(`\`\`\`\n${checkAdmin(target.permissions)}\n\`\`\`\n**Bitfield:** \`${target.permissions.bitfield}\``)
                 .setColor(0x1e143b).setFooter(`Triggered By ${message.author.tag}`, message.author.displayAvatarURL());
-                return message.channel.send(embed);
+                return message.channel.send({ embeds: [embed] });
             }
         }
     }
 }
 
 function checkAdmin(p) {
-    if (p.bitfield === 8n || p.bitfield === Permissions.ALL) return 'Administrator';
+    if (p.has(8n)) return 'Administrator';
     return humanize(p).join(', ');
 }

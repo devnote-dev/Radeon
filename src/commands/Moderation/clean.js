@@ -3,7 +3,6 @@
  * @copyright Radeon Development 2021
  */
 
-
 const advanceClean = require('../../functions/advanceClean');
 const { parseFlags } = require('../../dist/stringParser');
 const flags = '`-users` - Only user messages\n`-bots` - Only bot messages\n`-nopin` - Messages that aren\'t pinned\n`-has <Word>` - Messages that contain a specific word/char\n`-to <Message:ID>` - Messages before that message\n`-em` - Only messages with embeds';

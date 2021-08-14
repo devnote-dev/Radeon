@@ -4,7 +4,6 @@
  * @copyright Radeon Development 2021
  */
 
-
 module.exports = {
     name: 'unban',
     tag: 'Unbans a specified user',

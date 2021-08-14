@@ -3,7 +3,6 @@
  * @copyright Radeon Development 2021
  */
 
-
 const { MessageEmbed, Collection } = require('discord.js');
 const { toDurationDefault } = require('../../dist/functions');
 
@@ -45,11 +44,11 @@ module.exports = {
         .addField('Mentionable', `${role.mentionable}`, true)
         .addField('Members', `${role.members.size}`, true)
         .addField('Permissions', `${role.permissions.bitfield} (Bitfield)`, false)
-        .setColor(role.color)
+        .setColor(role.color || 0x2f3136)
         .setFooter(`Triggered By ${message.author.tag}`, message.author.displayAvatarURL());
         setTimeout(() => {
             message.channel.stopTyping();
-            return message.channel.send(embed)
+            return message.channel.send({ embeds: [embed] })
         }, 1000);
     }
 }

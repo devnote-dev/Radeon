@@ -4,7 +4,6 @@
  * @copyright Radeon Development 2021
  */
 
-
 const { MessageEmbed } = require('discord.js');
 
 module.exports = {
@@ -19,7 +18,7 @@ module.exports = {
             .setDescription(`Current Prefix: \`${data.prefix}\`\n\nDefault Prefixes: \`r!\`, <@${client.user.id}>`)
             .setColor(0x1e143b)
             .setFooter('Note: DM commands do not require a prefix.');
-            return message.channel.send(embed);
+            return message.channel.send({ embeds: [embed] });
         } catch (err) {
             console.error(err);
             return client.errEmb('This command cant be used at this time.', message);
