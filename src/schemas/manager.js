@@ -32,6 +32,7 @@ class DBManager {
     async get(id) {
         if (typeof id !== 'string') throw new TypeError('Guild ID must be a string.');
         try {
+            if (this._conn == DB.settings) return await this._conn.findOne({ client: id });
             return await this._conn.findOne({ guildID: id });
         } catch {
             return null;
