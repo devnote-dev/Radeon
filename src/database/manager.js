@@ -4,7 +4,6 @@
  * @copyright Radeon Development 2021
  */
 
-
 const Bans = require('./bans');
 const Guild = require('./guild');
 const Muted = require('./muted');
@@ -18,7 +17,7 @@ const DB = {
     warns: Warns,
     settings: Settings
 }
-
+new Guild
 function Database(type) {
     if (type in DB) return new DBManager(DB[type]);
     throw new Error('Unknown Database Type.');
@@ -47,8 +46,7 @@ class DBManager {
         }
     }
 
-    async create(id, data, result=false) {
-        if (typeof id !== 'string') throw new TypeError('Guild ID must be a string.');
+    async create(data, result=false) {
         if (typeof data !== 'object') throw new TypeError('Database data must be an object.');
         const d = await new this._conn(data).save();
         return result ? d : null;

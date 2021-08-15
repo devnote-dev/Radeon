@@ -4,9 +4,8 @@
  * @copyright Radeon Development 2021
  */
 
-
 const { MessageEmbed } = require('discord.js');
-const { guildPreset } = require('../schemas/presets');
+const { guildPreset } = require('../database/presets');
 
 exports.run = async (client, guild) => {
     if (!client.guilds.cache.has(guild.id)) {
@@ -17,7 +16,7 @@ exports.run = async (client, guild) => {
         client.channels.cache.get(client.config.logs.joins)?.send(e).catch(()=>{});
     }
     console.log(`\nMONGO | Guild Added: ${guild.name} (${guild.id})`);
-    await client.db('guild').create(guild.id, guildPreset(guild.id));
-    await client.db('muted').create(guild.id, { guildID: guild.id });
-    await client.db('warns').create(guild.id, { guildID: guild.id });
+    await client.db('guild').create(guildPreset(guild.id));
+    await client.db('muted').create({ guildID: guild.id });
+    await client.db('warns').create({ guildID: guild.id });
 }

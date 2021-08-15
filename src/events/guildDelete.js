@@ -5,8 +5,6 @@
  */
 
 const { MessageEmbed } = require('discord.js');
-const Guild = require('../schemas/guild');
-const Muted = require('../schemas/muted');
 
 exports.run = async (client, guild) => {
     const e = new MessageEmbed()
