@@ -43,23 +43,23 @@ module.exports = {
             }
             let reasons = `Kicks: ${modLogs.kickReason ? ENABLED : DISABLED}\nBans: ${modLogs.banReason ? ENABLED : DISABLED}`;
             const embed = new MessageEmbed()
-            .setTitle('Server Modlogs')
-            .setDescription('You can edit the modlogs settings by using `modlogs <setting> [option]`.\nSee `help modlogs` for information on the options.')
-            .addFields(
-                {name: 'Modlogs Channel', value: modlogschan, inline: true},
-                {name: 'Actionlog Channel', value: actionlogchan, inline: true},
-                {name: 'Ban Messge', value: modLogs.banMessage ? ENABLED : DISABLED, inline: true},
-                {name: 'Log Kicks', value: kicks, inline: true},
-                {name: 'Log Bans', value: bans, inline: true},
-                {name: 'Reasons', value: reasons, inline: true}
-            )
-            .setColor(0x1e143b)
-            .setFooter(`Triggered By ${message.author.tag}`, message.author.displayAvatarURL());
+                .setTitle('Server Modlogs')
+                .setDescription('You can edit the modlogs settings by using `modlogs <setting> [option]`.\nSee `help modlogs` for information on the options.')
+                .addFields(
+                    {name: 'Modlogs Channel', value: modlogschan, inline: true},
+                    {name: 'Actionlog Channel', value: actionlogchan, inline: true},
+                    {name: 'Ban Messge', value: modLogs.banMessage ? ENABLED : DISABLED, inline: true},
+                    {name: 'Log Kicks', value: kicks, inline: true},
+                    {name: 'Log Bans', value: bans, inline: true},
+                    {name: 'Reasons', value: reasons, inline: true}
+                )
+                .setColor(0x1e143b)
+                .setFooter(`Triggered By ${message.author.tag}`, message.author.displayAvatarURL());
             return message.channel.send({ embeds: [embed] });
         } else {
             const sub = args[0].toLowerCase();
             if (sub === 'channel') {
-                if (!args[1]) return client.errEmb('Insufficient Arguments.\n```\nmoglogs logchannel <Channel:Mention/ID>\nmodlogs logchannel remove\n```', message);
+                if (!args[1]) return client.errEmb('Insufficient Arguments.\n```\nmoglogs channel <Channel:Mention/ID>\nmodlogs channel remove\n```', message);
                 if (args[1].toLowerCase() === 'remove') {
                     if (!modLogs.channel) return client.infoEmb('There is no modlogs channel set.', message);
                     try {
@@ -125,18 +125,26 @@ module.exports = {
                 if (args[1].toLowerCase() === 'kicks') {
                     try {
                         await client.db('guild').update(message.guild.id, {
-                            requireKickReason: !data.requireKickReason
+                            modLogs:{
+                                kicks: modLogs.kicks,
+                                bans: modLogs.bans,
+                                kickReason: !modLogs.kickReason
+                            }
                         });
-                        return client.checkEmb(`Successfully ${data.requireKickReason ? 'Disabled' : 'Enabled'} Kick Command Reasons!`, message);
+                        return client.checkEmb(`Successfully ${modLogs.kickReason ? 'Disabled' : 'Enabled'} Kick Command Reasons!`, message);
                     } catch {
                         return client.errEmb('Unknown: Failed Updating ``. Try contacting support.', message);
                     }
                 } else if (args[1].toLowerCase() === 'bans') {
                     try {
                         await client.db('guild').update(message.guild.id, {
-                            requireBanReason: !data.requireBanReason
+                            modLogs:{
+                                kicks: modLogs.kicks,
+                                bans: modLogs.bans,
+                                banReason: !modLogs.banReason
+                            }
                         });
-                        return client.checkEmb(`Successfully ${data.requireBanReason ? 'Disabled' : 'Enabled'} Ban Command Reasons!`, message);
+                        return client.checkEmb(`Successfully ${modLogs.banReason ? 'Disabled' : 'Enabled'} Ban Command Reasons!`, message);
                     } catch {
                         return client.errEmb('Unknown: Failed Updating ``. Try contacting support.', message);
                     }
@@ -147,7 +155,7 @@ module.exports = {
             } else if (sub === 'banmessage') {
                 if (!args[1]) {
                     if (!modLogs.banMessage) return client.infoEmb('No ban message has been set. You can set one with the `modlogs banmessage <Message>` command.', message);
-                    return message.channel.send(`**Server Ban Message:**\n\n${data.banMessage}`);
+                    return message.channel.send(`**Server Ban Message:**\n\n${modLogs.banMessage}`);
                 } else if (args[1].toLowerCase() === 'remove') {
                     try {
                         await client.db('guild').update(message.guild.id, {
