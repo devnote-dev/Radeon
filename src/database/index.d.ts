@@ -5,7 +5,6 @@
  * @copyright Radeon Development 2021
  */
 
-
 import { Document, Model } from 'mongoose';
 
 export const AR:       Model<Document>;
@@ -23,5 +22,7 @@ export class DBManager {
     getAll(): Promise<Array<Model<Document>>>;
     create(id: string, data: object, result: boolean): Promise<Model<Document>|null>;
     update(id: string, data: object, result: boolean): Promise<Model<Document>|null>;
+    push(id: string, data: object, result: boolean): Promise<Model<Document>|null>;
+    pull(id: string, data: object, result: boolean): Promise<Model<Document>|null>;
     delete(id: string, data: object, result: boolean): Promise<Model<Document>|null>;
 }

@@ -5,7 +5,6 @@
  * @copyright Radeon Development 2021
  */
 
-
 const { Client, Collection, Intents:{ FLAGS }} = require('discord.js');
 const { readdirSync } = require('fs');
 
@@ -37,7 +36,7 @@ client.cooldowns  = new Collection();
 client.cmdlogs    = new Set();
 client.config     = require('../config.json');
 client.mongoose   = require('./mongo');
-client.db         = require('./schemas/manager');
+client.db         = require('./database/manager');
 client.hooks      = {
     cache:          new Collection(),
     digest:         new Map()
