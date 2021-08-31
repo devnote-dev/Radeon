@@ -5,66 +5,74 @@
  */
 
 // Current Process for this:
-// client.ratelimits is a collection of guild states, inside
-// of the guild states is a collection of channel states, and
-// inside the channel states is a collection of user ratelimit
+// client.ratelimits is a map of guild states, inside
+// of the guild states is a map of channel states, and
+// inside the channel states is a map of user ratelimit
 // states. The userState is updated per execution:
 //
 //     id saved; check if exceeded limit -> bulkDelete & log; reset state;
 //     AFTER: save userState to channelState; save channelState to guildState;
 //     save guildState to client.ratelimits;
 
-const { Collection } = require("discord.js");
 const { AmodEmbed } = require('.');
 
 module.exports = async (client, message, automod) => {
-    const { author } = message;
-    let channel;
-    if (automod.channel) channel = message.guild.channels.cache.get(automod.channel);
+    const { guild, channel, author } = message;
+    const log = message.guild.channels.cache.get(automod.channel);
 
-    if (client.ratelimits.has(message.guild.id)) {
-        const guildState = client.ratelimits.get(message.guild.id);
-        if (guildState.has(message.channel.id)) {
-            const channelState = guildState.get(message.channel.id);
-            if (channelState.has(author.id)) {
-                const userState = channelState.get(author.id);
+    const guildState = client.ratelimits.get(guild.id);
+    if (guildState) {
+        const channelState = guildState.get(channel.id);
+        if (channelState) {
+            const userState = channelState.get(author.id);
+            if (userState) {
                 userState.cache.push(message.id);
-                const total = userState.cache.length;
-                if (total > 5) {
-                    if (userState.last < userState.limit) {
+                if (userState.last < userState.limit) {
+                    if (userState.cache.length > 5) {
                         try {
-                            await message.channel.bulkDelete(userState.cache);
-                            console.log(`${message.guild.id}: amod clean`);
-                            if (channel) channel.send(AmodEmbed(`Sent ${total} Messages in ${(userState.limit - userState.last) / 1000} Seconds`, author, message.channel));
+                            await channel.bulkDelete(userState.cache);
+                            if (log) log.send({
+                                embeds:[AmodEmbed(
+                                    `Sent ${userState.cache.length} messages in ${(userState.limit - userState.last) / 1000} seconds`,
+                                    author, channel
+                                )]
+                            });
+                            channel.send(`${author} Avoid sending too many similar messages.`);
                         } catch {}
                     }
-                    userState.cache = [];
-                    userState.last  = Date.now();
-                    userState.limit = Date.now() + 6000;
-                    channelState.set(author.id, userState);
-                    guildState.set(message.channel.id, channelState);
-                    client.ratelimits.set(message.guild.id, guildState);
                 } else {
-                    userState.last = Date.now();
-                    channelState.set(author.id, userState);
-                    guildState.set(message.channel.id, channelState);
-                    client.ratelimits.set(message.guild.id, guildState);
+                    userState.cache = [];
                 }
+                userState.last = Date.now();
+                userState.limit = Date.now() + 6000;
+                channelState.set(channel.id, userState);
+                guildState.set(channel.id, channelState);
+                client.ratelimits.set(guild.id, guildState);
             } else {
-                const nState = { cache:[message.id], last:Date.now(), limit:Date.now()+6000 };
-                channelState.set(author.id, nState);
-                guildState.set(message.channel.id, channelState);
-                client.ratelimits.set(message.guild.id, guildState);
+                channelState.set(author.id, {
+                    cache: [message.id],
+                    last: Date.now(),
+                    limit: Date.now() + 6000
+                });
+                guildState.set(channel.id, channelState);
+                client.ratelimits.set(guild.id, guildState);
             }
         } else {
-            const nUserState = { cache:[message.id], last:Date.now(), limit:Date.now()+6000 };
-            const nChanState = new Collection().set(author.id, nUserState);
-            client.ratelimits.set(message.channel.id, nChanState);
+            const channelState = new Map().set(author.id, {
+                cache: [message.id],
+                    last: Date.now(),
+                    limit: Date.now() + 6000
+            });
+            guildState.set(channel.id, channelState);
+            client.ratelimits.set(guild.id, guildState);
         }
     } else {
-        const nUState = { cache:[message.id], last:Date.now(), limit:Date.now()+6000 };
-        const nCState = new Collection().set(author.id, nUState);
-        const nGState = new Collection().set(message.channel.id, nCState);
-        client.ratelimits.set(message.guild.id, nGState);
+        const channelState = new Map().set(author.id, {
+            cache: [message.id],
+                last: Date.now(),
+                limit: Date.now() + 6000
+        });
+        const guildState = new Map().set(channel.id, channelState);
+        client.ratelimits.set(guild.id, guildState);
     }
 }

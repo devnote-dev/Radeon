@@ -4,7 +4,6 @@
  * @copyright Radeon Development 2021
  */
 
-
 const { botReady } = require('../dist/console');
 
 exports.run = async client => {

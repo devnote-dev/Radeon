@@ -37,6 +37,7 @@ client.cmdlogs    = new Set();
 client.config     = require('../config.json');
 client.mongoose   = require('./mongo');
 client.db         = require('./database/manager');
+client.util       = require('./functions');
 client.hooks      = {
     cache:          new Collection(),
     digest:         new Map()

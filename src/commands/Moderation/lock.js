@@ -18,9 +18,9 @@ module.exports = {
         let chan = message.channel;
         let reason = '(No Reason Specified)';
         const data = await client.db('guild').get(message.guild.id);
-        if (!data) return client.errEmb('Unkown: Failed Connecting To Server Database. Try contacting support.', message);
+        if (!data) return client.errEmb('Unkown: Failed connecting to server database. Try contacting support.', message);
         const role = message.guild.roles.resolve(data.everyoneRole);
-        if (!role) return client.errEmb('Everyone Role Not Found!');
+        if (!role) return client.errEmb('Everyone role not found!');
         if (args.length) {
             if (message.mentions.channels.size) {
                 chan = message.mentions.channels.first();
@@ -30,9 +30,9 @@ module.exports = {
                 reason = args.join(' ');
             }
         }
-        if (!chan) return client.errEmb('Unknown Channel Specified.', message);
+        if (!chan) return client.errEmb('Unknown channel specified.', message);
         if (!chan.viewable) return client.errEmb('I don\'t have permissions to view that channel.', message);
-        if (!chan.isText()) return client.errEmb('Channel is not a Text Channel.', message);
+        if (!chan.isText()) return client.errEmb('Channel is not a text channel.', message);
         if (!chan.manageable) return client.errEmb('I don\'t have permissions to manage that channel.', message);
         if (chan.permissionOverwrites.has(role.id)) {
             if (chan.permissionOverwrites.get(role.id).deny.has(2048n)) return client.infoEmb('That Channel is Already Locked. Maybe you meant `unlock`?', message);
@@ -40,17 +40,18 @@ module.exports = {
 
         try {
             const embed = new MessageEmbed()
-            .setTitle('Channel Locked')
-            .addFields(
-                {name: 'Reason', value: reason, inline: true},
-                {name: 'Moderator', value: message.author, inline: true}
-            )
-            .setColor(0x0054d1).setTimestamp();
-            await chan.send({ embeds: [embed] });
-            await chan.updateOverwrite(role, { SEND_MESSAGES: false }, `Lock Requested By ${message.author.tag}`);
-            return client.checkEmb(`Successfully Locked ${chan}!`, message);
+                .setTitle('Channel Locked')
+                .addFields(
+                    {name: 'Reason', value: reason, inline: true},
+                    {name: 'Moderator', value: message.author, inline: true}
+                )
+                .setColor(0x0054d1)
+                .setTimestamp();
+            await chan.send({ embeds:[embed] });
+            await chan.permissionOverwrites.create(role, { SEND_MESSAGES: false }, `Lock Requested By ${message.author.tag}`);
+            return client.checkEmb(`Successfully Llocked ${chan}!`, message);
         } catch {
-            return client.errEmb('Unknown: Failed Locking Channel.', message);
+            return client.errEmb('Unknown: Failed locking channel.', message);
         }
     }
 }

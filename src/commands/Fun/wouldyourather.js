@@ -3,7 +3,7 @@
  * @copyright Radeon Development 2021
  */
 
-const { choose } = require('../../dist/functions');
+const { choose } = require('../../functions');
 const request = require('node-superfetch')
 const { MessageEmbed } = require('discord.js');
 
@@ -16,7 +16,7 @@ module.exports = {
     cooldown: 5,
     async run(client, message, args) {
         // setting rating
-        let rating = await choose(args, ["pg", "pg13", "r"], null);
+        let rating = await choose(args.raw, ["pg", "pg13", "r"], null);
 
         let wyr = (await request.get(`https://api.truthordarebot.xyz/wyr?rating=${rating}`).then(response => response.body)).question;
 
@@ -27,6 +27,6 @@ module.exports = {
         .setColor(0x1e143b)
         .setFooter(`Rating: ${rating}`)
         .setDescription(wyr.replace("Would you rather ", ""));
-        return message.reply({ embeds: [embed] });
+        return message.reply({ embeds:[embed] });
     }
 }

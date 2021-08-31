@@ -3,7 +3,6 @@
  * @copyright Radeon Development 2021
  */
 
-
 const { MessageEmbed } = require('discord.js');
 
 exports.run = async (client, member) => {
@@ -12,6 +11,7 @@ exports.run = async (client, member) => {
     if (!modLogs.channel || !modLogs.kicks) return;
     const c = member.guild.channels.cache.get(modLogs.channel);
     if (!c) return;
+
     let count = 0, audit;
     do {
         audit = await member.guild.fetchAuditLogs({ type: 20, limit: 2 }).catch(()=>{});
@@ -28,15 +28,15 @@ exports.run = async (client, member) => {
         if (audit.target.id !== member.user.id) return;
         const { reason, executor } = audit;
         const embed = new MessageEmbed()
-        .setTitle('Member Kicked')
-        .setThumbnail(member.user.displayAvatarURL({ dynamic: true }))
-        .addFields(
-            {name: 'User', value: `• ${member.user.tag}\n• ${member.user.id}`, inline: true},
-            {name: 'Moderator', value: `• ${executor.tag}\n• ${executor.id}`, inline: true},
-            {name: 'Reason', value: reason || '(No Reason Specified)', inline: false}
-        )
-        .setColor('GREY')
-        .setTimestamp();
-        c.send(embed).catch(()=>{});
+            .setTitle('Member Kicked')
+            .setThumbnail(member.user.displayAvatarURL({ dynamic: true }))
+            .addFields(
+                {name: 'User', value: `• ${member.user.tag}\n• ${member.user.id}`, inline: true},
+                {name: 'Moderator', value: `• ${executor.tag}\n• ${executor.id}`, inline: true},
+                {name: 'Reason', value: reason || '(No Reason Specified)', inline: false}
+            )
+            .setColor('GREY')
+            .setTimestamp();
+        c.send({ embeds:[embed] }).catch(()=>{});
     }
 }

@@ -15,12 +15,12 @@ module.exports = {
     guildOnly: true,
     async run(client, message, args) {
         if (args.length < 2) return client.errEmb('Insufficient Arguments Specified.\n```\neditembed <Message:ID> <JSON:Text>\n```', message);
-        const msg = message.channel.messages.cache.get(args[0]);
+        const msg = message.channel.messages.cache.get(args.raw[0]);
         if (!msg) return client.errEmb('Invalid Message.\nEither the message ID provided was invalid or the message is not in the bot\'s cache.', message);
-        if (msg.author.id != client.user.id) return client.errEmb('Message was not sent by this bot.', message);
+        if (msg.author.id !== client.user.id) return client.errEmb('Message was not sent by this bot.', message);
         try {
-            const embeds = JSON.parse(args.slice(1).join(' '));
-            await msg.edit({ embeds: [embeds] });
+            const embeds = JSON.parse(args.raw.slice(1).join(' '));
+            await msg.edit({ embeds:[embeds] });
             await message.react(':checkgreen:796925441771438080').catch(()=>{});
         } catch (err) {
             return client.errEmb(err.message, message);

@@ -3,7 +3,7 @@
  * @copyright Radeon Development 2021
  */
 
-const { choose } = require('../../dist/functions')
+const { choose } = require('../../functions');
 const { MessageEmbed } = require('discord.js');
 
 module.exports = {
@@ -16,19 +16,19 @@ module.exports = {
     async run(client, message, args) {
 
         let options = ["jokes", "dadjokes", "antijokes", "meanjokes"]
-        if (args.length && options.includes(args[0])) options = [choose(args, options, null)]
+        if (args.length && options.includes(args.raw[0])) options = [choose(args.raw, options, null)]
         else if (args.length) return client.errEmb(`Invalid subreddit, valid options are:\n${options.join(', ').slice(this.length - 2)}`, message)
 
         let post = await redditPost(options);
         if (!post) return client.errEmb("No joke was returned", message);
 
         const embed = new MessageEmbed()
-        .setTitle(post.title)
-        .setURL(`https://reddit.com${post.permalink}`)
-        .setColor(0x1e143b)
-        .setDescription(`||${post.selftext}||`)
-        .setFooter(`👍 ${post.ups} - ${post.subreddit_name_prefixed}`);
-        message.reply({ embeds: [embed] });
+            .setTitle(post.title)
+            .setURL(`https://reddit.com${post.permalink}`)
+            .setColor(0x1e143b)
+            .setDescription(`||${post.selftext}||`)
+            .setFooter(`👍 ${post.ups} - ${post.subreddit_name_prefixed}`);
+        message.reply({ embeds:[embed] });
     }
 }
 

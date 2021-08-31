@@ -3,7 +3,6 @@
  * @copyright Radeon Development 2021
  */
 
-
 const { readdirSync } = require('fs');
 const { logError } = require('../../dist/console');
 

@@ -17,15 +17,16 @@ module.exports = {
     cooldown: 20,
     async run(client, message, args) {
         // flags
-        let flags = parseFlags(args.join(" "), [
+        let flags = parseFlags(args.raw.join(" "), [
             {name: 'link', type: 'string', quotes: false},
         ])
 
+        // Removed as presence intent is unavailable - 31/08/2021
         // set search to presence
-        let spotifyActivity = (message.mentions.members.first() || message.member).presence.activities.find(activity => activity.name == 'Spotify' || activity.name.toLowerCase() == 'youtube music')
-        if (spotifyActivity && (message.mentions.members.first() || !args.length)) {
-            args = [spotifyActivity.details, spotifyActivity.state]
-        }
+        // let spotifyActivity = (message.mentions.members.first() || message.member).presence.activities.find(activity => activity.name == 'Spotify' || activity.name.toLowerCase() == 'youtube music')
+        // if (spotifyActivity && (message.mentions.members.first() || !args.length)) {
+        //     args = [spotifyActivity.details, spotifyActivity.state]
+        // }
 
         // Quick - error
         if (!YoutubeKey) return client.errEmb("No youtube api key found")
@@ -67,6 +68,6 @@ module.exports = {
         embed.setThumbnail(songData.thumbnailUrl)
         embed.setTitle(songData.title + " by " + songData.artistName)
 
-        return message.reply({ embeds: [embed] });
+        return message.reply({ embeds:[embed] });
     }
 }

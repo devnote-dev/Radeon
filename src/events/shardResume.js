@@ -3,7 +3,6 @@
  * @copyright Radeon Development 2021
  */
 
-
 const { MessageEmbed } = require('discord.js');
 const { logShard } = require('../dist/console');
 
@@ -12,7 +11,7 @@ exports.run = async (client, shard) => {
     const c = client.channels.cache.get(client.config.logs.event);
     if (!c) return;
     const e = new MessageEmbed()
-    .setDescription(`Shard ${shard} / ${client.shard.count} - Resumed`)
-    .setColor(3447003);
-    c.send(e).catch(()=>{});
+        .setDescription(`:blue_circle: Shard ${shard} / ${client.shard.count} - Resumed`)
+        .setColor(3447003);
+    return c.send({ embeds:[e] }).catch(()=>{});
 }

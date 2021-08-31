@@ -3,7 +3,6 @@
  * @copyright Radeon Development 2021
  */
 
-
 const { Guild, Message, MessageEmbed } = require('discord.js');
 
 module.exports = async client => {

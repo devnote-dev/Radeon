@@ -4,7 +4,6 @@
  * @copyright Radeon Development 2021
  */
 
-
 const filehound = require('filehound');
 const { parse, join } = require('path');
 const { logError } = require('../dist/console');

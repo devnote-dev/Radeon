@@ -15,14 +15,14 @@ module.exports = {
     async run(client, message, args) {
         if (!args.length) return client.errEmb('No Command Specified.', message);
         const path = `${message.guild.id}/${message.channel.id}`;
-        const cmd = args[0].toLowerCase();
+        const cmd = args.lower[0];
         const ARGS = args.slice(1);
         if (cmd === 'execute' || cmd === 'exec') return message.react('❌').catch(()=>{});
         let command = client.commands.get(cmd) || client.commands.get(client.aliases.get(cmd));
         if (!command) return client.errEmb(`Unknown Command \`${cmd}\``, message);
         logAdmin('exec', path, message.author.id, command.name +' '+ ARGS.join(' '));
         try {
-            await command.run(client, message, ARGS);
+            return await command.run(client, message, ARGS);
         } catch (err) {
             return client.errEmb(err.message, message);
         }

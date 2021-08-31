@@ -5,7 +5,6 @@
  * @copyright Radeon Development 2021
  */
 
-
 const { isBotStaff, isBotOwner, humanize } = require('../dist/functions');
 const { logError, logWarn } = require('../dist/console');
 const { handleActionLog } = require('../automod');
@@ -23,15 +22,9 @@ const EM = {
 }
 
 const ACTION_CMDS = [
-    'slowmode',
-    'clean',
-    'mute',
-    'unmute',
-    'kick',
-    'ban',
-    'massban',
-    'unban',
-    'lock',
+    'slowmode', 'clean', 'mute',
+    'unmute', 'kick', 'ban',
+    'massban', 'unban', 'lock',
     'unlock'
 ];
 
@@ -170,6 +163,14 @@ exports.run = async (client, message) => {
             if (!message.member.permissions.has(command.userPerms)) {
                 if (command.modBypass && !isBotStaff(author.id)) return message.reply(EM.errNoUserPerms(command.userPerms));
             }
+        }
+
+        // final parsing before execution
+        args = {
+            raw: args,
+            length: args.length,
+            upper: args.map(a => a.toUpperCase()),
+            lower: args.map(a => a.toLowerCase())
         }
 
         // After all checks have passed, log & run the command

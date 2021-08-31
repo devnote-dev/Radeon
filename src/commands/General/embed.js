@@ -71,7 +71,7 @@ module.exports = {
                 embed.setFooter('\u200b', _ficon);
             }
             try {
-                return await message.channel.send({ content, embeds: [embed] });
+                return await message.channel.send({ content, embeds:[embed] });
             } catch (err) {
                 return client.errEmb(err.message, message);
             }

@@ -7,7 +7,7 @@ const Discord = require('discord.js');
 const { Util } = Discord;
 const { inspect } = require('util');
 const { logAdmin } = require('../../dist/console');
-const _funcs = require('../../dist/functions');
+const funcs = require('../../dist/functions');
 
 module.exports = {
     name: 'eval',
@@ -16,11 +16,11 @@ module.exports = {
     async run(client, message, args) {
         const { author, member, channel, guild } = message;
         if (!args.length) return client.errEmb('No Code Provided.', message);
-        const path = `${guild.id}/${channel.id}`;
-        let code = args.join(' ');
+        const _path = `${guild.id}/${channel.id}`;
+        let code = args.raw.join(' ');
         if (/^`{3}(?:.+)?(?:\n+)?[\s\S]+(?:\n+)?`{3}$/gmi.test(code)) code = code.replace(/^```(?:[\S\n]+)?|```$/gmi, '');
-        logAdmin('eval', path, author.id, code);
-        if (/token|(client)?\.config|while\s*\(\s*true\s*\)\s*\{\s*\}/gi.test(code)) return client.errEmb('You Can\'t Do That.', message);
+        logAdmin('eval', _path, author.id, code);
+        if (/while\s*\(\s*true\s*\)\s*\{\s*\}/gi.test(code)) return client.errEmb('Cannot execute infinite loop.', message);
         try {
             let evaled;
             if (code.includes('await')) {
@@ -31,12 +31,12 @@ module.exports = {
             evaled = inspect(evaled, false, 0);
             if (evaled.length > 2000) {
                 evaled = Util.splitMessage(evaled);
-                evaled.forEach(async m => {
+                return evaled.forEach(async m => {
                     await channel.send(`\`\`\`js\n${m}\n\`\`\``);
                     await new Promise(res => setTimeout(res, 750));
                 });
             } else {
-                channel.send(`\`\`\`js\n${evaled}\n\`\`\``);
+                return channel.send(`\`\`\`js\n${evaled}\n\`\`\``);
             }
         } catch (err) {
             return channel.send(`\`\`\`js\n${err}\n\`\`\``);

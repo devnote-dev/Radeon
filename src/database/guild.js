@@ -4,11 +4,10 @@
  * @copyright Radeon Development 2021
  */
 
-
 const { Schema, model } = require('mongoose');
 
 const guildSchema = Schema({
-    guildID: {
+    guildID:{
         type:                   String,
         required:               true
     },
@@ -19,14 +18,8 @@ const guildSchema = Schema({
     actionLog:                  String,
     modLogs:{
         channel:                String,
-        kicks:{
-            type:               Boolean,
-            default:            false
-        },
-        bans:{
-            type:               Boolean,
-            default:            false
-        },
+        kicks:                  Boolean,
+        bans:                   Boolean,
         kickReason:{
             type:               Boolean,
             default:            false

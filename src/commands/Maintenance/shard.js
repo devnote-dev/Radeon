@@ -4,7 +4,7 @@
  */
 
 const { MessageEmbed } = require('discord.js');
-const { toDurationDefault } = require('../../dist/functions');
+const { toDurationDefault } = require('../../functions');
 
 module.exports = {
     name: 'shard',
@@ -22,41 +22,34 @@ module.exports = {
         const shard = server.shard;
         switch (shard.status) {
             case 0:
-                sstatus = 'Ready';
-                break;
+                sstatus = 'Ready'; break;
             case 1:
-                sstatus = 'Connecting';
-                break;
+                sstatus = 'Connecting'; break;
             case 2:
-                sstatus = 'Reconnecting';
-                break;
+                sstatus = 'Reconnecting'; break;
             case 3:
-                sstatus = 'Idle';
-                break;
+                sstatus = 'Idle'; break;
             case 5:
-                sstatus = 'Disconnected';
-                break;
+                sstatus = 'Disconnected'; break;
             case 7:
-                sstatus = 'Identifying';
-                break;
+                sstatus = 'Identifying'; break;
             case 8:
-                sstatus = 'Resuming';
-                break;
+                sstatus = 'Resuming'; break;
             default:
-                sstatus = 'Unknown!';
+                sstatus = 'Unknown!'; break;
         }
 
         const embed = new MessageEmbed()
-        .setTitle('Shard Info')
-        .addFields(
-            {name: 'Guild', value: `${server.name} (ID ${server.id})`, inline: false},
-            {name: 'Shard ID', value: shard.id.toString(), inline: true},
-            {name: 'Status', value: sstatus, inline: true},
-            {name: 'Ping', value: `${shard.ping}ms`, inline: true},
-            {name: 'Last Ping', value: toDurationDefault(shard.lastPingTimestamp), inline: true}
-        )
-        .setColor(0x1e143b)
-        .setFooter(`Triggered by ${message.author.tag}`, message.author.displayAvatarURL());
-        return message.channel.send({ embeds: [embed] });
+            .setTitle('Shard Info')
+            .addFields(
+                {name: 'Guild', value: `${server.name} (ID ${server.id})`, inline: false},
+                {name: 'Shard ID', value: shard.id.toString(), inline: true},
+                {name: 'Status', value: sstatus, inline: true},
+                {name: 'Ping', value: `${shard.ping}ms`, inline: true},
+                {name: 'Last Ping', value: toDurationDefault(shard.lastPingTimestamp), inline: true}
+            )
+            .setColor(0x1e143b)
+            .setFooter(`Triggered by ${message.author.tag}`, message.author.displayAvatarURL());
+        return message.channel.send({ embeds:[embed] });
     }
 }

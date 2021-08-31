@@ -16,16 +16,16 @@ module.exports = {
     roleBypass: true,
     async run(client, message, args) {
         if (!args.length) return client.errEmb('No User Specified.\n```\nunban <User:ID> [Reason:Text]\n```', message);
-        const target = args[0];
-        if (!/^\d{17,19}$/g.test(target)) return client.errEmb('Invalid User ID Specified.', message);
+        const target = args.raw[0];
+        if (!/^\d{17,19}$/g.test(target)) return client.errEmb('Invalid user ID specified.', message);
         if (await message.guild.members.fetch(target) || !await message.guild.bans.fetch(target).catch(()=>{})) return client.errEmb('User is not banned from this server.', message);
         let reason = '(No Reason Specified)';
-        if (args.length > 1) reason = args.slice(1).join(' ');
+        if (args.length > 1) reason = args.raw.slice(1).join(' ');
         try {
             const US = await message.guild.bans.remove(target, `${message.author.tag}: ${reason}`);
-            return client.checkEmb(`Successfully Unbanned \`${US?.tag}\`!`, message);
+            return client.checkEmb(`Successfully unbanned \`${US?.tag}\`!`, message);
         } catch {
-            return client.errEmb(`Unknown: Failed Unbanning User \`${target}\``, message);
+            return client.errEmb(`Unknown: Failed unbanning user \`${target}\``, message);
         }
     }
 }

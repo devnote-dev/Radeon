@@ -3,7 +3,6 @@
  * @copyright Radeon Development 2021
  */
 
-
 const { MessageEmbed } = require('discord.js');
 
 exports.run = async (client, guild, user) => {
@@ -13,7 +12,7 @@ exports.run = async (client, guild, user) => {
     if (!modLogs.channel || !modLogs.bans) return;
     const c = guild.channels.cache.get(modLogs.channel);
     if (!c) return;
-    if (user.partial) user = await user.fetch();
+
     let count = 0;
     let audit;
     while (!audit) {
@@ -30,15 +29,15 @@ exports.run = async (client, guild, user) => {
     if (audit) {
         const { reason, executor } = audit;
         const embed = new MessageEmbed()
-        .setTitle('Member Banned')
-        .setThumbnail(user.displayAvatarURL({ dynamic: true }))
-        .addFields(
-            {name: 'User', value: `• ${user.tag}\n• ${user.id}`, inline: true},
-            {name: 'Moderator', value: `• ${executor.tag}\n• ${executor.id}`, inline: true},
-            {name: 'Reason', value: reason || '(No Reason Specified)', inline: false}
-        )
-        .setColor('RED')
-        .setTimestamp();
-        c.send(embed).catch(()=>{});
+            .setTitle('Member Banned')
+            .setThumbnail(user.displayAvatarURL({ dynamic: true }))
+            .addFields(
+                {name: 'User', value: `• ${user.tag}\n• ${user.id}`, inline: true},
+                {name: 'Moderator', value: `• ${executor.tag}\n• ${executor.id}`, inline: true},
+                {name: 'Reason', value: reason || '(No Reason Specified)', inline: false}
+            )
+            .setColor('RED')
+            .setTimestamp();
+        c.send({ embeds:[embed] }).catch(()=>{});
     }
 }

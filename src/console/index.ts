@@ -4,7 +4,7 @@
  */
 
 import { Shard } from 'discord.js';
-import Settings from '../schemas/settings';
+import Settings from '../database/settings';
 
 function borderBold() {
     return console.log('==================================');

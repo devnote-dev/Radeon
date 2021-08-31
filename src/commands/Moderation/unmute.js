@@ -6,6 +6,7 @@
 
 const { MessageEmbed } = require('discord.js');
 const { logError } = require('../../dist/console');
+const { resolveMember } = require('../../functions');
 const Muted = require('../../schemas/muted');
 
 module.exports = {
@@ -22,11 +23,11 @@ module.exports = {
         const { modLogs, muteRole } = data;
         if (!muteRole) return client.errEmb('Mute role not found/set. You can set one using the `muterole` command.', message);
         if (!args.length) return client.errEmb('Insufficient Arguments.\n```\nunmute <User:Mention/ID> [Reason:Text]\n```', message);
-        const target = message.mentions.members.first() || await message.guild.members.fetch(args[0]).catch(()=>{});
+        const target = message.mentions.members.first() || await resolveMember(message, args.raw);
         if (!target) return client.errEmb('User is not a member of this server.', message);
         if (!target.roles.cache.has(muteRole)) return client.errEmb(`\`${target.user.tag}\` is not muted.`, message);
         let reason = '(No Reason Specified)';
-        if (args.length > 1) reason = args.slice(1).join(' ');
+        if (args.length > 1) reason = args.raw.slice(1).join(' ');
         try {
             const mData = await Muted.findOne({ guildID: message.guild.id });
             if (mData.mutedList.has(target.user.id)) {
@@ -35,27 +36,28 @@ module.exports = {
             }
             await target.roles.remove(muteRole);
             const dmEmb = new MessageEmbed()
-            .setTitle('You have been Unmuted!')
-            .addField('Reason', reason, false)
-            .setColor(0x1e143b).setFooter(`Sent from ${message.guild.name}`, message.guild.iconURL({ dynamic: true }))
-            .setTimestamp();
+                .setTitle('You have been Unmuted!')
+                .addField('Reason', reason, false)
+                .setColor(0x1e143b).setFooter(`Sent from ${message.guild.name}`, message.guild.iconURL({ dynamic: true }))
+                .setTimestamp();
             target.user.send({ embeds: [dmEmb] }).catch(()=>{});
             client.checkEmb(`\`${target.user.tag}\` was unmuted!`, message);
             if (modLogs.channel && message.guild.channels.cache.has(modLogs.channel)) {
                 const embed = new MessageEmbed()
-                .setTitle('Member Unmuted')
-                .setThumbnail(target.user.displayAvatarURL({ dynamic: true }))
-                .addFields(
-                    {name: 'User', value: `• ${target.user.tag}\n• ${target.user.id}`, inline: true},
-                    {name: 'Moderator', value: `• ${message.author.tag}\n• ${message.author.id}`, inline: true},
-                    {name: 'Reason', value: reason, inline: false}
-                )
-                .setColor('BLUE').setTimestamp();
-                return message.guild.channels.cache.get(modLogs.channel)?.send({ embeds: [embed] }).catch(()=>{});
+                    .setTitle('Member Unmuted')
+                    .setThumbnail(target.user.displayAvatarURL({ dynamic: true }))
+                    .addFields(
+                        {name: 'User', value: `• ${target.user.tag}\n• ${target.user.id}`, inline: true},
+                        {name: 'Moderator', value: `• ${message.author.tag}\n• ${message.author.id}`, inline: true},
+                        {name: 'Reason', value: reason, inline: false}
+                    )
+                    .setColor('BLUE')
+                    .setTimestamp();
+                return message.guild.channels.cache.get(modLogs.channel)?.send({ embeds:[embed] }).catch(()=>{});
             }
         } catch (err) {
             logError(err, `${message.guild.id}/${message.channel.id}`, message.author.id);
-            return client.errEmb(`Unknown: Failed Unmuting Member \`${target.user.tag}\``, message);
+            return client.errEmb(`Unknown: Failed unmuting member \`${target.user.tag}\``, message);
         }
     }
 }
@@ -77,7 +79,7 @@ module.exports._selfexec = async (client, guild, user) => {
                 {name: 'Reason', value: 'Auto: Mute Expired', inline: false}
             )
             .setColor('BLUE').setTimestamp();
-            return GS.channels.cache.get(modLogs.channel)?.send({ embeds: [embed] }).catch(()=>{});
+            return GS.channels.cache.get(modLogs.channel)?.send({ embeds:[embed] }).catch(()=>{});
         }
     } catch (err) {
         logError(err, __filename);

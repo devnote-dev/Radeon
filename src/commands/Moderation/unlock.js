@@ -18,21 +18,21 @@ module.exports = {
         let chan = message.channel;
         let reason = '(No Reason Specified)';
         const data = await client.db('guild').get(message.guild.id);
-        if (!data) return client.errEmb('Unkown: Failed Connecting To Server Database. Try contacting support.', message);
+        if (!data) return client.errEmb('Unkown: Failed connecting to server database. Try contacting support.', message);
         const role = message.guild.roles.resolve(data.everyoneRole);
-        if (!role) return client.errEmb('Everyone Role Not Found!');
+        if (!role) return client.errEmb('Everyone role not found!');
         if (args.length) {
             if (message.mentions.channels.size) {
                 chan = message.mentions.channels.first();
-                const i = args.indexOf(`<#${chan.id}>`);
-                if (i === 0 && args.length > 1) reason = args.slice(1).join(' ');
+                const i = args.raw.indexOf(`<#${chan.id}>`);
+                if (i === 0 && args.length > 1) reason = args.raw.slice(1).join(' ');
             } else {
-                reason = args.join(' ');
+                reason = args.raw.join(' ');
             }
         }
-        if (!chan) return client.errEmb('Unknown Channel Specified.', message);
+        if (!chan) return client.errEmb('Unknown channel specified.', message);
         if (!chan.viewable) return client.errEmb('I don\'t have permissions to view that channel.', message);
-        if (!chan.isText()) return client.errEmb('Channel is not a Text Channel.', message);
+        if (!chan.isText()) return client.errEmb('Channel is not a text channel.', message);
         if (!chan.manageable) return client.errEmb('I don\'t have permissions to manage that channel.', message);
         if (chan.permissionOverwrites.has(role.id)) {
             if (chan.permissionOverwrites.get(role.id).allow.has(2048n)) return client.infoEmb('That Channel is Already Unlocked. Maybe you meant `lock`?', message);

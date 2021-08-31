@@ -3,7 +3,6 @@
  * @copyright Radeon Development 2021
  */
 
-
 const { logAdmin } = require('../../dist/console');
 
 module.exports = {
@@ -15,38 +14,31 @@ module.exports = {
     modOnly: 1,
     async run(client, message, args) {
         if (args.length < 2) return client.errEmb('Insufficient Arguments\n```\nreload <Category> <Command>\n```', message);
-        const cat = args[0].toLowerCase();
-        const cmd = client.commands.get(args[1].toLowerCase()) || client.commands.get(client.aliases.get(args[1].toLowerCase()));
+        const cat = args.lower[0];
+        const cmd = client.commands.get(args.lower[1]) || client.commands.get(client.aliases.get(args.lower[1]));
         switch (cat) {
             case 'a':
             case 'admin':
-                category = 'Admin';
-                break;
+                category = 'Admin'; break;
             case 'g':
             case 'general':
-                category = 'General';
-                break;
+                category = 'General'; break;
             case 'ma':
             case 'main':
             case 'maintenance':
-                category = 'Maintenance';
-                break;
+                category = 'Maintenance'; break;
             case 'mo':
             case 'mod':
             case 'moderation':
-                category = 'Moderation';
-                break;
+                category = 'Moderation'; break;
             case 'ss':
             case 'settings':
-                category = 'Server Settings';
-                break;
+                category = 'Server Settings'; break;
             case 'f':
             case 'fun':
-                category = 'Fun'
-                break;
+                category = 'Fun'; break;
             default:
-                category = undefined;
-                break;
+                category = undefined; break;
         }
         if (!category) return client.errEmb('Unknown Command Category Specified.', message);
         if (!cmd) return client.errEmb('Unknown Command Specified.', message);

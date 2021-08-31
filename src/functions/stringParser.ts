@@ -1,5 +1,5 @@
 /**
- * Strings Parser
+ * Radeon Strings Parser
  * 
  * There will be NO support for the use of this file
  * except for self-hosted instances of Radeon
@@ -13,11 +13,11 @@
 type FlagOptions = {
     name: string;
     type:
-    |'string'
-    |'int'
-    |'bool'
-    |'user'
-    |'channel';
+        |'string'
+        |'int'
+        |'bool'
+        |'user'
+        |'channel';
     quotes?: boolean;
 }
 
@@ -30,7 +30,7 @@ type Flag = {
  * Parses arguments encased in quotations.
  * @param {string} ms The string to parse from.
  * @param {boolean?} stripQuotes Removes quotes after parsing.
- * @returns string
+ * @returns {string}
  */
 function parseQuotes(str: string, stripQuotes: boolean=false): string {
     const split:  string[] = str.split('');
@@ -69,7 +69,7 @@ function parseQuotes(str: string, stripQuotes: boolean=false): string {
  * Parses message flags into usable objects.
  * @param {string} str The string to parse from.
  * @param {Flag[]} flags The flags to parse.
- * @returns Flags Array
+ * @returns {Readonly<Flag[]>}
  */
 function parseFlags(str: string, flags: FlagOptions[]): Readonly<Flag[]> {
     const parsed: Flag[] = [];

@@ -3,7 +3,6 @@
  * @copyright Radeon Development 2021
  */
 
-
 const activities = [
 "PLAYING",
 "STREAMING",
@@ -20,9 +19,9 @@ module.exports = {
     modOnly: 4,
     async run(client, message, args) { 
         if (args.length < 2) return client.errEmb('Insufficient Arguments\n```\nsetstatus <Type> <Name> [-online|-idle|-dnd]\n```', message);
-        if (!activities.includes(args[0].toUpperCase())) return client.errEmb('Unknown Status Type.', message);
-        const type = args[0].toUpperCase();
-        let name = args.slice(1).join(' ');
+        if (!activities.includes(args.upper[0])) return client.errEmb('Unknown Status Type.', message);
+        const type = args.upper[0];
+        let name = args.raw.slice(1).join(' ');
         let status = 'online';
         statuses.forEach(s => {
             if (name.includes('-'+s)) {

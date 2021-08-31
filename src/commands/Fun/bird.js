@@ -31,10 +31,10 @@ module.exports = {
             }
         ]
     },
-    async run(client, message, args) {
+    async run(_, message, args) {
 
         let fox = {}
-        switch (args[0] || null) {
+        switch (args.lower[0] || null) {
             case "img":
             case "pic":
             case "image":
@@ -61,7 +61,7 @@ module.exports = {
         } else {
             embed.setImage(fox.image)
         }
-        return message.reply({ embeds: [embed] })
+        return message.reply({ embeds:[embed] });
 
         // just make them functions, keep it clean
     }
@@ -75,7 +75,7 @@ async function getImage() {
 }
 
 module.exports.appres = (_, int) => {
-    int.defer();
+    await int.defer();
     let fox = {};
     if (int.options[0]) {
         if (int.options[0].name === 'image') {
@@ -88,13 +88,13 @@ module.exports.appres = (_, int) => {
         fox.fact = getFact();
     }
     const embed = new MessageEmbed()
-    .setColor(0x1e143b)
-    .setTitle("Bird")
+        .setColor(0x1e143b)
+        .setTitle("Bird");
     if (fox.fact) embed.setDescription(fox.fact)
     if (fox.image && fox.fact) {
         embed.setThumbnail(fox.image)
     } else {
         embed.setImage(fox.image)
     }
-    return int.editReply(embed);
+    return int.reply({ embeds:[embed] });
 }

@@ -11,22 +11,29 @@ module.exports = {
     usage: 'jsonembed <JSON:Text>\n\njsonembed { "title":"hi", "description":"hello" }',
     cooldown: 2,
     guildOnly: true,
-    async run(client, message, args) {
-        if (!args.length) return client.errEmb('No JSON Provided.\n```\njsonembed <JSON:Text>\n```', message);
+    async run(client, { channel }, args) {
+        if (!args.length) return client.errEmb('No JSON Provided.\n```\njsonembed <JSON:Text>\n```', channel);
         try {
-            const embed = JSON.parse(args.join(' '));
-            if (embed.title == undefined && embed.url != undefined) {
-                throw new Error('Title is required for URL field.');
-            }
+            const embed = JSON.parse(args.raw.join(' '));
+            if (
+                embed.title === undefined &&
+                embed.url !== undefined
+            ) throw new Error('Title is required for URL field.');
             if (embed.author) {
-                if (embed.author.name == undefined && embed.author.icon_url != undefined) embed.author.name = '\u200b';
+                if (
+                    embed.author.name === undefined &&
+                    embed.author.icon_url !== undefined
+                ) embed.author.name = '\u200b';
             }
             if (embed.footer) {
-                if (embed.footer.text == undefined && embed.footer.icon_url != undefined) embed.footer.text = '\u200b';
+                if (
+                    embed.footer.text === undefined &&
+                    embed.footer.icon_url !== undefined
+                ) embed.footer.text = '\u200b';
             }
-            return await message.channel.send({ embeds: [embed] });
+            return channel.send({ embeds:[embed] });
         } catch (err) {
-            return client.errEmb(err.message, message);
+            return client.errEmb(err.message, channel);
         }
     }
 }

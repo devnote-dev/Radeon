@@ -21,7 +21,7 @@ module.exports = {
     async run(client, message, args) {
         if (!args.length) return client.errEmb('No Amount Specified.\n```\nclean <Amount:Number>\nclean <Amount:Number> [User:Mention/ID]\nclean <Amount:Number> [...Flags]\n```\n**Flags:**\n'+ flags, message);
         let amount = parseInt(args[0]);
-        if (isNaN(amount) || amount < 1 || amount > 100) return client.errEmb('Invalid Amount Specified. Amount must be a number between 1 and 100.', message);
+        if (isNaN(amount) || amount < 1 || amount > 100) return client.errEmb('Invalid amount specified. Amount must be a number between 1 and 100.', message);
         if (args.length > 1) {
             let target = '', flagUsers = false, flagBots = false, flagNopin = false, flagHas = '', flagTo = '', flagEmbeds = false;
             const parsed = parseFlags(args.slice(1).join(' '), [
@@ -41,12 +41,12 @@ module.exports = {
                 if (flag.name === 'to') flagTo = flag.value;
                 if (flag.name === 'em') flagEmbeds = true;
             });
-            if (flagUsers && flagBots) return client.errEmb('Both Users & Bots Flags Specified, pick one.', message);
-            if (flagTo && /\D+/g.test(flagTo)) return client.errEmb('Invalid Message ID for To Flag.', message);
+            if (flagUsers && flagBots) return client.errEmb('Both users & bots flags specified, pick one.', message);
+            if (flagTo && /\D+/g.test(flagTo)) return client.errEmb('Invalid message ID for `to` flag.', message);
             try {
                 await message.delete().catch(()=>{});
                 const res = await advanceClean(message, amount, { target, flagUsers, flagBots, flagNopin, flagHas, flagTo, flagEmbeds });
-                return client.checkEmb(`Deleted ${res} Messages!`, message).then(m => setTimeout(() => m.delete(), 2000));
+                return client.checkEmb(`Deleted ${res} messages!`, message).then(m => setTimeout(() => m.delete(), 2000));
             } catch (err) {
                 return client.errEmb(err.message, message);
             }
@@ -54,7 +54,7 @@ module.exports = {
             try {
                 await message.delete().catch(()=>{});
                 const res = await message.channel.bulkDelete(amount, true);
-                return client.checkEmb(`Deleted ${res.size} Messages!`, message).then(m => setTimeout(() => m.delete(), 2000));
+                return client.checkEmb(`Deleted ${res.size} messages!`, message).then(m => setTimeout(() => m.delete(), 2000));
             } catch (err) {
                 return client.errEmb(err.message, message);
             }

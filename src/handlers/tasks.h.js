@@ -3,7 +3,6 @@
  * @copyright Radeon Development 2021
  */
 
-
 const { CronJob } = require('cron');
 const { logError } = require('../dist/console');
 const { fetchHook } = require('../automod');

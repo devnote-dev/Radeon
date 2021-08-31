@@ -12,10 +12,10 @@ module.exports = {
     description: 'Fox image and fact',
     usage: 'Fox [image|fact]',
     cooldown: 5,
-    async run(client, message, args) {
+    async run(_, message, args) {
 
         let fox = {}
-        switch (args[0] || null) {
+        switch (args.lower[0] || null) {
             case "img":
             case "pic":
             case "image":
@@ -34,15 +34,15 @@ module.exports = {
         
         // embed
         const embed = new MessageEmbed()
-        .setColor(0x1e143b)
-        .setTitle("Fox")
+            .setColor(0x1e143b)
+            .setTitle("Fox");
         if (fox.fact) embed.setDescription(fox.fact)
         if (fox.image && fox.fact) {
             embed.setThumbnail(fox.image)
         } else {
             embed.setImage(fox.image)
         }
-        return message.reply({ embeds: [embed] })
+        return message.reply({ embeds:[embed] })
 
         // just make them functions, keep it clean
         async function getFact() {
