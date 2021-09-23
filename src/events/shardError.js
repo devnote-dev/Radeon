@@ -4,12 +4,13 @@
  */
 
 const { MessageEmbed } = require('discord.js');
-const { logShard, logError } = require('../dist/console');
+const { logs } = require('../../config.json');
+const log = require('../log');
 
 exports.run = async (client, error, shard) => {
-    logShard(client, 'error', shard);
-    logError(error, __filename);
-    const c = client.channels.cache.get(client.config.logs.event);
+    log.shard(client, 'error', shard);
+    log.error(error, __filename);
+    const c = client.channels.cache.get(logs.event);
     if (!c) return;
     const e = new MessageEmbed()
         .setDescription(`<:dnd_status:882270447201316905> Shard ${shard} / ${client.shard.count} - Error\n\n${error.message}`)

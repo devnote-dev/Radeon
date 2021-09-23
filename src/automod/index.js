@@ -4,7 +4,6 @@
  * @copyright Radeon Development 2021
  */
 
-
 const { MessageEmbed } = require('discord.js');
 
 function AmodEmbed(msg, ctx) {
@@ -58,7 +57,9 @@ function handleActionLog(log, msg, ctx) {
     ctx.client.hooks.digest.set(ctx.guild.id, dghooks.push(embed));
 }
 
-exports.AmodEmbed = AmodEmbed;
-exports.ActionEmbed = ActionEmbed;
-exports.fetchHook = fetchHook;
-exports.handleActionLog = handleActionLog;
+module.exports = {
+    AmodEmbed,
+    ActionEmbed,
+    fetchHook,
+    handleActionLog
+}

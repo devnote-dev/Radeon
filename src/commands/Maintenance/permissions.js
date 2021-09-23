@@ -57,7 +57,7 @@ module.exports = {
             const res = new Permissions(bit);
             const embed = new MessageEmbed()
                 .setTitle('Permissions')
-                .setDescription(`Resovled from Bitfield **\`${bit}\`**\n\`\`\`\n${checkAdmin(res)}\n\`\`\``)
+                .setDescription(`Resovled from Bitfield **${bit}**:\n\`\`\`\n${checkAdmin(res)}\n\`\`\``)
                 .setColor(0x1e143b)
                 .setFooter(`Triggered By ${message.author.tag}`, message.author.displayAvatarURL());
             return message.channel.send({ embeds:[embed] });
@@ -68,7 +68,7 @@ module.exports = {
             if (!chan) return client.errEmb('Unknown Channel Specified.', message);
             const embed = new MessageEmbed()
                 .setTitle(`Permissions in ${chan.name}`)
-                .setDescription(`\`\`\`\n${checkAdmin(chan.permissionsFor(message.author))}\n\`\`\`\n**Bitfield:** \`${chan.permissionsFor(message.author).bitfield}\``)
+                .setDescription(`\`\`\`\n${checkAdmin(chan.permissionsFor(message.author))}\n\`\`\`\n**Bitfield:** ${chan.permissionsFor(message.author).bitfield}`)
                 .setColor(0x1e143b)
                 .setFooter(`Triggered By ${message.author.tag}`, message.author.displayAvatarURL());
             return message.channel.send({ embeds:[embed] });
@@ -102,22 +102,22 @@ module.exports = {
             }
         
         } else {
-            const target = message.mentions.members.first() || await resolveMember(message, args.raw);
+            const target = message.mentions.members.first() || await resolveMember(message, [args.raw[0]]);
             if (!target) return client.errEmb('Invalid Member Specified.', message);
             if (args.lower[1] && args.lower[1] === 'in') {
                 if (!args.raw[2]) return client.errEmb('No Channel Specified.\n```\npermissions <User:Mention/ID> in <Channel:Mention/ID>\n```', message);
-                const chan = message.mentions.channels.first() || resolveChannel(message, args.raw);
+                const chan = message.mentions.channels.first() || resolveChannel(message, [args.raw[2]]);
                 if (!chan) return client.errEmb('Unknown Channel Specified.', message);
                 const embed = new MessageEmbed()
                     .setAuthor(`Permissions for ${target.user.tag} in ${chan.name}`, target.user.displayAvatarURL())
-                    .setDescription(`\`\`\`\n${checkAdmin(chan.permissionsFor(message.author))}\n\`\`\`\n**Bitfield:** \`${chan.permissionsFor(target).bitfield}\``)
+                    .setDescription(`\`\`\`\n${checkAdmin(chan.permissionsFor(message.author))}\n\`\`\`\n**Bitfield:** ${chan.permissionsFor(target).bitfield}`)
                     .setColor(0x1e143b)
                     .setFooter(`Triggered By ${message.author.tag}`, message.author.displayAvatarURL());
                 return message.channel.send({ embeds:[embed] });
             } else {
                 const embed = new MessageEmbed()
                     .setAuthor(`Permissions of ${target.user.tag}`, target.user.displayAvatarURL())
-                    .setDescription(`\`\`\`\n${checkAdmin(target.permissions)}\n\`\`\`\n**Bitfield:** \`${target.permissions.bitfield}\``)
+                    .setDescription(`\`\`\`\n${checkAdmin(target.permissions)}\n\`\`\`\n**Bitfield:** ${target.permissions.bitfield}`)
                     .setColor(0x1e143b)
                     .setFooter(`Triggered By ${message.author.tag}`, message.author.displayAvatarURL());
                 return message.channel.send({ embeds:[embed] });

@@ -8,6 +8,7 @@ const Bans = require('./bans');
 const Guild = require('./guild');
 const Muted = require('./muted');
 const Warns = require('./warns');
+const Automod = require('./automod');
 const Settings = require('./settings');
 
 const DB = {
@@ -15,9 +16,10 @@ const DB = {
     guild: Guild,
     muted: Muted,
     warns: Warns,
+    automod: Automod,
     settings: Settings
 }
-new Guild
+
 function Database(type) {
     if (type in DB) return new DBManager(DB[type]);
     throw new Error('Unknown Database Type.');

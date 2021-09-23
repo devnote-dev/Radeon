@@ -10,18 +10,18 @@ const { logError, logWarn } = require('../dist/console');
 const { handleActionLog } = require('../automod');
 
 // Base Error Messages
-const EM = {
-    errMain: 'Radeon is currently undergoing maintenance and will be temporarily unavailable. For more information join the Support Server using the link below!\nhttps://discord.gg/xcZwGhSy4G',
-    errNoExec: (cmd) => `Command \`${cmd}\` stopped running unexpectedly.\nIf you see this error regularly, contact support via the \`@Radeon support\` command.`,
-    errNoEmbeds: 'I don\'t have permissions to send embeds here! Please enable this permission to use Radeon.',
-    errGuildOnly: 'This command can only be used in servers.',
-    errAdminOnly: 'This command is for bot admins only.',
-    errOwnerOnly: 'This command is for bot owners only.',
-    errNoBotPerms: (p) => `I am missing the \`${humanize(p).join('`, `')}\` permission(s) for this command.`,
-    errNoUserPerms: (p) => `You am missing the \`${humanize(p).join('`, `')}\` permission(s) for this command.`
+const ERRORS = {
+    main: 'Radeon is currently undergoing maintenance and will be temporarily unavailable. For more information join the Support Server using the link below!\nhttps://discord.gg/xcZwGhSy4G',
+    noExec: (cmd) => `Command \`${cmd}\` stopped running unexpectedly.\nIf you see this error regularly, contact support via the \`@Radeon support\` command.`,
+    noEmbeds: 'I don\'t have permissions to send embeds here! Please enable this permission to use Radeon.',
+    guildOnly: 'This command can only be used in servers.',
+    adminOnly: 'This command is for bot admins only.',
+    ownerOnly: 'This command is for bot owners only.',
+    noBotPerms: (p) => `I am missing the \`${humanize(p).join('`, `')}\` permission(s) for this command.`,
+    noUserPerms: (p) => `You am missing the \`${humanize(p).join('`, `')}\` permission(s) for this command.`
 }
 
-const ACTION_CMDS = [
+const ACTIONS = [
     'slowmode', 'clean', 'mute',
     'unmute', 'kick', 'ban',
     'massban', 'unban', 'lock',
@@ -30,7 +30,8 @@ const ACTION_CMDS = [
 
 exports.run = async (client, message) => {
     // Partials handling
-    if (message.partial) message = await message.fetch();
+    if (message.partial) message = await message.fetch().catch(()=>{});
+    if (!message) return;
     const { author, channel } = message;
     if (author.bot) return;
     // path for logging purposes
@@ -81,8 +82,8 @@ exports.run = async (client, message) => {
     }
 
     // Fetching server database...
-    const gData = await client.db('guild').get(message.guild.id);
-    if (!gData) {
+    const data = await client.db('guild').get(message.guild.id);
+    if (!data) {
         // fallback for servers joined while offline/during downtime
         client.emit('guildCreate', message.guild);
         // might remove logging later
@@ -96,7 +97,7 @@ exports.run = async (client, message) => {
         actionLog,
         automod,
         overrides
-    } = gData;
+    } = data;
 
     // pretty self-explanatory
     if (overrides.ignoredCmdChannels.includes(channel.id)) return;

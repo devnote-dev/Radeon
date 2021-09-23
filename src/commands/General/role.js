@@ -24,9 +24,9 @@ module.exports = {
 
         if (/(?:<@!?)?\d{17,19}>?/g.test(sub)) {
             if (!message.member.permissions.has(268435456n)) return message.channel.send('You are missing the `Manage Roles` permission(s) to use this command.');
-            const target = message.mentions.members.first() || await resolveMember(message, args.raw);
+            const target = message.mentions.members.first() || await resolveMember(message, [args.raw[0]]);
             if (!target) return client.errEmb('Invalid Member Specified.', message);
-            const role = message.mentions.roles.first() || resolveRole(message, args.raw);
+            const role = message.mentions.roles.first() || resolveRole(message, args.raw.slice(1));
             if (role instanceof Collection) {
                 const rmap = role.map(r => `• ${r.name} (ID ${r.id})`).join('\n');
                 return client.infoEmb(`More than one role found with similar names:\n\n${rmap}`, message);
@@ -78,7 +78,7 @@ module.exports = {
         } else if (sub === 'd' || sub === 'delete') {
             if (!message.member.permissions.has(268435456n)) return message.channel.send('You are missing the `Manage Roles` permission(s) to use this command.');
             if (!args.raw[1]) return client.errEmb('No Role Specified.\n```\nrole delete <Role:Name/Mention/ID>\n```', message);
-            const role = message.mentions.roles.first() || resolveRole(message, args.raw);
+            const role = message.mentions.roles.first() || resolveRole(message, args.raw.slice(1));
             if (role instanceof Collection) {
                 const rmap = role.map(r => `• ${r.name} (ID ${r.id})`).join('\n');
                 return client.infoEmb(`More than one role found with similar names:\n\n${rmap}`, message);
@@ -95,7 +95,9 @@ module.exports = {
 
         } else if (sub === 'i' || sub === 'info') {
             if (!args.raw[1]) return client.errEmb('No Role Specified.\n```\nrole info <Role:Name/Mention/ID>\n```', message);
-            require('./roleinfo').run(client, message, args.raw.slice(1));
+            args.length -= 1;
+            args.raw = args.raw.slice(1);
+            return client.commands.get('roleinfo')?.run(client, message, args);
 
         } else if (sub === 'l' || sub === 'list') {
             if (message.guild.roles.cache.size) {

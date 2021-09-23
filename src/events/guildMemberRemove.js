@@ -13,17 +13,18 @@ exports.run = async (client, member) => {
     if (!c) return;
 
     let count = 0, audit;
-    do {
-        audit = await member.guild.fetchAuditLogs({ type: 20, limit: 2 }).catch(()=>{});
-        count++;
+    while (!audit) {
+        audit = await guild.fetchAuditLogs({ type: 20, limit: 2 }).catch(()=>{});
         if (!audit) {
+            count++;
+            if (count === 3) break;
             await new Promise(res => setTimeout(res, 3000));
         } else {
             audit = audit.entries.first();
-            if (audit.target?.id === member.user.id) break;
-            continue;
+            break;
         }
-    } while (!audit && count < 4)
+    }
+
     if (audit) {
         if (audit.target.id !== member.user.id) return;
         const { reason, executor } = audit;

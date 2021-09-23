@@ -5,12 +5,13 @@
 
 const { token } = require('../config.json');
 const { ShardingManager } = require('discord.js');
-const { logShardSpawn } = require('./dist/console');
+const log = require('./log');
+
 const manager = new ShardingManager('./src/Radeon.js', {
     totalShards: 'auto',
     respawn: true,
     token
 });
 
-manager.on('shardCreate', shard => logShardSpawn(shard));
+manager.on('shardCreate', shard => log.shard.spawn(shard));
 manager.spawn();

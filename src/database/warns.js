@@ -3,18 +3,17 @@
  * @copyright Radeon Development 2021
  */
 
-
 const { Schema, model } = require('mongoose');
 
-const warnSchema = Schema({
+const Warns = Schema({
     guildID:{
-        type:      String,
-        required:  true
+        type:     String,
+        required: true
     },
-    warnList:{
-        type:       Map,
-        default:    new Map()
+    list:{
+        type:     Map,
+        default:  new Map()
     }
 });
 
-module.exports = model('Warns', warnSchema, 'Warns');
+module.exports = model('Warns', Warns);

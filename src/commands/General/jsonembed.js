@@ -15,6 +15,7 @@ module.exports = {
         if (!args.length) return client.errEmb('No JSON Provided.\n```\njsonembed <JSON:Text>\n```', channel);
         try {
             const embed = JSON.parse(args.raw.join(' '));
+            if (!Object.keys(embed).length) throw new Error('Minimum 1 field is required.');
             if (
                 embed.title === undefined &&
                 embed.url !== undefined

@@ -4,10 +4,11 @@
  * @copyright Radeon Development 2021
  */
 
-const { botReady } = require('../dist/console');
+const { logs } = require('../../config.json');
+const log = require('../log');
 
 exports.run = async client => {
-    botReady(client);
+    await log.ready(client);
     await client.user.setPresence({
         status: 'online',
         activities:[{
@@ -16,6 +17,7 @@ exports.run = async client => {
         }]
     });
     client.stats.events++;
-    const { guilds } = client.config.logs;
-    if (client.channels.cache.has(guilds)) client.channels.cache.get(guilds)?.setName(`│🌐» ${client.guilds.cache.size}`).catch(()=>{});
+    if (client.channels.cache.has(logs.guilds)) client.channels.cache.get(logs.guilds)
+        ?.setName(`│🌐» ${client.guilds.cache.size}`)
+        .catch(()=>{});
 }

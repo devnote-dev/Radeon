@@ -19,13 +19,14 @@ exports.run = async (client, guild, user) => {
         audit = await guild.fetchAuditLogs({ type: 22, limit: 2 }).catch(()=>{});
         if (!audit) {
             count++;
-            if (count == 3) break;
+            if (count === 3) break;
             await new Promise(res => setTimeout(res, 3000));
         } else {
             audit = audit.entries.first();
             break;
         }
     }
+
     if (audit) {
         const { reason, executor } = audit;
         const embed = new MessageEmbed()

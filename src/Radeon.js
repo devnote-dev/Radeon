@@ -6,6 +6,7 @@
  */
 
 const { Client, Collection, Intents:{ FLAGS }} = require('discord.js');
+const { token } = require('../config.json');
 const { readdirSync } = require('fs');
 
 const client = new Client({
@@ -25,7 +26,8 @@ const client = new Client({
     allowedMentions:{
         parse:['users'],
         repliedUser: true
-    }
+    },
+    retryLimit: 3
 });
 
 client.commands   = new Collection();
@@ -33,18 +35,15 @@ client.aliases    = new Collection();
 client.slash      = new Collection();
 client.ratelimits = new Collection();
 client.cooldowns  = new Collection();
-client.cmdlogs    = new Set();
-client.config     = require('../config.json');
 client.mongoose   = require('./mongo');
 client.db         = require('./database/manager');
-client.util       = require('./functions');
 client.hooks      = {
     cache:          new Collection(),
     digest:         new Map()
 };
 client.stats      = {
     events:     0,
-    commands:   0,
+    commands:   new Set(),
     messages:   0,
     background: 0,
     _events:    0,
@@ -57,4 +56,4 @@ readdirSync('./src/handlers/').forEach(handler => {
 });
 
 client.mongoose.init();
-client.login(client.config.token);
+client.login(token);

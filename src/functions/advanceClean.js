@@ -9,49 +9,40 @@ const { Collection } = require('discord.js');
 
 module.exports = async (message, amount, options) => {
     const { target, flagUsers, flagBots, flagNopin, flagHas, flagTo, flagEmbeds } = options;
-    let filtered = new Collection(), count = 0;
+    const filtered = new Collection();
     const messages = await message.channel.messages.fetch({ limit: 100, after: flagTo || null });
+    let count = 0;
 
-    if (target || flagUsers || flagBots) {
-        messages.forEach(msg => {
-            if (count > amount) return;
+    if (target, flagUsers, flagBots) {
+        for (const [id, msg] of messages) {
+            if (count === amount) break;
             if (target) {
                 if (msg.author.id === target) {
-                    filtered.set(msg.id, msg);
+                    filtered.set(id, msg);
                     count++;
                 }
             } else if (flagUsers) {
-                if (!msg.author.bot) {
-                    filtered.set(msg.id, msg);
+                if (msg.author.bot) {
+                    filtered.set(id, msg);
                     count++;
                 }
             } else if (flagBots) {
-                if (msg.author.bot) {
-                    filtered.set(msg.id, msg);
+                if (!msg.author.bot) {
+                    filtered.set(id, msg);
                     count++;
                 }
             }
-        });
+        }
     } else {
-        messages.forEach(msg => {
-            if (count > amount) return;
-            filtered.set(msg.id, msg);
-            count++;
-        });
+        for (const [id, msg] of messages) {
+            if (count === amount) break;
+            filtered.set(id, msg);
+        }
     }
 
-    if (flagNopin) {
-        const temp = filtered.filter(msg => !msg.pinned);
-        filtered = temp;
-    }
-    if (flagHas) {
-        const temp = filtered.filter(msg => msg.content.includes(flagHas));
-        filtered = temp;
-    }
-    if (flagEmbeds) {
-        const temp = filtered.filter(msg => msg.embeds && msg.embeds.length);
-        filtered = temp;
-    }
+    if (flagNopin) filtered.sweep(m => !m.pinned);
+    if (flagHas) filtered.sweep(m => m.content.includes(flagHas));
+    if (flagEmbeds) filtered.sweep(m => m.embeds?.length);
 
     if (filtered.size) {
         if (filtered.size === 1) {

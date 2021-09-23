@@ -20,11 +20,11 @@ module.exports = {
     roleBypass: true,
     async run(client, message, args) {
         if (!args.length) return client.errEmb('No Amount Specified.\n```\nclean <Amount:Number>\nclean <Amount:Number> [User:Mention/ID]\nclean <Amount:Number> [...Flags]\n```\n**Flags:**\n'+ flags, message);
-        let amount = parseInt(args[0]);
+        let amount = parseInt(args.raw[0]);
         if (isNaN(amount) || amount < 1 || amount > 100) return client.errEmb('Invalid amount specified. Amount must be a number between 1 and 100.', message);
         if (args.length > 1) {
             let target = '', flagUsers = false, flagBots = false, flagNopin = false, flagHas = '', flagTo = '', flagEmbeds = false;
-            const parsed = parseFlags(args.slice(1).join(' '), [
+            const parsed = parseFlags(args.lower.slice(1).join(' '), [
                 {name: 'users', type: 'bool'},
                 {name: 'bots', type: 'bool'},
                 {name: 'nopin', type: 'bool'},
