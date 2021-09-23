@@ -4,10 +4,10 @@
  */
 
 const { MessageEmbed } = require('discord.js');
-const { logShard } = require('../dist/console');
+const log = require('../log');
 
 exports.run = async (client, shard) => {
-    logShard(client, 'resume', shard);
+    log.shard(client, 'resume', shard);
     const c = client.channels.cache.get(client.config.logs.event);
     if (!c) return;
     const e = new MessageEmbed()

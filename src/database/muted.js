@@ -6,15 +6,15 @@
 
 const { Schema, model } = require('mongoose');
 
-const mutedSchema = Schema({
-    guildID: {
-        type:       String,
-        required:   true
+const Muted = Schema({
+    guildID:{
+        type:     String,
+        required: true
     },
-    mutedList:{
-        type:       Map,
-        default:    new Map()
+    list:{
+        type:     Map,
+        default:  new Map()
     }
 });
 
-module.exports = model('MutedList', mutedSchema, 'Muted');
+module.exports = model('Muted', Muted);

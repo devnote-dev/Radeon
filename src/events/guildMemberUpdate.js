@@ -6,13 +6,14 @@
 exports.run = async (client, oldMem, newMem) => {
     const { guild } = oldMem;
     const gData = await client.db('guild').get(guild.id);
-    if (!gData || !gData.muteRole) return;
+    if (!gData?.automod?.mute?.role) return;
     const mData = await client.db('muted').get(guild.id);
-    if (!mData.mutedList.length) return;
+    if (!mData.list.length) return;
+    const id = gData.automod.mute.role;
     if (newMem.partial) newMem = await newMem.fetch();
     if (
-        oldMem.roles.cache.has(gData.muteRole) &&
-        !newMem.roles.cache.has(gData.muteRole) &&
-        mData.mutedList.has(newMem.user.id)
-    ) newMem.roles.add(gData.muteRole).catch(()=>{});
+        oldMem.roles.cache.has(id) &&
+        !newMem.roles.cache.has(id) &&
+        mData.list.has(newMem.user.id)
+    ) newMem.roles.add(id).catch(()=>{});
 }

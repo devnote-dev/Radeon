@@ -3,7 +3,7 @@
  * @copyright Radeon Development 2021
  */
 
-const { logError } = require('../dist/console');
+const log = require('../log');
 
 exports.run = async (client, int) => {
     if (!int.isCommand()) return;
@@ -12,6 +12,6 @@ exports.run = async (client, int) => {
             return await client.slash.get(int.commandName)(client, int);
         }
     } catch (err) {
-        logError(err, __filename, int?.user.id);
+        log.error(err, __filename, int?.user?.id);
     }
 }

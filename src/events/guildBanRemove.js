@@ -5,7 +5,7 @@
 
 const { MessageEmbed } = require('discord.js');
 
-exports.run = async (_, guild, user) => {
+exports.run = async (client, guild, user) => {
     const db = await client.db('guild').get(guild.id);
     const { modLogs } = db;
     if (!modLogs.channel || !modLogs.bans) return;
@@ -18,13 +18,14 @@ exports.run = async (_, guild, user) => {
         audit = await guild.fetchAuditLogs({ type: 23, limit: 2 }).catch(()=>{});
         if (!audit) {
             count++;
-            if (count == 3) break;
+            if (count === 3) break;
             await new Promise(res => setTimeout(res, 3000));
         } else {
             audit = audit.entries.first();
             break;
         }
     }
+
     if (audit) {
         const { reason, executor } = audit;
         const embed = new MessageEmbed()

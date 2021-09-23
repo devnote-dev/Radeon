@@ -4,12 +4,13 @@
  */
 
 const { MessageEmbed } = require('discord.js');
-const { logShard, logWarn } = require('../dist/console');
+const { logs } = require('../../config.json');
+const log = require('../log');
 
 exports.run = async (client, event, shard) => {
-    logShard(client, 'discon', shard);
-    logWarn(event);
-    const c = client.channels.cache.get(client.config.logs.event);
+    log.shard(client, 'discon', shard);
+    console.warn(event);
+    const c = client.channels.cache.get(logs.event);
     if (!c) return;
     const e = new MessageEmbed()
         .setDescription(`<:dnd_status:882270447201316905> Shard ${shard} / ${client.shard.count} - Disconnected`)

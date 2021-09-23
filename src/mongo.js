@@ -3,10 +3,9 @@
  * @copyright Radeon Development 2021
  */
 
-
 const mongoose = require('mongoose');
 const { MongoPath } = require('../config.json');
-const { logDB } = require('./dist/console');
+const log = require('./log');
 
 module.exports = {
     init: () => {
@@ -23,8 +22,8 @@ module.exports = {
         mongoose.set('useFindAndModify', false);
         mongoose.Promise = global.Promise;
 
-        mongoose.connection.on('connected', () => logDB('connected'));
-        mongoose.connection.on('err', err => logDB('error', err));
-        mongoose.connection.on('disconnected', () => logDB('disconnected'));
+        mongoose.connection.on('connected', log.db('connected'));
+        mongoose.connection.on('err', err => log.db('error', err));
+        mongoose.connection.on('disconnected', log.db('disconnected'));
     }
 }

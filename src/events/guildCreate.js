@@ -5,18 +5,19 @@
  */
 
 const { MessageEmbed } = require('discord.js');
-const { guildPreset } = require('../database/presets');
+const presets = require('../database/presets');
 
 exports.run = async (client, guild) => {
     if (!client.guilds.cache.has(guild.id)) {
         const e = new MessageEmbed()
-        .setDescription(`<:checkgreen:796925441771438080> Joined **${guild.name}** - Active in ${client.guilds.cache.size} Servers!`)
-        .setColor(0x00d134)
-        .setTimestamp();
-        client.channels.cache.get(client.config.logs.joins)?.send(e).catch(()=>{});
+            .setDescription(`<:checkgreen:796925441771438080> Joined **${guild.name}** - Active in ${client.guilds.cache.size} Servers!`)
+            .setColor(0x00d134)
+            .setTimestamp();
+        client.channels.cache.get(client.config.logs.joins)?.send({ embeds:[e] }).catch(()=>{});
     }
     console.log(`\nMONGO | Guild Added: ${guild.name} (${guild.id})`);
-    await client.db('guild').create(guildPreset(guild.id));
-    await client.db('muted').create({ guildID: guild.id });
-    await client.db('warns').create({ guildID: guild.id });
+    await client.db('guild').create(presets.guild(guild.id));
+    await client.db('automod').create(presets.automod(guild.id));
+    await client.db('muted').create(presets.muted(guild.id));
+    await client.db('warns').create(presets.warns(guild.id));
 }

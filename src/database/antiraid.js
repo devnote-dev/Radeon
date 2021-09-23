@@ -3,7 +3,6 @@
  * @copyright Radeon Development 2021
  */
 
-
 const { Schema, model } = require('mongoose');
 
 const antiraidSchema = Schema({

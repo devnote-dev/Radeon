@@ -17,7 +17,7 @@ module.exports = {
     guildOnly: true,
     async run(client, message, args) {
         if (!args.length) return client.errEmb(`No Arguments Provided.\n\`\`\`\n${usage}\n\`\`\``, message);
-        const flags = parseFlags(args.join(' '), [
+        const flags = parseFlags(args.raw.join(' '), [
             {name: 'raw', type: 'string', quotes: true},
             {name: 'author', type: 'string', quotes: true},
             {name: 'aicon', type: 'string'},

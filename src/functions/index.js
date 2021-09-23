@@ -56,7 +56,7 @@ function toDurationDays(ms) {
 }
 
 function isBotStaff(id) {
-    if (botOwners.includes(id) || botAdmins.includes(id)) return true; else return false;
+    return botOwners.includes(id) || botAdmins.includes(id);
 }
 
 function isBotOwner(id) { return botOwners.includes(id) }
@@ -147,13 +147,15 @@ function resolveChannel(ctx, args) {
     return ctx.channels.cache.filter(r => r.name.includes(args));
 }
 
-exports.toDurationDefault = toDurationDefault;
-exports.toDurationLong = toDurationLong;
-exports.toDurationDays = toDurationDays;
-exports.isBotStaff = isBotStaff;
-exports.isBotOwner = isBotOwner;
-exports.humanize = humanize;
-exports.choose = choose;
-exports.resolveRole = resolveRole;
-exports.resolveMember = resolveMember;
-exports.resolveChannel = resolveChannel;
+module.exports = {
+    toDurationDefault,
+    toDurationLong,
+    toDurationDays,
+    isBotStaff,
+    isBotOwner,
+    humanize,
+    choose,
+    resolveRole,
+    resolveMember,
+    resolveChannel
+}
