@@ -26,8 +26,7 @@ const client = new Client({
     allowedMentions:{
         parse:['users'],
         repliedUser: true
-    },
-    retryLimit: 3
+    }
 });
 
 client.commands   = new Collection();
@@ -35,7 +34,6 @@ client.aliases    = new Collection();
 client.slash      = new Collection();
 client.ratelimits = new Collection();
 client.cooldowns  = new Collection();
-client.mongoose   = require('./mongo');
 client.db         = require('./database/manager');
 client.hooks      = {
     cache:          new Collection(),
@@ -55,5 +53,5 @@ readdirSync('./src/handlers/').forEach(handler => {
     require(`./handlers/${handler}`)(client);
 });
 
-client.mongoose.init();
+require('./mongo')();
 client.login(token);
