@@ -5,8 +5,9 @@
  * @copyright Radeon Development 2021
  */
 
-const { isBotStaff, isBotOwner, humanize } = require('../dist/functions');
+const { isBotStaff, isBotOwner, humanize } = require('../functions');
 const { handleActionLog } = require('../automod');
+const config = require('../../config.json');
 const log = require('../log');
 
 // Base Error Messages
@@ -59,7 +60,6 @@ exports.run = async (client, message) => {
             if (isBotStaff(author.id)) {
                 try {
                     _logcmd(client, author, command, channel);
-                    client.stats.commands++;
                     return await command.run(client, message, args);
                 } catch (err) {
                     log.error(err, path, author.id);
@@ -71,7 +71,6 @@ exports.run = async (client, message) => {
         } else {
             try {
                 _logcmd(client, author, command, channel);
-                client.stats.commands++;
                 return await command.run(client, message, args);
             } catch (err) {
                 log.error(err, path, author.id);
@@ -85,7 +84,7 @@ exports.run = async (client, message) => {
     const aData = await client.db('automod').get(message.guild.id);
     if (!gData || !aData) {
         // fallback for servers joined while offline/during downtime
-        client.emit('guildCreate', message.guild);
+        return client.emit('guildCreate', message.guild);
     }
 
     // extracting all the necessary info
@@ -97,15 +96,15 @@ exports.run = async (client, message) => {
     client.stats.messages++;
     if (
         message.content.toLowerCase().startsWith(prefix)
-        || message.content.toLowerCase().startsWith(client.config.prefix)
+        || message.content.toLowerCase().startsWith(config.prefix)
         || new RegExp(`^<@!?${client.user.id}>\\s+`, 'gi').test(message.content)
     ) {
         // Getting arguments, much cleaner now :D
         let args;
         if (message.mentions.users.size) {
             args = message.content.trim().split(/\s+|\\?\n+/g).slice(1);
-        } else if (message.content.toLowerCase().startsWith(client.config.prefix)) {
-            args = message.content.slice(client.config.prefix.length).trim().split(/\s+|\\?\n+/g);
+        } else if (message.content.toLowerCase().startsWith(config.prefix)) {
+            args = message.content.slice(config.prefix.length).trim().split(/\s+|\\?\n+/g);
         } else {
             args = message.content.slice(prefix.length).trim().split(/\s+|\\?\n+/g);
         }
@@ -170,7 +169,6 @@ exports.run = async (client, message) => {
         // After all checks have passed, log & run the command
         try {
             _logcmd(client, author, command, channel);
-            client.stats.commands++;
             await command.run(client, message, args);
             handleActionLog(actionLog, args, message);
             if (deleteAfterExec && ACTIONS.includes(command.name)) message.delete().catch(()=>{});
@@ -209,7 +207,7 @@ exports.run = async (client, message) => {
 
 // Internal command logging
 function _logcmd(client, user, command, channel) {
-    client.cmdlogs.add({
+    client.stats.commands.add({
         user:       user.id,
         command:    command.name,
         channel:{
@@ -218,7 +216,6 @@ function _logcmd(client, user, command, channel) {
         },
         time:       new Date().toLocaleString()
     });
-    return;
 }
 
 // Command cooldown handling
