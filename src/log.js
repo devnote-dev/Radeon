@@ -20,10 +20,10 @@ async function ready(bot) {
     let fmt = `${BOLD}\n${PURPLE}Radeon is ready!${RESET}\n\n`;
     fmt += `${PURPLE + bot.stats._events.toString() + RESET} Events loaded\n`;
     fmt += `${GREEN + bot.stats.commands.size.toString() + RESET} Commands loaded\n`;
-    fmt += `${RED + bot.stats._failed.toString() + RESET} Commands failed`;
-    if (bot.stats._failed.length) fmt += ':\n' + bot.stats._failed.map(c => `- ${RED + c + RESET}`).join('\n');
-    fmt += `\nReady at: ${bot.readyAt.toLocaleString()}\nServers: ${bot.guilds.cache.size}\n`;
-    fmt += `Maintenance: ${db.maintenance}\nCycle: ${db.cycleStatus}`;
+    fmt += `${RED + bot.stats._failed.length.toString() + RESET} Commands failed`;
+    if (bot.stats._failed.length) fmt += ':\n' + bot.stats._failed.map(c => `${RED}- ${c + RESET}`).join('\n');
+    fmt += `\n\nReady at: ${bot.readyAt.toLocaleString()}\nServers: ${bot.guilds.cache.size}\n`;
+    fmt += `Maintenance: ${db?.maintenance || 'unknown'}\nCycle: ${db?.cycleStatus ||'unknown'}`;
     return log(fmt);
 }
 
@@ -48,13 +48,13 @@ function db(state, data) {
     let fmt;
     switch (state) {
         case 'connected':
-            log = `${GREEN}MONGO${RESET} | Connected`;
+            fmt = `${GREEN}MONGO${RESET} | Connected`;
             break;
         case 'error':
-            log = `${YELLOW}MONGO${RESET} | Error: ${data || 'Data Unavailable'}`;
+            fmt = `${YELLOW}MONGO${RESET} | Error: ${data || 'Data Unavailable'}`;
             break;
         case 'disconnected':
-            log = `${RED}MONGO${RESET} | Disconnected`;
+            fmt = `${RED}MONGO${RESET} | Disconnected`;
             break;
     }
     return log(fmt);
@@ -86,7 +86,7 @@ function error(err, path, user) {
     } else if (path.includes('/')) {
         path = path.split('/').pop();
     }
-    let fmt = `${RED}ERROR${RESET} | ${err.name}\nPath: ${path}\nUser: ${user || 'internal'}\nMessage: ${err.message}\n`;
+    let fmt = `${RED}ERROR${RESET} | ${err.name}\nPath: ${path}\nUser: ${user || 'internal'}\nMessage: ${err.stack}\n`;
     return log(SMALL +'\n'+ fmt);
 }
 
