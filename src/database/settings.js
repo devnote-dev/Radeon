@@ -10,14 +10,9 @@ const Settings = Schema({
         type:     String,
         required: true
     },
-    maintenance:{
-        type:     Boolean,
-        default:  false
-    },
-    cycleStatus:{
-        type:     Boolean,
-        default:  true
-    }
+    maintenance:  Boolean,
+    cycleStatus:  Boolean,
+    lastStatus:   String
 });
 
 module.exports = model('Settings', Settings);

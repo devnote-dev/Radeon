@@ -10,10 +10,7 @@ const Warns = Schema({
         type:     String,
         required: true
     },
-    list:{
-        type:     Map,
-        default:  new Map()
-    }
+    list:         Map
 });
 
 module.exports = model('Warns', Warns);
