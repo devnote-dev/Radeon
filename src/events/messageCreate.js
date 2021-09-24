@@ -6,8 +6,8 @@
  */
 
 const { isBotStaff, isBotOwner, humanize } = require('../dist/functions');
-const { logError, logWarn } = require('../dist/console');
 const { handleActionLog } = require('../automod');
+const log = require('../log');
 
 // Base Error Messages
 const ERRORS = {
@@ -40,7 +40,7 @@ exports.run = async (client, message) => {
     // maintenance mode checks
     const state = await client.db('settings').get(client.user.id);
     let lock = false;
-    if (state && state.maintenance) {
+    if (state?.maintenance) {
         if (!isBotOwner(author.id)) lock = true;
     }
 
@@ -52,52 +52,45 @@ exports.run = async (client, message) => {
         if (!cmd.length) return;
         let command = client.commands.get(cmd) || client.commands.get(client.aliases.get(cmd));
         if (!command) return;
-        if (lock) return channel.send(EM.errMain);
+        if (lock) return channel.send(ERRORS.main);
         if (command.guildOnly) {
-            return channel.send(EM.errGuildOnly);
+            return channel.send(ERRORS.guildOnly);
         } else if (command.modOnly) {
             if (isBotStaff(author.id)) {
                 try {
-                    logcmd(client, author, command, channel);
+                    _logcmd(client, author, command, channel);
                     client.stats.commands++;
-                    await command.run(client, message, args);
+                    return await command.run(client, message, args);
                 } catch (err) {
-                    logError(err, path, author.id);
-                    return channel.send(EM.errNoExec(command.name));
+                    log.error(err, path, author.id);
+                    return channel.send(ERRORS.noExec(cmd.name));
                 }
             } else if (command.modOnly === 'warn') {
-                return channel.send(EM.errOwnerOnly);
+                return channel.send(ERRORS.ownerOnly);
             } else if (command.modOnly === 'void') return;
         } else {
             try {
-                logcmd(client, author, command, channel);
+                _logcmd(client, author, command, channel);
                 client.stats.commands++;
-                await command.run(client, message, args);
+                return await command.run(client, message, args);
             } catch (err) {
-                logError(err, path, author.id);
-                return channel.send(EM.errNoExec(command.name));
+                log.error(err, path, author.id);
+                return channel.send(ERRORS.noExec(command.name));
             }
         }
-        return;
     }
 
     // Fetching server database...
-    const data = await client.db('guild').get(message.guild.id);
-    if (!data) {
+    const gData = await client.db('guild').get(message.guild.id);
+    const aData = await client.db('automod').get(message.guild.id);
+    if (!gData || !aData) {
         // fallback for servers joined while offline/during downtime
         client.emit('guildCreate', message.guild);
-        // might remove logging later
-        logWarn(`MessageEvent guildCreate fired\n\nServer: ${message.guild.id}`);
     }
 
     // extracting all the necessary info
-    const {
-        prefix,
-        deleteAfterExec,
-        actionLog,
-        automod,
-        overrides
-    } = data;
+    const { prefix, deleteAfterExec, actionLog } = gData;
+    const { overrides } = aData;
 
     // pretty self-explanatory
     if (overrides.ignoredCmdChannels.includes(channel.id)) return;
@@ -121,28 +114,28 @@ exports.run = async (client, message) => {
         if (!args.length) return;
         const cmd = args.shift().toLowerCase();
         if (!cmd.length) return;
-        let command = client.commands.get(cmd) || client.commands.get(client.aliases.get(cmd));
+        const command = client.commands.get(cmd) || client.commands.get(client.aliases.get(cmd));
         if (!command) return;
-        if (lock) return channel.send(EM.errNoExec(command.name));
+        if (lock) return channel.send(ERRORS.noExec(cmd.name));
         if (overrides.ignoredCommands.includes(command.name)) return;
 
         // Checks for servers with shitty channel perms
         if (!channel.permissionsFor(message.guild.me).has(2048n)) return;
-        if (!channel.permissionsFor(message.guild.me).has(16384n)) return channel.send(EM.errNoEmbeds);
+        if (!channel.permissionsFor(message.guild.me).has(16384n)) return channel.send(ERRORS.noEmbeds);
 
         // Simplify handling cooldowns down to one line
-        if (runCooldown(client, message, command)) return;
+        if (_runCooldown(client, message, command)) return;
 
         // Handling staff commands
         if (command.modOnly) {
             if (command.modOnly < 3) {
                 if (!isBotOwner(author.id)) {
-                    if (command.modOnly === 2) message.reply(EM.errOwnerOnly);
+                    if (command.modOnly === 2) message.reply(ERRORS.ownerOnly);
                     return;
                 }
             } else {
                 if (!isBotStaff(author.id)) {
-                    if (command.modOnly === 4) message.reply(EM.errAdminOnly);
+                    if (command.modOnly === 4) message.reply(ERRORS.adminOnly);
                     return;
                 }
             }
@@ -176,21 +169,21 @@ exports.run = async (client, message) => {
 
         // After all checks have passed, log & run the command
         try {
-            logcmd(client, author, command, channel);
+            _logcmd(client, author, command, channel);
             client.stats.commands++;
             await command.run(client, message, args);
             handleActionLog(actionLog, args, message);
-            if (deleteAfterExec && ACTION_CMDS.includes(command.name)) message.delete().catch(()=>{});
+            if (deleteAfterExec && ACTIONS.includes(command.name)) message.delete().catch(()=>{});
         } catch (err) {
-            logError(err, path, author.id);
-            return channel.send(EM.errNoExec(command.name));
+            log.error(err, path, author.id);
+            return channel.send(ERRORS.noExec(command.name));
         }
 
     } else {
         // Processing for automod
         if (!automod.active) return;
         // permissions shit again
-        if (!channel.permissionsFor(message.guild.me).has(10240n)) return; // 26624
+        if (!channel.permissionsFor(message.guild.me).has(10240n)) return; // TODO: 26624
         // Make sure we dont trigger on ignored roles
         const bypass = message.member.roles.cache.some(r => overrides.ignoredAutomodRoles.includes(r.id));
         if (bypass) return;
@@ -198,14 +191,14 @@ exports.run = async (client, message) => {
             try {
                 await require('../automod/main')(message, automod);
             } catch (err) {
-                logError(err, path);
+                log.error(err, path);
             }
         }
         if (automod.ratelimit) {
             try {
                 await require('../automod/ratelimit')(client, message, automod);
             } catch (err) {
-                logError(err, path);
+                log.error(err, path);
             }
         }
         // if (automod.filter.active || automod.zalgo.active) {
@@ -215,7 +208,7 @@ exports.run = async (client, message) => {
 }
 
 // Internal command logging
-function logcmd(client, user, command, channel) {
+function _logcmd(client, user, command, channel) {
     client.cmdlogs.add({
         user:       user.id,
         command:    command.name,
@@ -229,7 +222,7 @@ function logcmd(client, user, command, channel) {
 }
 
 // Command cooldown handling
-function runCooldown(client, message, command) {
+function _runCooldown(client, message, command) {
     if (!command.cooldown) return;
     const { author: user } = message;
     if (client.cooldowns.has(user.id)) {
