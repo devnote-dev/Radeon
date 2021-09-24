@@ -4,8 +4,8 @@
  */
 
 const { CronJob } = require('cron');
-const { logError } = require('../dist/console');
 const { fetchHook } = require('../automod');
+const log = require('../log');
 
 module.exports = async client => {
     // Scheduled Mutes Handler
@@ -14,20 +14,20 @@ module.exports = async client => {
         try {
             const mData = await client.db('muted').getAll();
             mData.forEach(async GS => {
-                GS.mutedList.forEach((k,v) => {
+                GS.muted.forEach((k,v) => {
                     if (k == null) return;
                     if (Date.now() > k) remove.push(v);
                 });
                 if (remove.length) {
-                    const temp = GS.mutedList;
+                    const temp = GS.muted;
                     remove.forEach(i => temp.delete(i));
-                    await client.db('muted').update(GS.guildID, { mutedList: temp });
+                    await client.db('muted').update(GS.guildID, { muted: temp });
                     remove.forEach(i => require('../commands/Moderation/unmute')._selfexec(client, GS.guildID, i));
                 }
             });
             client.stats.background++;
         } catch (err) {
-            logError(err, __filename);
+            log.error(err, __filename);
         }
     });
 
@@ -56,7 +56,7 @@ module.exports = async client => {
         }
     });
 
-    scheduleUnmuteCron.start();
-    scheduleStatusCron.start();
-    scheduleWHooksCron.start();
+    // scheduleUnmuteCron.start();
+    // scheduleStatusCron.start();
+    // scheduleWHooksCron.start();
 }
