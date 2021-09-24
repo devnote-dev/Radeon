@@ -4,6 +4,7 @@
  */
 
 const { MessageEmbed } = require('discord.js');
+const { logs } = require('../../config.json');
 const log = require('../log');
 
 exports.run = (client, ratelimit) => {
@@ -17,7 +18,7 @@ exports.run = (client, ratelimit) => {
             {name: 'Source (Route)', value: `\`\`\`\n${ratelimit.route}\n\`\`\``, inline: false}
         )
         .setTimestamp();
-    client.channels.cache.get(client.config.logs.error).send({ embeds:[e] })
+    client.channels.cache.get(logs.error).send({ embeds:[e] })
     .catch(() => {
         log.error(`Ratelimit
         Limit: ${ratelimit.limit}

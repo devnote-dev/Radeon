@@ -6,6 +6,7 @@
 
 const { MessageEmbed } = require('discord.js');
 const presets = require('../database/presets');
+const { logs } = require('../../config.json');
 
 exports.run = async (client, guild) => {
     if (!client.guilds.cache.has(guild.id)) {
@@ -13,7 +14,7 @@ exports.run = async (client, guild) => {
             .setDescription(`<:checkgreen:796925441771438080> Joined **${guild.name}** - Active in ${client.guilds.cache.size} Servers!`)
             .setColor(0x00d134)
             .setTimestamp();
-        client.channels.cache.get(client.config.logs.joins)?.send({ embeds:[e] }).catch(()=>{});
+        client.channels.cache.get(logs.joins)?.send({ embeds:[e] }).catch(()=>{});
     }
     console.log(`\nMONGO | Guild Added: ${guild.name} (${guild.id})`);
     await client.db('guild').create(presets.guild(guild.id));
