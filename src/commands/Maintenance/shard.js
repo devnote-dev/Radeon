@@ -13,13 +13,21 @@ module.exports = {
     usage: 'shard [Guild:ID]',
     cooldown: 2,
     guildOnly: true,
+    options:[{
+        name: 'server',
+        type: 'NUMBER',
+        description: 'The server ID of the shard',
+        required: false
+    }],
+
     run(client, message, args) {
         let server = message.guild;
-        if (args.length) server = client.guilds.cache.get(args[0]);
-        if (!server) return client.errEmb('Invalid or Unknown Server ID.', message);
-        if (!server.available) return client.errEmb('This Guild is Unavailable at this time.', message);
+        if (args.length) server = client.guilds.cache.get(args.raw[0]);
+        if (!server) return client.errEmb('Invalid or unknown server ID.', message);
+        if (!server.available) return client.errEmb('This server is unavailable at this time.', message);
 
         const shard = server.shard;
+        let sstatus;
         switch (shard.status) {
             case 0:
                 sstatus = 'Ready'; break;
@@ -51,5 +59,10 @@ module.exports = {
             .setColor(0x1e143b)
             .setFooter(`Triggered by ${message.author.tag}`, message.author.displayAvatarURL());
         return message.channel.send({ embeds:[embed] });
+    },
+
+    slash(client, { message, options }) {
+        const id = options.get('server')?.value;
+        this.run(client, message, { raw: id ?? null });
     }
 }

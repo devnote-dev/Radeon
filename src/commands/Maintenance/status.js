@@ -13,6 +13,7 @@ module.exports = {
     tag: 'Sends Radeon\'s status',
     description: 'Sends the bot\'s status for that guild.',
     cooldown: 5,
+
     run(client, message) {
         const { heapUsed, heapTotal } = process.memoryUsage();
         const embed = new MessageEmbed()
@@ -32,5 +33,7 @@ module.exports = {
             .addField('Memory', `${Math.floor(heapUsed / 1024)}/${Math.floor(heapTotal / 1024)} MB (${Math.floor((heapUsed / heapTotal) * 100)}%)`, true)
             .setFooter(`Triggered By ${message.author.tag}`, message.author.displayAvatarURL());
         return message.channel.send({ embeds:[embed] });
-    }
+    },
+
+    slash(client, { message }) { this.run(client, message) }
 }
