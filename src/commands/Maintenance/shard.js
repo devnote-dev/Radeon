@@ -50,7 +50,8 @@ module.exports = {
         const embed = new MessageEmbed()
             .setTitle('Shard Info')
             .addFields(
-                {name: 'Guild', value: `${server.name} (ID ${server.id})`, inline: false},
+                {name: 'Guild', value: server.name, inline: false},
+                {name: 'ID', value: server.id.toString(), inline: false},
                 {name: 'Shard ID', value: shard.id.toString(), inline: true},
                 {name: 'Status', value: sstatus, inline: true},
                 {name: 'Ping', value: `${shard.ping}ms`, inline: true},

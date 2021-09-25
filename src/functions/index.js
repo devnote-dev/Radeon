@@ -98,35 +98,33 @@ function choose(args, options, not) {
 
 /**
  * Resolves a role from a name, ID, or object.
- * @param {string|Message|GuildMember} ctx The context to resolve from.
- * @param {string[]} args Arguments to resolve from.
+ * @param {Message|GuildMember} ctx The context to resolve from.
+ * @param {string|string[]} args Arguments to resolve from.
  * @returns {?Role|Collection<string, Role>}
  */
-function resolveRole(ctx, args) {
-    args = args.join(' ').toLowerCase();
-    if (ctx instanceof Message || ctx instanceof GuildMember) ctx = ctx.guild;
+function resolveRole({ guild }, args) {
+    args = Array.isArray(args) ? args.join(' ').toLowerCase() : args;
 
-    let role = ctx.roles.resolve(args);
+    let role = guild.roles.resolve(args);
     if (role) return role;
-    role = ctx.roles.cache.filter(r => r.name.toLowerCase().includes(args));
+    role = guild.roles.cache.filter(r => r.name.toLowerCase().includes(args));
     return role.size > 1 ? role : role.first();
 }
 
 /**
  * Resolves a member from a name, nickname, ID, or object.
- * @param {string|Message|GuildMember} ctx The context to resolve from.
- * @param {string[]} args Arguments to resolve from.
- * @returns {Promise<GuildMember | void>}
+ * @param {Message|GuildMember} ctx The context to resolve from.
+ * @param {string|string[]} args Arguments to resolve from.
+ * @returns {Promise<?GuildMember>}
  */
-async function resolveMember(ctx, args) {
-    args = args.join(' ');
-    if (ctx instanceof Message || ctx instanceof GuildMember) ctx = ctx.guild;
+async function resolveMember({ guild }, args) {
+    args = Array.isArray(args) ? args.join(' ').toLowerCase() : args;
 
-    let member = ctx.members.resolve(args);
+    let member = guild.members.resolve(args);
     if (member) return Promise.resolve(member);
-    member = await ctx.members.search({ query: args });
+    member = await guild.members.search({ query: args });
     if (member) return member.size > 1 ? member : member.first();
-    member = await ctx.members.fetch(member).catch(()=>{});
+    member = await guild.members.fetch(member).catch(()=>{});
     return member instanceof Collection && member.size === 1
         ? member.first()
         : member
@@ -134,17 +132,16 @@ async function resolveMember(ctx, args) {
 
 /**
  * Resolves a channel from a name, ID, or object.
- * @param {string|Message} ctx The context to resolve from.
- * @param {string[]} args Arguments to resolve from.
+ * @param {Message|GuildMember} ctx The context to resolve from.
+ * @param {string|string[]} args Arguments to resolve from.
  * @returns {?GuildChannel}
  */
-function resolveChannel(ctx, args) {
-    args = args.join('-').toLowerCase();
-    if (ctx instanceof Message) ctx = ctx.guild;
+function resolveChannel({ guild }, args) {
+    args = Array.isArray(args) ? args.join('-').toLowerCase() : args;
 
-    const chan = ctx.channels.resolve(args);
+    const chan = guild.channels.resolve(args);
     if (chan) return chan;
-    return ctx.channels.cache.filter(r => r.name.includes(args));
+    return guild.channels.cache.filter(r => r.name.includes(args));
 }
 
 module.exports = {

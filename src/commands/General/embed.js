@@ -15,8 +15,9 @@ module.exports = {
     usage,
     cooldown: 3,
     guildOnly: true,
+
     async run(client, message, args) {
-        if (!args.length) return client.errEmb(`No Arguments Provided.\n\`\`\`\n${usage}\n\`\`\``, message);
+        if (!args.length) return client.error(`Insufficient Arguments\n\`\`\`\n${usage}\n\`\`\``, message);
         const flags = parseFlags(args.raw.join(' '), [
             {name: 'raw', type: 'string', quotes: true},
             {name: 'author', type: 'string', quotes: true},
@@ -73,7 +74,7 @@ module.exports = {
             try {
                 return await message.channel.send({ content, embeds:[embed] });
             } catch (err) {
-                return client.errEmb(err.message, message);
+                return client.error(err.message, message);
             }
         } else {
             return message.channel.send('No flags Provided.');

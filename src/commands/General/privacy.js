@@ -11,6 +11,7 @@ module.exports = {
     tag: 'Sends Radeon\'s privacy policy.',
     description: 'Sends Radeon\'s privacy policy and information on data collected.',
     cooldown: 2,
+
     run(_, { channel, author }) {
         const embed = new MessageEmbed()
             .setTitle('Radeon Privacy Policy')
@@ -22,5 +23,7 @@ module.exports = {
             .setColor(0x1e143b)
             .setFooter(`Triggered By ${author.tag}`, author.displayAvatarURL());
         return channel.send({ embeds:[embed] });
-    }
+    },
+
+    slash(client, { message }) { this.run(client, message) }
 }

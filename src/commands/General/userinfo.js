@@ -15,10 +15,11 @@ module.exports = {
     usage: 'userinfo [User:Mention/ID]',
     cooldown: 8,
     guildOnly: true,
+
     async run(client, message, args) {
         let target = message.member;
         if (args.length) target = message.mentions.members.first() || await resolveMember(message, args.raw);
-        if (!target) return client.errEmb('Invalid Member Specified.', message);
+        if (!target) return client.error('Invalid Member Specified.', message);
         message.channel.startTyping();
         if (target.partial) target = await target.fetch();
         const member = target;

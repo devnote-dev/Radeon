@@ -18,6 +18,7 @@ module.exports = {
     description: 'Permissions Tools: can send the permissions of a specified user or triggering user, and permissions in a specified channel.',
     usage:'permissions [User:Mention/ID]\npermissions <User:Mention/ID> in <Channel:Mention/ID>\npermissions in <Channel:Mention/ID>\npermissions create <Permission:Name>; ...;\npermissions resolve <Bitfield:Number>',
     guildOnly: true,
+
     async run(client, message, args) {
         if (!args.length) {
             const embed = new MessageEmbed()
@@ -27,9 +28,9 @@ module.exports = {
                 .setFooter(`Triggered By ${message.author.tag}`, message.author.displayAvatarURL());
             return message.channel.send({ embeds:[embed] });
         }
-        
+
         const sub = args.lower[0];
-        if (sub == 'create') {
+        if (sub === 'create') {
             if (!args.raw[1]) return client.errEmb('No Permissions Specified.\nMake sure each permission is separated by **;**.\n```\npermissions create <Permission:Name>; ...;\n```', message);
             let perms = args.upper.slice(1).join(' ');
             perms = perms.includes(';')
@@ -49,8 +50,8 @@ module.exports = {
                 .setColor(0x1e143b)
                 .setFooter(`Triggered By ${message.author.tag}`, message.author.displayAvatarURL());
             return message.channel.send({ embeds:[embed] });
-        
-        } else if (sub == 'resolve') {
+
+        } else if (sub === 'resolve') {
             if (!args.raw[1]) return client.errEmb('No Permission Bitfield Provided.\n```\npermissions resolve <Bitfield:Number>\n```', message);
             if (/[^0-9]+n?/gm.test(args.raw[1])) return client.errEmb('Invalid Bitfield Provided.', message);
             const bit = BigInt(args.raw[1]);
@@ -61,8 +62,8 @@ module.exports = {
                 .setColor(0x1e143b)
                 .setFooter(`Triggered By ${message.author.tag}`, message.author.displayAvatarURL());
             return message.channel.send({ embeds:[embed] });
-        
-        } else if (sub == 'in') {
+
+        } else if (sub === 'in') {
             if (!args.raw[1]) return client.errEmb('No Channel Specified.\n```\npermissions in <Channel:Mention/ID>\n```', message);
             const chan = message.mentions.channels.first() || resolveChannel(message, args.raw);
             if (!chan) return client.errEmb('Unknown Channel Specified.', message);
@@ -72,8 +73,8 @@ module.exports = {
                 .setColor(0x1e143b)
                 .setFooter(`Triggered By ${message.author.tag}`, message.author.displayAvatarURL());
             return message.channel.send({ embeds:[embed] });
-        
-        } else if (sub == 'diff') {
+
+        } else if (sub === 'diff') {
             if (!args[2]) return client.errEmb('Insufficient Arguments\n```\npermissions diff <User/Channel/Role> <User/Channel/Role>\n```', message);
             let ent1, ent2;
 
@@ -100,7 +101,7 @@ module.exports = {
                     .setFooter(`Triggered By ${message.author.tag}`, message.author.displayAvatarURL());
                 return message.channel.send({ embeds:[embed] });
             }
-        
+
         } else {
             const target = message.mentions.members.first() || await resolveMember(message, [args.raw[0]]);
             if (!target) return client.errEmb('Invalid Member Specified.', message);
@@ -123,7 +124,9 @@ module.exports = {
                 return message.channel.send({ embeds:[embed] });
             }
         }
-    }
+    },
+
+    async slash(client, { message }) { await this.run(client, message) }
 }
 
 function checkAdmin(p) {

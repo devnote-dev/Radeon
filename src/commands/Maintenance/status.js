@@ -5,6 +5,7 @@
 
 const { version: dcversion, MessageEmbed } = require('discord.js');
 const { join } = require('path');
+const { botOwners } = require('../../../config.json');
 const { version } = require(join(process.cwd(), 'package.json')); 
 const { toDurationDefault } = require('../../functions');
 
@@ -20,7 +21,7 @@ module.exports = {
             .setTitle('Radeon Status (Total)')
             .setThumbnail(client.user.displayAvatarURL())
             .setColor(0x1e143b)
-            .addField('Owners', `<@${client.config.botOwners.join('>\n<@')}>`, true)
+            .addField('Owners', `<@${botOwners.join('>\n<@')}>`, true)
             .addField('Version', version, true)
             .addField('Discord.js', dcversion, true)
             .addField('NodeJS', process.version, true)
@@ -28,7 +29,7 @@ module.exports = {
             .addField('Servers', client.guilds.cache.size.toString(), true)
             .addField('Channels', client.channels.cache.size.toString(), true)
             .addField('Users', client.users.cache.size.toString(), true)
-            .addField('Stats', `${client.stats.commands} Commands ran\n${client.stats.events} Events processed\n${client.stats.messages} Messages seen\n${client.stats.background} Background Tasks ran`, true)
+            .addField('Stats', `${client.stats.commands.size} Commands ran\n${client.stats.events} Events processed\n${client.stats.messages} Messages seen\n${client.stats.background} Background Tasks ran`, true)
             .addField('Uptime', toDurationDefault(Date.now() - client.uptime).replace('ago', ''), true)
             .addField('Memory', `${Math.floor(heapUsed / 1024)}/${Math.floor(heapTotal / 1024)} MB (${Math.floor((heapUsed / heapTotal) * 100)}%)`, true)
             .setFooter(`Triggered By ${message.author.tag}`, message.author.displayAvatarURL());

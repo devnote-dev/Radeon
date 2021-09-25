@@ -17,6 +17,13 @@ module.exports = {
     usage: 'help [Command:Name/Alias]\nhelp [Category]',
     cooldown: 3,
     guildOnly: false,
+    options:[{
+        name: 'command',
+        type: 'STRING',
+        description: 'The command to get help for.',
+        required: false
+    }],
+
     run(client, message, args) {
         if (args.length) {
             let valid = false;
@@ -105,5 +112,12 @@ module.exports = {
                 .setColor(0x1e143b);
             return message.channel.send({ embeds:[embed] });
         }
+    },
+
+    slash(client, { message, options }) {
+        const cmd = options.get('command')?.value;
+        let args = { length: 0 }
+        if (cmd) args = { length: 1, lower:[cmd.toLowerCase()] }
+        this.run(client, message, args);
     }
 }

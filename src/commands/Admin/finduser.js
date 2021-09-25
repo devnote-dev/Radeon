@@ -5,26 +5,25 @@
 
 const { MessageEmbed, GuildMember, Collection } = require('discord.js');
 const { toDurationDefault, resolveMember } = require('../../functions');
-const { logError } = require('../../dist/console');
+const log = require('../../log');
 
 module.exports = {
     name: 'finduser',
-    aliases: ['find-user'],
     description: 'Fetches a user globally.',
     usage: 'finduser <User:Name/Mention/ID>',
     guildOnly: false,
     modOnly: 4,
     async run(client, message, args) {
-        if (!args.length) return client.errEmb('No User Specified\n```\nfinduser <User:Name/Mention/ID>\n```', message);
+        if (!args.length) return client.error('No User Specified\n```\nfinduser <User:Name/Mention/ID>\n```', message);
         let user = await resolveMember(message, args.raw);
         if (!user) {
-            if (/\D+/g.test(args.raw.join(' '))) return client.errEmb('User Not Found. Try using user ID.', message);
+            if (/\D+/g.test(args.raw.join(' '))) return client.error('User not found. Try using user ID.', message);
             try {
                 user = await client.users.fetch(args.raw.join(' '), true);
-                if (!user) return client.errEmb('User is not available.', message);
+                if (!user) return client.error('User not found.', message);
             } catch (err) {
-                logError(err.message, message.guild.id+'/'+message.channel.id, message.author.id);
-                return client.errEmb('User is not available.', message);
+                log.error(err, message, message.author.id);
+                return client.error('User is not available.', message);
             }
         }
         if (user instanceof Collection) user = user.first();
@@ -46,7 +45,7 @@ module.exports = {
             .setThumbnail(user.displayAvatarURL({ dynamic: true }))
             .setFooter(`Triggered By ${message.author.tag}`, message.author.displayAvatarURL());
         setTimeout(() => {
-            message.channel.stopTyping()
+            message.channel.stopTyping();
             return message.channel.send({ embeds:[embed] })
         }, 2000);
     }

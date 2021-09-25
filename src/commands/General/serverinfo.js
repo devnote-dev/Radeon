@@ -14,6 +14,7 @@ module.exports = {
     description: 'Sends information about the server.',
     cooldown: 12,
     guildOnly: true,
+
     async run(_, message) {
         message.channel.startTyping();
         const server = message.guild;

@@ -13,6 +13,6 @@ module.exports = {
         const server = client.guilds.cache.get(args.raw[0]);
         if (!server) return client.errEmb('Unknown Guild Specified.');
         await server.leave();
-        return client.checkEmb(`Successfully Left Guild: \`${server.name}\`\nDatabases will be updated.`, message);
+        return client.check(`Successfully left server \`${server.name}\`\nDatabases will be updated.`, message);
     }
 }

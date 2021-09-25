@@ -11,10 +11,11 @@ module.exports = {
     description: 'Shows all the servers Radeon is in.',
     guildOnly: true,
     modOnly: 3,
-    async run(client, message) {
+
+    async run(client, { channel }) {
         const table = new ascii();
         table.setHeading('Server Name', 'Server ID', 'Available');
         client.guilds.cache.forEach(g => table.addRow(g.name, g.id, g.available));
-        return message.channel.send(`\`\`\`\n${table.toString()}\n\`\`\``);
+        return channel.send(`\`\`\`\n${table.toString()}\n\`\`\``);
     }
 }

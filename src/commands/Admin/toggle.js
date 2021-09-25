@@ -9,8 +9,8 @@ module.exports = {
     usage: 'toggle <option>',
     modOnly: 1,
     async run(client, message, args) {
-        if (!args.length) return client.errEmb('Insufficient Arguments.\n```\ntoggle <option>\n```', message);
-        if (!['main', 'cycle'].includes(args.lower[0])) return client.errEmb('Unknown settings option.', message);
+        if (!args.length) return client.error('Insufficient Arguments.\n```\ntoggle <option>\n```', message);
+        if (!['main', 'cycle'].includes(args.lower[0])) return client.error('Unknown settings option.', message);
         const db = client.db('settings');
         const state = db.get(client.user.id);
         if (args.lower[0] === 'main') {
@@ -18,12 +18,12 @@ module.exports = {
                 cycleStatus: state.cycleStatus,
                 maintenance: !state.maintenance
             });
-            return client.errEmb(`Maintenance mode successfully ${state.maintenance ? 'disabled' : 'enabled'}!`, message);
+            return client.check(`Maintenance mode successfully ${state.maintenance ? 'disabled' : 'enabled'}!`, message);
         }
         await db.update(client.user.id, {
             cycleStatus: !state.cycleStatus,
             maintenance: state.maintenance
         });
-        return client.errEmb(`Cycle status successfully ${state.cycleStatus ? 'disabled' : 'enabled'}!`, message);
+        return client.check(`Cycle status successfully ${state.cycleStatus ? 'disabled' : 'enabled'}!`, message);
     }
 }

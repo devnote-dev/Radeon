@@ -4,14 +4,16 @@
  */
 
 const { readdirSync } = require('fs');
-const { logError } = require('../../dist/console');
+const log = require('../../log');
 
 module.exports = {
     name: 'register',
     description: 'Registers Radeon\'s global slash commands into Discord.',
     modOnly: 2,
+
     async run(client, message) {
         try {
+            const payload = [];
             let count = 0;
             readdirSync('./src/commands/')
             .forEach(dir => {
@@ -19,16 +21,22 @@ module.exports = {
                 .filter(f => f.endsWith('.js'))
                 .forEach(async cmd => {
                     const command = require(`../${dir}/${cmd}`);
-                    if (!command.appdata) return;
-                    await client.application.commands.create(command.appdata);
-                    count++;
-                    if (!client.slash.has(command.appdata.name)) client.slash.set(command.appdata.name, command.appres);
+                    if (command.slash || command.description) {
+                        const data = {};
+                        data.name = command.name;
+                        data.description = command.description;
+                        if (command.options) data.options = command.options;
+                        payload.push(data);
+                        count++;
+                        if (!client.slash.has(command.name)) client.slash.set(command.name, command.slash);
+                    }
                 });
             });
-            return client.checkEmb(`Successfully Registered ${count} Slash Commands!`, message);
+            await client.application.commands.set(payload);
+            return client.check(`Successfully Registered ${count} Slash Commands!`, message);
         } catch (err) {
-            logError(err, __filename, message.author.id);
-            return client.errEmb('Failed Registering (logged on console).', message);
+            log.error(err, message, message.author.id);
+            return client.error('Failed registering (logged on console).', message);
         }
     }
 }

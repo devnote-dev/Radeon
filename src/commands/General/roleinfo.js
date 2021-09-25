@@ -14,14 +14,15 @@ module.exports = {
     usage: 'roleinfo <Role:Name/Mention/ID>',
     cooldown: 5,
     guildOnly: true,
+
     async run(client, message, args) {
-        if (!args.length) return client.errEmb('No Role Specified.\n```\nroleinfo <Role:Name/Mention/ID>\n```', message);
+        if (!args.length) return client.error('No Role Specified.\n```\nroleinfo <Role:Name/Mention/ID>\n```', message);
         const role = message.mentions.roles.first() || resolveRole(message, args.raw);
         if (role instanceof Collection) {
             const rmap = role.map(r => `• ${r.name} (ID ${r.id})`).join('\n');
-            return client.infoEmb(`More than one role found with similar names:\n\n${rmap}`, message);
+            return client.info(`More than one role found with similar names:\n\n${rmap}`, message);
         }
-        if (!role) return client.errEmb('Role Not Found!', message);
+        if (!role) return client.error('Role Not Found!', message);
 
         message.channel.startTyping();
         const embed = new MessageEmbed()

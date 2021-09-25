@@ -11,8 +11,9 @@ module.exports = {
     usage: 'jsonembed <JSON:Text>\n\njsonembed { "title":"hi", "description":"hello" }',
     cooldown: 2,
     guildOnly: true,
+
     async run(client, { channel }, args) {
-        if (!args.length) return client.errEmb('No JSON Provided.\n```\njsonembed <JSON:Text>\n```', channel);
+        if (!args.length) return client.error('No JSON Provided.\n```\njsonembed <JSON:Text>\n```', channel);
         try {
             const embed = JSON.parse(args.raw.join(' '));
             if (!Object.keys(embed).length) throw new Error('Minimum 1 field is required.');
@@ -34,7 +35,7 @@ module.exports = {
             }
             return channel.send({ embeds:[embed] });
         } catch (err) {
-            return client.errEmb(err.message, channel);
+            return client.error(err.message, channel);
         }
     }
 }

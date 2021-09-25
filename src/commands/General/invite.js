@@ -10,6 +10,7 @@ module.exports = {
     aliases: ['support'],
     tag: 'Sends Radeon\'s invite links!',
     description: 'Sends Radeon\'s invite links!',
+
     run(client, { channel, author }) {
         const e = new MessageEmbed()
             .setTitle('🔗 Invite Links')
@@ -18,5 +19,7 @@ module.exports = {
             .setColor(0x1e143b)
             .setFooter(`Triggered By ${author.tag}`, author.displayAvatarURL());
         return channel.send({ embeds:[e] });
-    }
+    },
+
+    slash(client, { message }) { this.run(client, message) }
 }
