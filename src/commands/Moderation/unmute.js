@@ -5,9 +5,9 @@
  */
 
 const { MessageEmbed } = require('discord.js');
-const { logError } = require('../../dist/console');
+const log = require('../../log');
 const { resolveMember } = require('../../functions');
-const Muted = require('../../schemas/muted');
+const Muted = require('../../database/muted');
 
 module.exports = {
     name: 'unmute',
@@ -56,7 +56,7 @@ module.exports = {
                 return message.guild.channels.cache.get(modLogs.channel)?.send({ embeds:[embed] }).catch(()=>{});
             }
         } catch (err) {
-            logError(err, `${message.guild.id}/${message.channel.id}`, message.author.id);
+            log.error(err, message);
             return client.errEmb(`Unknown: Failed unmuting member \`${target.user.tag}\``, message);
         }
     }
@@ -82,6 +82,6 @@ module.exports._selfexec = async (client, guild, user) => {
             return GS.channels.cache.get(modLogs.channel)?.send({ embeds:[embed] }).catch(()=>{});
         }
     } catch (err) {
-        logError(err, __filename);
+        log.error(err, __filename);
     }
 }

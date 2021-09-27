@@ -16,6 +16,7 @@ module.exports = {
     botPerms: 4n,
     guildOnly: true,
     roleBypass: true,
+
     async run(client, message, args) {
         if (!args.length) return client.errEmb('Insufficient arguments.\n```\nban <User:Mention/ID> <Reason:Text> [-dd <Number>]\n```', message);
         const target = message.mentions.users.first() || await resolveMember(message, args.raw);
@@ -24,6 +25,7 @@ module.exports = {
         if (target.id === client.user.id) return client.errEmb('I can\'t ban myself.', message);
         let data = await client.db('guild').get(message.guild.id);
         if (!data) return client.errEmb('Unknown: Failed connecting to server database. Try contacting support.', message);
+
         data = data.automod;
         let reason = '(No Reason Specified)', ddays = 0;
         if (args.length > 2) reason = args.slice(1).join(' ');
@@ -36,9 +38,11 @@ module.exports = {
             if (ddays < 0 || ddays > 7) ddays = 0;
             reason = reason.replace(/\b-dd\s*\d\B/gi, '');
         }
-        if (getMemberBannable(message.guild, target)) return client.errEmb('User cannot be banned.', message);
+
+        if (isBannable(message.guild, target)) return client.errEmb('User cannot be banned.', message);
         const banned = await message.guild.bans.fetch(target.id).catch(()=>{});
         if (banned) return client.errEmb('User is already banned.', message);
+
         try {
             await target.send(client.actionDM('Banned', message, reason)).catch(()=>{});
             if (data.banMessage) await target.send(data.banMessage +`\n\nBan message sent from **${message.guild.name}**`).catch(()=>{});
@@ -50,7 +54,7 @@ module.exports = {
     }
 }
 
-async function getMemberBannable(GS, US) {
+async function isBannable(GS, US) {
     try {
         return await client.guilds.cache
             .get(GS.id)

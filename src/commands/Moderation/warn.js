@@ -3,8 +3,7 @@
  * @copyright Radeon Development 2021
  */
 
-
-const Warns = require('../../schemas/warnings');
+const Warns = require('../../database/warns');
 
 module.exports = {
     // name: 'warn',

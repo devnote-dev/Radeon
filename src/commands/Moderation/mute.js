@@ -5,7 +5,7 @@
  */
 
 const { MessageEmbed } = require('discord.js');
-const { logError } = require('../../dist/console');
+const log = require('../../log');
 const { resolveMember } = require('../../functions');
 const ms = require('ms');
 
@@ -67,7 +67,7 @@ module.exports = {
                 message.guild.channels.cache.get(modLogs.channel)?.send({ embeds:[embed] }).catch(()=>{});
             }
         } catch (err) {
-            logError(err, `${message.guild.id}/${message.channel.id}`);
+            log.error(err, message);
             return client.errEmb(`Unknown: Failed muting member \`${target.user.tag}\``, message);
         }
     }

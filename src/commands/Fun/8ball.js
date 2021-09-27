@@ -42,7 +42,7 @@ module.exports = {
     }
 }
 
-module.exports.appres = (_, int) => {
+module.exports.appres = async (_, int) => {
     await int.defer();
     const random = options[Math.floor(Math.random() * options.length)];
     const embed = new MessageEmbed()

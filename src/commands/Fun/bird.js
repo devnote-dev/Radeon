@@ -74,7 +74,7 @@ async function getImage() {
     return await request.get('https://some-random-api.ml/img/bird').then(response => response.body.link);
 }
 
-module.exports.appres = (_, int) => {
+module.exports.appres = async (_, int) => {
     await int.defer();
     let fox = {};
     if (int.options[0]) {
