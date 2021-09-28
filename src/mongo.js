@@ -9,12 +9,12 @@ const log = require('./log');
 
 module.exports = () => {
     const dbOptions = {
-        useNewUrlParser: true,
         useUnifiedTopology: true,
+        connectTimeoutMS: 10000,
+        useNewUrlParser: true,
         autoIndex: false,
         poolSize: 5,
-        connectTimeoutMS: 10000,
-        family:4
+        family: 4
     };
 
     mongoose.connect(MongoPath, dbOptions);
