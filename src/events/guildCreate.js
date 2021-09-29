@@ -19,6 +19,6 @@ exports.run = async (client, guild) => {
     console.log(`\nMONGO | Guild Added: ${guild.name} (${guild.id})`);
     await client.db('guild').create(presets.guild(guild.id));
     await client.db('automod').create(presets.automod(guild.id));
-    await client.db('muted').create(presets.muted(guild.id));
+    await client.db('scheduled').create(presets.scheduled(guild.id));
     await client.db('warns').create(presets.warns(guild.id));
 }
