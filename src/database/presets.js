@@ -37,7 +37,8 @@ exports.automod = (id) => {
         displayNames: false,
         mentions:{
             active: false,
-            threshold: 5
+            threshold: 5,
+            unique: false
         },
         filter:{
             active: false,
@@ -45,7 +46,7 @@ exports.automod = (id) => {
         },
         zalgo:{
             active: false,
-            threshold: 40
+            threshold: 30
         },
         overrides:{
             bypassUsers: new Map(),
@@ -59,10 +60,11 @@ exports.automod = (id) => {
     }
 }
 
-exports.muted = (id) => {
+exports.scheduled = (id) => {
     return {
         guildID: id,
-        list: new Map()
+        muted: new Map(),
+        unbans: new Map()
     }
 }
 

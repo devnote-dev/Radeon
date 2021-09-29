@@ -7,12 +7,14 @@ const { Schema, model } = require('mongoose');
 
 const Settings = Schema({
     client:{
-        type:     String,
-        required: true
+        type:      String,
+        required:  true
     },
-    maintenance:  Boolean,
-    cycleStatus:  Boolean,
-    lastStatus:   String
+    maintenance:   Boolean,
+    cycleStatus:   Boolean,
+    lastStatus:    String,
+    bannedUsers:   [String],
+    bannedServers: [String]
 });
 
 module.exports = model('Settings', Settings);

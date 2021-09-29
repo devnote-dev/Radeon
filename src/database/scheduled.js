@@ -6,12 +6,13 @@
 
 const { Schema, model } = require('mongoose');
 
-const Muted = Schema({
+const Scheduled = Schema({
     guildID:{
         type:     String,
         required: true
     },
-    list:         Map
+    muted:        Map,
+    unbans:       Map
 });
 
-module.exports = model('Muted', Muted);
+module.exports = model('Scheduled', Scheduled);

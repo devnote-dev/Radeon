@@ -4,20 +4,18 @@
  * @copyright Radeon Development 2021
  */
 
-const Bans = require('./bans');
 const Guild = require('./guild');
-const Muted = require('./muted');
 const Warns = require('./warns');
 const Automod = require('./automod');
 const Settings = require('./settings');
+const Scheduled = require('./scheduled');
 
 const DB = {
-    bans: Bans,
     guild: Guild,
-    muted: Muted,
     warns: Warns,
     automod: Automod,
-    settings: Settings
+    settings: Settings,
+    scheduled: Scheduled
 }
 
 function Database(type) {
