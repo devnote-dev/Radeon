@@ -35,6 +35,7 @@ exports.automod = (id) => {
         ratelimit: false,
         floods: false,
         displayNames: false,
+        links: false,
         mentions:{
             active: false,
             threshold: 5,

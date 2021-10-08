@@ -28,6 +28,7 @@ const Automod = Schema({
     ratelimit:                  Boolean,
     floods:                     Boolean,
     displayNames:               Boolean,
+    links:                      Boolean,
     mentions:{
         active:                 Boolean,
         threshold:              Number,
@@ -55,6 +56,7 @@ const Automod = Schema({
         ratelimit:              String,
         floods:                 String,
         displayNames:           String,
+        links:                  String,
         mentions:               String,
         filter:                 String,
         zalgo:                  String
