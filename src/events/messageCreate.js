@@ -143,8 +143,8 @@ exports.run = async (client, message) => {
         // Handling commands with perms
         // This has been rewritten 3 times now :')
         let bypass = false;
-        if (command.roleBypass && overrides.roleBypass.has(command.name)) {
-            const allowed = overrides.roleBypass.get(command.name);
+        if (command.roleBypass && overrides.bypassRoles.has(command.name)) {
+            const allowed = overrides.bypassRoles.get(command.name);
             bypass = message.member.roles.cache.some(r => allowed.includes(r.id));
         }
         if (command.botPerms) {
