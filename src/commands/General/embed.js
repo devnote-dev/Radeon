@@ -4,9 +4,11 @@
  */
 
 const { MessageEmbed } = require('discord.js');
-const { parseFlags } = require('../../dist/stringParser');
+const { parseAll, parseWithContext } = require('../../functions/strings');
 
-const usage = 'embed <...Flags>\n-raw "message"\n-author "author message"\n-aicon "author iconURL"\n-thumb "thumbnail URL"\n-title "title message"\n-url "title URL"\n-desc "description message"\n-color "HEX/DECIMAL"\n-image "image URL"\n-footer "footer message"\n-ficon "footer iconURL"\n-ts (timestamp)';
+const usage = 'embed <...Flags>\n--raw="message"\n--author="author message"\n--aicon="author iconURL"\n--thumb="thumbnail URL"\n'+
+    '--title="title message"\n--url="title URL"\n--desc="description message"\n--color="HEX/DECIMAL"\n--image="image URL"\n'+
+    '--footer="footer message"\n--ficon="footer iconURL"\n--ts (timestamp)';
 
 module.exports = {
     name: 'embed',
@@ -18,66 +20,58 @@ module.exports = {
 
     async run(client, message, args) {
         if (!args.length) return client.error(`Insufficient Arguments\n\`\`\`\n${usage}\n\`\`\``, message);
-        const flags = parseFlags(args.raw.join(' '), [
-            {name: 'raw', type: 'string', quotes: true},
-            {name: 'author', type: 'string', quotes: true},
-            {name: 'aicon', type: 'string'},
-            {name: 'thumb', type: 'string'},
-            {name: 'title', type: 'string', quotes: true},
-            {name: 'url', type: 'string'},
-            {name: 'desc', type: 'string', quotes: true},
-            {name: 'color', type: 'string'},
-            {name: 'image', type: 'string'},
-            {name: 'footer', type: 'string', quotes: true},
-            {name: 'ficon', type: 'string'},
-            {name: 'ts', type: 'bool'}
-        ]);
+        const { long } = parseAll(args.raw.join(' '));
+        const flags = parseWithContext(long, {
+            raw: String,
+            author: String,
+            aicon: String,
+            thumb: String,
+            title: String,
+            desc: String,
+            color: String,
+            image: String,
+            footer: String,
+            ficon: String,
+            ts: Boolean
+        });
+
         const embed = new MessageEmbed();
-        let content;
-        if (flags.length) {
-            let _author, _aicon, _footer, _ficon;
-            flags.forEach(flag => {
-                if (!flag.value) return;
-                let value = typeof flag.value === 'string'
-                    ? flag.value
-                        .replace(/^"|"$/gm, '')
-                        .replace(/\\?\n/gm, '\n')
-                    : flag.value;
-                if (flag.name === 'raw') content = value;
-                if (flag.name === 'author') _author = value;
-                if (flag.name === 'aicon') _aicon = value;
-                if (flag.name === 'thumb') embed.setThumbnail(value);
-                if (flag.name === 'title') embed.setTitle(value);
-                if (flag.name === 'url') embed.setURL(value);
-                if (flag.name === 'desc') embed.setDescription(value);
-                if (flag.name === 'color') embed.setColor(value);
-                if (flag.name === 'image') embed.setImage(value);
-                if (flag.name === 'footer') _footer = value;
-                if (flag.name === 'ficon') _ficon = value;
-                if (flag.name === 'ts') embed.setTimestamp();
-            });
-            if (_author && _aicon) {
-                embed.setAuthor(_author, _aicon);
-            } else if (_author && !_aicon) {
-                embed.setAuthor(_author);
-            } else if (!_author && _aicon) {
-                embed.setAuthor('\u200b', _aicon);
-            }
-            if (!embed.description) embed.setDescription('\u200b');
-            if (_footer && _ficon) {
-                embed.setFooter(_footer, _ficon);
-            } else if (_footer && !_ficon) {
-                embed.setFooter(_footer);
-            } else if (!_footer && _ficon) {
-                embed.setFooter('\u200b', _ficon);
-            }
-            try {
-                return await message.channel.send({ content, embeds:[embed] });
-            } catch (err) {
-                return client.error(err.message, message);
-            }
-        } else {
-            return message.channel.send('No flags Provided.');
+        let content, author, aicon, footer, ficon;
+        for (const [k, v] of flags) {
+            if (v.parsed === null) continue;
+            if (k === 'raw') content = v.parsed;
+            if (k === 'author') author = v.parsed;
+            if (k === 'aicon') aicon = v.parsed;
+            if (k === 'thumb') embed.setThumbnail(v.parsed);
+            if (k === 'title') embed.setTitle(v.parsed);
+            if (k === 'url') embed.setURL(v.parsed);
+            if (k === 'desc') embed.setDescription(v.parsed);
+            if (k === 'color') embed.setColor(v.parsed);
+            if (k === 'image') embed.setImage(v.parsed);
+            if (k === 'footer') footer = v.parsed;
+            if (k === 'ficon') ficon = v.parsed;
+            if (k === 'ts') embed.setTimestamp();
+        }
+        if (author && aicon) {
+            embed.setAuthor(author, aicon);
+        } else if (author && !aicon) {
+            embed.setAuthor(author);
+        } else if (!author && aicon) {
+            embed.setAuthor('\u200b', aicon);
+        }
+        if (!embed.description) embed.setDescription('\u200b');
+        if (footer && ficon) {
+            embed.setFooter(footer, ficon);
+        } else if (footer && !ficon) {
+            embed.setFooter(footer);
+        } else if (!footer && ficon) {
+            embed.setFooter('\u200b', ficon);
+        }
+
+        try {
+            return await message.channel.send({ content, embeds:[embed] });
+        } catch (err) {
+            return client.error(err.message, message);
         }
     }
 }
