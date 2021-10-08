@@ -80,16 +80,16 @@ exports.run = async (client, message) => {
     }
 
     // Fetching server database...
-    const gData = await client.db('guild').get(message.guild.id);
-    const aData = await client.db('automod').get(message.guild.id);
-    if (!gData || !aData) {
+    const data = await client.db('guild').get(message.guild.id);
+    const automod = await client.db('automod').get(message.guild.id);
+    if (!data || !automod) {
         // fallback for servers joined while offline/during downtime
         return client.emit('guildCreate', message.guild);
     }
 
     // extracting all the necessary info
-    const { prefix, deleteAfterExec, actionLog } = gData;
-    const { overrides } = aData;
+    const { prefix, deleteAfterExec, actionLog } = data;
+    const { overrides } = automod;
 
     // pretty self-explanatory
     if (overrides.ignoredCmdChannels.includes(channel.id)) return;
