@@ -44,6 +44,7 @@ client.stats      = {
     commands:   new Set(),
     messages:   0,
     background: 0,
+    _commands:  0,
     _events:    0,
     _failed:    []
 };

@@ -19,7 +19,7 @@ async function ready(bot) {
     const db = await bot.db('settings').get(bot.user.id);
     let fmt = `${BOLD}\n${PURPLE}Radeon is ready!${RESET}\n\n`;
     fmt += `${PURPLE + bot.stats._events.toString() + RESET} Events loaded\n`;
-    fmt += `${GREEN + bot.stats.commands.size.toString() + RESET} Commands loaded\n`;
+    fmt += `${GREEN + bot.stats._commands.toString() + RESET} Commands loaded\n`;
     fmt += `${RED + bot.stats._failed.length.toString() + RESET} Commands failed`;
     if (bot.stats._failed.length) fmt += ':\n' + bot.stats._failed.map(c => `${RED}- ${c + RESET}`).join('\n');
     fmt += `\n\nReady at: ${bot.readyAt.toLocaleString()}\nServers: ${bot.guilds.cache.size}\n`;

@@ -8,6 +8,7 @@ const filehound = require('filehound');
 const { parse, join } = require('path');
 
 module.exports = async client => {
+    let ready = 0;
     const failed = [];
 
     filehound.create()
@@ -20,8 +21,10 @@ module.exports = async client => {
                 if (command.name) {
                     client.commands.set(command.name, command);
                     if (command.slash) client.slash.set(command.name, command.slash);
+                    ready++;
                 } else if (command.slash) {
                     client.slash.set(command.name, command.slash);
+                    ready++;
                 } else {
                     failed.push(parse(cmd).base);
                 }
@@ -30,5 +33,6 @@ module.exports = async client => {
                 failed.push(parse(cmd).base);
             }
         });
+    client.stats._commands = ready;
     client.stats._failed = failed;
 }
