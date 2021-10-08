@@ -4,7 +4,6 @@
  * @copyright Radeon Development 2021
  */
 
-
 const { Collection } = require('discord.js');
 
 module.exports = async (message, amount, options) => {
@@ -13,7 +12,7 @@ module.exports = async (message, amount, options) => {
     const messages = await message.channel.messages.fetch({ limit: 100, after: flagTo || null });
     let count = 0;
 
-    if (target, flagUsers, flagBots) {
+    if (target || flagUsers || flagBots) {
         for (const [id, msg] of messages) {
             if (count === amount) break;
             if (target) {
