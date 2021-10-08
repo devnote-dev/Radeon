@@ -34,14 +34,15 @@ module.exports = {
                 .setTitle('Automod Settings')
                 .setDescription(`The automod settings for this server are currently **${getState(data.active, false)}**. See \`help automod\` on how to edit these setttings.`)
                 .addFields(
-                    {name: 'Log Channel', value: logchannel.toString() || 'None Set', inline: true},
+                    {name: 'Log Channel', value: logchannel?.toString() || 'None Set', inline: true},
                     {name: 'Invites', value: getState(data.invites), inline: true},
                     {name: 'Spam (ratelimit)', value: getState(data.ratelimit), inline: true},
                     {name: 'Floods', value: getState(data.floods), inline: true},
                     {name: 'Usernames', value: getState(data.displayNames), inline: true},
+                    {name: 'Links', value: getState(data.links), inline: true},
                     {name: 'Mentions', value: mentions, inline: true},
-                    {name: 'Filter', value: 'View with `automod filter`', inline: true},
                     {name: 'Zalgo', value: zalgo, inline: true},
+                    {name: 'Filter', value: 'View with `automod filter`', inline: true},
                     {name: 'Rulesets', value: 'View with `automod rulesets`', inline: true}
                 )
                 .setColor(0x1e143b)
