@@ -14,6 +14,8 @@ exports.run = async (client, guild) => {
         .setTimestamp();
     client.channels.cache.get(logs.joins)?.send({ embeds:[e] }).catch(()=>{});
     await client.db('guild').delete(guild.id);
-    await client.db('muted').delete(guild.id);
+    await client.db('warns').delete(guild.id);
+    await client.db('automod').delete(guild.id);
+    await client.db('scheduled').delete(guild.id);
     console.log(`MONGO | Guild Removed: ${guild.name}`);
 }
