@@ -26,7 +26,7 @@ module.exports = {
                 }
             } else if (args.lower[0] === 'save') {
                 let content = '';
-                client.cmdlogs.forEach(
+                client.stats.commands.forEach(
                     log => content += `USER: ${log.user}\nCMD: ${log.command}\nCHANNEL: ${log.channel.id} - ${log.channel.type}\nTIME: ${log.time}\n\n`
                 );
                 writeFileSync(join(__dirname, '_logs.txt'), content);
@@ -35,7 +35,7 @@ module.exports = {
         } else {
             message.delete().catch(()=>{});
             let content = '';
-            client.cmdlogs.forEach(
+            client.stats.commands.forEach(
                 log => content += `USER: ${log.user}\nCMD: ${log.command}\nCHANNEL: ${log.channel.id} - ${log.channel.type}\nTIME: ${log.time}\n\n`
             );
             const att = new MessageAttachment(Buffer.from(content), 'radeon_cmd_logs.txt');
