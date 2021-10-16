@@ -28,7 +28,7 @@ module.exports = {
         }
         if (user instanceof Collection) user = user.first();
         if (user instanceof GuildMember) user = user.user;
-        message.channel.startTyping();
+        message.channel.sendTyping();
 
         const mutuals = client.guilds.cache
             .filter(g => g.members.cache.has(user.id))
@@ -45,7 +45,6 @@ module.exports = {
             .setThumbnail(user.displayAvatarURL({ dynamic: true }))
             .setFooter(`Triggered By ${message.author.tag}`, message.author.displayAvatarURL());
         setTimeout(() => {
-            message.channel.stopTyping();
             return message.channel.send({ embeds:[embed] })
         }, 2000);
     }
