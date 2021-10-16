@@ -43,7 +43,7 @@ module.exports = {
         }
         if (!category) return client.error('Unknown command category specified.', message);
         if (!cmd) return client.error('Unknown command specified.', message);
-        // log.admin('reload', message, message.autor.id, cmd.name);
+        log.admin('reload', message, message.author.id, cmd.name);
         try {
             delete require.cache[require.resolve(`../${category}/${cmd.name}.js`)];
             client.commands.delete(cmd);
