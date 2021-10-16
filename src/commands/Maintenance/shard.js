@@ -23,8 +23,8 @@ module.exports = {
     run(client, message, args) {
         let server = message.guild;
         if (args.length) server = client.guilds.cache.get(args.raw[0]);
-        if (!server) return client.errEmb('Invalid or unknown server ID.', message);
-        if (!server.available) return client.errEmb('This server is unavailable at this time.', message);
+        if (!server) return client.error('Invalid or unknown server ID.', message);
+        if (!server.available) return client.error('This server is unavailable at this time.', message);
 
         const shard = server.shard;
         let sstatus;

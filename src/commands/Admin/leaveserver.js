@@ -9,9 +9,9 @@ module.exports = {
     usage: 'leaveserver <Guild:ID>',
     modOnly: 2,
     async run(client, message, args) {
-        if (!args.length) return client.errEmb('No Guild Specified.', message);
+        if (!args.length) return client.error('No Guild Specified.', message);
         const server = client.guilds.cache.get(args.raw[0]);
-        if (!server) return client.errEmb('Unknown Guild Specified.');
+        if (!server) return client.error('Unknown Guild Specified.');
         await server.leave();
         return client.check(`Successfully left server \`${server.name}\`\nDatabases will be updated.`, message);
     }

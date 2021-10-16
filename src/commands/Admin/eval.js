@@ -16,11 +16,11 @@ module.exports = {
 
     async run(client, message, args) {
         const { author, member, channel, guild } = message;
-        if (!args.length) return client.errEmb('No Code Provided.', message);
+        if (!args.length) return client.error('No Code Provided.', message);
         let code = args.raw.join(' ');
         if (/^`{3}(?:.+)?(?:\n+)?[\s\S]+(?:\n+)?`{3}$/gmi.test(code)) code = code.replace(/^```(?:[\S\n]+)?|```$/gmi, '');
         log.admin('eval', message, author.id, code);
-        if (/while\s*\(\s*true\s*\)\s*\{\s*\}/gi.test(code)) return client.errEmb('Cannot execute infinite loop.', message);
+        if (/while\s*\(\s*true\s*\)\s*\{\s*\}/gi.test(code)) return client.error('Cannot execute infinite loop.', message);
         try {
             let evaled;
             if (code.includes('await')) {
