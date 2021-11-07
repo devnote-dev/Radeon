@@ -3,24 +3,21 @@
 *.jpeg
 *.png
 *.mp3
-*.mp4
 
 # Hidden Directories
 anti-raid/
+assets/
 images/
 node_modules/
-other files/
-dist/
 tests/
-web/*.*
+.vscode/
+web/
 
 # Private Files
-.vscode
 src/commands/Admin/_logs.txt
 src/commands/Admin/test.js
 config.json
 setup.js
-topgg-page.htm
 
 # Testing / Broken Files
 */override.js
