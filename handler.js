@@ -15,6 +15,8 @@ module.exports = (client) => {
             const cmd = require(`./commands/${dir}/${file}`);
             cmd.cat = dir;
             client.commands.set(cmd.name, cmd);
+            if (command.aliases)
+                command.aliases.forEach(a => client.aliases.set(a, command.name));
         });
     });
 
