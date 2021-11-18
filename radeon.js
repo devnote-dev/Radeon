@@ -38,7 +38,8 @@ client.const = require('./const');
 
 // TODO:
 // - client stats module
-// - client db module
+client.db = require('./database');
 
 require('./handler')(client);
+require('./database/init')();
 client.login(token);
