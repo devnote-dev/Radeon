@@ -13,6 +13,7 @@ module.exports = (client) => {
         readdirSync(`./commands/${dir}/`)
         .forEach(file => {
             const cmd = require(`./commands/${dir}/${file}`);
+            cmd.cat = dir;
             client.commands.set(cmd.name, cmd);
         });
     });
