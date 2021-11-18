@@ -1,0 +1,7 @@
+exports.col = {
+    def: 0x1e143b,
+    red: 0x0,
+    yellow: 0x0,
+    green: 0x0,
+    blue: 0x0
+}

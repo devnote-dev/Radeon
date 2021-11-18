@@ -34,6 +34,8 @@ client.aliases = new Map();
 client.cooldowns = new Map();
 client.hooks = new Map();
 
+client.const = require('./const');
+
 // TODO:
 // - client stats module
 // - client db module
