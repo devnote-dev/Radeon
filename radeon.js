@@ -1,7 +1,7 @@
 /**
- * @author Piter <https://github.com/piterxyz>
- * @author Devonte <https://github.com/devnote-dev>
  * @author Tryharddeveloper <https://github.com/tryharddeveloper>
+ * @author Devonte <https://github.com/devnote-dev>
+ * @author Piter <https://github.com/piterxyz>
  * @copyright 2021 Radeon Development
  */
 
