@@ -1,5 +1,6 @@
-const mongoose = require('mongoose');
+const log = require('../log');
 const { MongoPath } = require('../config.json');
+const mongoose = require('mongoose');
 
 module.exports = () => {
     const options = {
@@ -15,5 +16,7 @@ module.exports = () => {
     mongoose.set('useFindAndModify', false);
     mongoose.Promise = Promise;
 
-    // TODO: add log functions
+    mongoose.connection.on('connect', () => log.info('Connected to database'));
+    mongoose.connection.on('err', err => log.error(err, __filename));
+    mongoose.connection.on('disconnect', () => log.warn('Disconnected from database'));
 }
