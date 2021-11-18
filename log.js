@@ -23,6 +23,23 @@ function ready(bot) {
     return log(fmt);
 }
 
+function info(...message) {
+    log(`${CYAN}INFO${RESET} |`, ...message);
+}
+
+function warn(msg, path=null) {
+    let fmt = `${YELLOW}WARN${RESET} | ${msg}`;
+    if (path) {
+        if (typeof path === 'object') {
+            path = path.channel.id +'/'+ path.id;
+        } else if (path.includes('/')) {
+            path = path.split('/').pop();
+        }
+        fmt += `\nPath: ${path}`;
+    }
+    log(fmt);
+}
+
 function error(err, path, user) {
     if (typeof path === 'object') {
         path = path.channel.id +'/'+ path.id;
@@ -35,5 +52,7 @@ function error(err, path, user) {
 
 module.exports = {
     ready,
+    info,
+    warn,
     error
 }
