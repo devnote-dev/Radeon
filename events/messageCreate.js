@@ -7,6 +7,7 @@
 
 const { prefix } = require('../config.json');
 const { humanize } = require('../util');
+const { parseAll, parseWithContext } = require('../util/flags');
 
 const noop = () => {};
 
@@ -19,6 +20,19 @@ module.exports = async (client, message) => {
     const { cmd, args } = _parseArgs(message.content, prefix, client.user.id);
     const command = client.commands.get(cmd) || client.commands.get(client.aliases.get(cmd));
     if (!command) return; // TODO: process automod {}
+
+    const ctx = {
+        length: args.length,
+        raw: args,
+        lower: args.map(a => a.toLowerCase()),
+        upper: args.map(a => a.toUpperCase()),
+        flags: null
+    }
+    if (command.flags) {
+        const { short, long } = parseAll(message.content);
+        const parsed = parseWithContext([...short, ...long], command.flags);
+        ctx.flags = parsed;
+    }
 
     if (!message.guild) {
         if (message.channel.partial) await message.channel.fetch().catch(noop);
@@ -37,7 +51,7 @@ module.exports = async (client, message) => {
         if (_runCooldown(client, message, command)) return;
 
         try {
-            await command.run(client, message, args);
+            await command.run(client, message, ctx);
         } catch {
             return message.reply(
                 '**Error**\nThis command stopped running unexpectedly. '+
@@ -69,7 +83,7 @@ module.exports = async (client, message) => {
     }
 
     try {
-        await command.run(client, message, args, checkInRun ? _checkRunPerms : null);
+        await command.run(client, message, ctx, checkInRun ? _checkRunPerms : null);
     } catch {
         return message.reply(
             '**Error**\nThis command stopped running unexpectedly. '+
