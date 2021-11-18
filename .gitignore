@@ -4,10 +4,11 @@
 *.png
 
 # Hidden Directories
-assets/
-images/
-node_modules/
-tests/
+/assets
+/images
+/node_modules
+/tests
+/_logs
 
 # Private Files
 config.json
