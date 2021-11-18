@@ -5,6 +5,7 @@
  * @copyright 2021 Radeon Development
  */
 
+const log = require('../log');
 const { prefix } = require('../config.json');
 const { humanize } = require('../util');
 const { parseAll, parseWithContext } = require('../util/flags');
@@ -52,7 +53,8 @@ module.exports = async (client, message) => {
 
         try {
             await command.run(client, message, ctx);
-        } catch {
+        } catch (err) {
+            log.error(err, message, message.author.id);
             return message.reply(
                 '**Error**\nThis command stopped running unexpectedly. '+
                 'If you see this error regularly, contact support via the `@Radeon support` command.'
@@ -84,7 +86,8 @@ module.exports = async (client, message) => {
 
     try {
         await command.run(client, message, ctx, checkInRun ? _checkRunPerms : null);
-    } catch {
+    } catch (err) {
+        log.error(err, message, message.author.id);
         return message.reply(
             '**Error**\nThis command stopped running unexpectedly. '+
             'If you see this error regularly, contact support via the `@Radeon support` command.'
