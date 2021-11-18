@@ -2,22 +2,12 @@
 *.jpg
 *.jpeg
 *.png
-*.mp3
 
 # Hidden Directories
-anti-raid/
 assets/
 images/
 node_modules/
 tests/
-.vscode/
-web/
 
 # Private Files
-src/commands/Admin/_logs.txt
-src/commands/Admin/test.js
 config.json
-setup.js
-
-# Testing / Broken Files
-*/override.js
