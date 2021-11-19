@@ -28,14 +28,15 @@ const Automod = Schema({
         banReason:              Boolean
     },
     invites:                    Boolean,
+    links:                      Boolean,
     spam:                       Boolean,
     floods:                     Boolean,
+    minAge:                     Number,
     names:{
         hoisted:                Boolean,
         zalgo:                  Boolean,
         filter:                 Boolean
     },
-    links:                      Boolean,
     mentions:{
         active:                 Boolean,
         limit:                  Number,
@@ -60,10 +61,10 @@ const Automod = Schema({
     },
     rulesets:{
         invites:                String,
-        ratelimit:              String,
-        floods:                 String,
-        displayNames:           String,
         links:                  String,
+        spam:                   String,
+        floods:                 String,
+        names:                  String,
         mentions:               String,
         filter:                 String,
         zalgo:                  String
@@ -103,6 +104,6 @@ module.exports = {
     Guild: model('Guild', Guild),
     Automod: model('Automod', Automod),
     Schedules: model('Schedules', Schedules),
-    Warns: model('Warns', Wans),
+    Warns: model('Warns', Warns),
     Settings: model('Settings', Settings)
 }
