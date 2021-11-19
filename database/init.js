@@ -8,12 +8,11 @@ module.exports = () => {
         connectTimeoutMS: 10000,
         useNewUrlParser: true,
         autoIndex: false,
-        poolSize: 5,
+        maxPoolSize: 5,
         family: 4
     }
 
     mongoose.connect(MongoPath, options);
-    mongoose.set('useFindAndModify', false);
     mongoose.Promise = Promise;
 
     mongoose.connection.on('connect', () => log.info('Connected to database'));
