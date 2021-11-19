@@ -37,6 +37,7 @@ const Automod = Schema({
     links:                      Boolean,
     spam:                       Boolean,
     floods:                     Boolean,
+    zalgo:                      Boolean,
     minAge:                     Number,
     names:{
         hoisted:                Boolean,
@@ -51,10 +52,6 @@ const Automod = Schema({
     filter:{
         active:                 Boolean,
         list:                   [String]
-    },
-    zalgo:{
-        active:                 Boolean,
-        limit:                  Number
     },
     overrides:{
         bypassUsers:            Map,
