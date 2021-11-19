@@ -11,6 +11,7 @@ const {
     MessageAttachment
 } = Discord;
 const { inspect } = require('util');
+const presets = require('../../database/presets');
 
 const noop = () => {};
 
