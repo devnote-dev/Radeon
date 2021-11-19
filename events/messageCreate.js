@@ -6,7 +6,7 @@
  */
 
 const log = require('../log');
-const { prefix } = require('../config.json');
+const { prefix, botOwners, botAdmins } = require('../config.json');
 const { humanize } = require('../util');
 const { parseAll, parseWithContext } = require('../util/flags');
 
@@ -41,13 +41,20 @@ module.exports = async (client, message) => {
         if (command.guildOnly) return message.reply('**Error:** This command is for servers only.');
 
         if (type = command.ownerOnly) {
-            if (type === 2) return;
-            return message.reply('**Error:** This command is for bot owners only.');
+            if (!botOwners.includes(message.author.id)) {
+                if (type === 2) return;
+                return message.reply('**Error:** This command is for bot owners only.');
+            }
         }
 
         if (type = command.modOnly) {
-            if (type === 2) return;
-            return message.reply('**Error:** This command is for bot staff only.');
+            if (
+                !botAdmins.includes(message.author.id) &&
+                !botOwners.includes(message.author.id)
+            ) {
+                if (type === 2) return;
+                return message.reply('**Error:** This command is for bot staff only.');
+            }
         }
 
         if (_runCooldown(client, message, command)) return;
@@ -64,13 +71,20 @@ module.exports = async (client, message) => {
     }
 
     if (type = command.ownerOnly) {
-        if (type === 2) return;
-        return message.reply('**Error:** This command is for bot owners only.');
+        if (!botOwners.includes(message.author.id)) {
+            if (type === 2) return;
+            return message.reply('**Error:** This command is for bot owners only.');
+        }
     }
 
     if (type = command.modOnly) {
-        if (type === 2) return;
-        return message.reply('**Error:** This command is for bot staff only.');
+        if (
+            !botAdmins.includes(message.author.id) &&
+            !botOwners.includes(message.author.id)
+        ) {
+            if (type === 2) return;
+            return message.reply('**Error:** This command is for bot staff only.');
+        }
     }
 
     if (_runCooldown(client, message, command)) return;
