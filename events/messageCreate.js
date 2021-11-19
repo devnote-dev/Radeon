@@ -38,16 +38,16 @@ module.exports = async (client, message) => {
     if (!message.guild) {
         if (message.channel.partial) await message.channel.fetch().catch(noop);
         if (!message.channel) return;
-        if (command.guildOnly) return message.reply('**Error**\nThis command is for servers only.');
+        if (command.guildOnly) return message.reply('**Error:** This command is for servers only.');
 
         if (type = command.ownerOnly) {
             if (type === 2) return;
-            return message.reply('**Error**\nThis command is for bot owners only.');
+            return message.reply('**Error:** This command is for bot owners only.');
         }
 
         if (type = command.modOnly) {
             if (type === 2) return;
-            return message.reply('**Error**\nThis command is for bot staff only.');
+            return message.reply('**Error:** This command is for bot staff only.');
         }
 
         if (_runCooldown(client, message, command)) return;
@@ -57,7 +57,7 @@ module.exports = async (client, message) => {
         } catch (err) {
             log.error(err, message, message.author.id);
             return message.reply(
-                '**Error**\nThis command stopped running unexpectedly. '+
+                '**Error:** This command stopped running unexpectedly.\n'+
                 'If you see this error regularly, contact support via the `@Radeon support` command.'
             );
         }
@@ -65,12 +65,12 @@ module.exports = async (client, message) => {
 
     if (type = command.ownerOnly) {
         if (type === 2) return;
-        return message.reply('**Error**\nThis command is for bot owners only.');
+        return message.reply('**Error:** This command is for bot owners only.');
     }
 
     if (type = command.modOnly) {
         if (type === 2) return;
-        return message.reply('**Error**\nThis command is for bot staff only.');
+        return message.reply('**Error:** This command is for bot staff only.');
     }
 
     if (_runCooldown(client, message, command)) return;
@@ -90,7 +90,7 @@ module.exports = async (client, message) => {
     } catch (err) {
         log.error(err, message, message.author.id);
         return message.reply(
-            '**Error**\nThis command stopped running unexpectedly. '+
+            '**Error:** This command stopped running unexpectedly.\n'+
             'If you see this error regularly, contact support via the `@Radeon support` command.'
         );
     }
@@ -135,5 +135,5 @@ function _runCooldown(client, message, command) {
 
 function _checkRunPerms(member, cmd) {
     if (member.permissions.has(cmd.perms.bits)) return;
-    return `**Error**\nYou are missing ${humanize(cmd.perms.bits)} permissions for this command!`;
+    return `**Error:** You are missing ${humanize(cmd.perms.bits)} permissions for this command!`;
 }
