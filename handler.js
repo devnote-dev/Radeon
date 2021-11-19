@@ -47,6 +47,7 @@ module.exports = (client) => {
 
     client.error = async (msg, ctx, ttl) => {
         if (ctx.channel) ctx = ctx.channel;
+        if (typeof msg === 'object') msg = `Insufficient Arguments\n\`\`\`\n${msg.usage}\n\`\`\``;
         const e = client.embed()
             .setDescription(msg)
             .setColor(client.const.col.red);
