@@ -26,7 +26,7 @@ module.exports = {
             .addField('Shards', client.shard.count.toString(), true)
             .addField('Servers', client.guilds.cache.size.toString(), true)
             .addField('Channels', client.channels.cache.size.toString(), true)
-            .addField('Users', client.users.cache.toString(), true)
+            .addField('Users', client.users.cache.size.toString(), true)
             .addField('Memory', `${Math.floor(heapUsed / 1024)}/${Math.floor(heapTotal / 1024)} MB (${Math.floor((heapUsed / heapTotal) * 100)}%)`, true)
             .setColor(client.const.col.def)
             .setFooter(`Triggered By ${author.tag}`, author.displayAvatarURL());
