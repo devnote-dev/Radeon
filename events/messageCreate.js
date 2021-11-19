@@ -17,8 +17,8 @@ module.exports = async (client, message) => {
     if (!message) return;
     if (message.author.bot) return;
 
-    if (!message.channel) return;
     const { cmd, args } = _parseArgs(message.content, prefix, client.user.id);
+    if (!cmd) return;
     const command = client.commands.get(cmd) || client.commands.get(client.aliases.get(cmd));
     if (!command) return; // TODO: process automod {}
 
@@ -37,6 +37,7 @@ module.exports = async (client, message) => {
 
     if (!message.guild) {
         if (message.channel.partial) await message.channel.fetch().catch(noop);
+        if (!message.channel) return;
         if (command.guildOnly) return message.reply('**Error**\nThis command is for servers only.');
 
         if (type = command.ownerOnly) {
@@ -98,13 +99,13 @@ module.exports = async (client, message) => {
 function _parseArgs(string, prefix, id) {
     const args = string.trim().split(/ +/g);
     let cmd = args.shift().toLowerCase();
-    if (cmd.startsWith(prefix)) return { cmd, args }
+    if (cmd.startsWith(prefix)) return { cmd: cmd.slice(1), args }
     if (cmd.startsWith('<@')) {
-        if (cmd !== `<@${id}>`) return null;
+        if (cmd !== `<@${id}>`) return { cmd: null }
         cmd = args.shift().toLowerCase();
         return { cmd, args }
     }
-    return null;
+    return { cmd: null }
 }
 
 function _runCooldown(client, message, command) {
