@@ -1,3 +1,8 @@
+/**
+ * @author Tryharddeveloper <https://github.com/tryharddeveloper>
+ * @copyright 2021 Radeon Development
+ */
+
 const log = require('../log');
 const { MongoPath } = require('../config.json');
 const mongoose = require('mongoose');

@@ -1,3 +1,8 @@
+/**
+ * @author Devonte <https://github.com/devnote-dev>
+ * @copyright 2021 Radeon Development
+ */
+
 const { Guild, Automod, Schedules, Warns, Settings } = require('./schemas');
 
 const DB = {
