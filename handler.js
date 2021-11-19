@@ -6,6 +6,7 @@
  */
 
 const { readdirSync } = require('fs');
+const { MessageEmbed } = require('discord.js');
 
 module.exports = (client) => {
     readdirSync('./commands/')
@@ -25,4 +26,36 @@ module.exports = (client) => {
         const event = require(`./events/${file}`);
         client.on(file.split('.')[0], (...ctx) => event(client, ...ctx));
     });
+
+    client.embed = () => {
+        return new MessageEmbed().setColor(client.const.col.def);
+    }
+
+    client.check = async (msg, ctx, ttl) => {
+        if (ctx.channel) ctx = ctx.channel;
+        const e = client.embed()
+            .setDescription(msg)
+            .setColor(client.const.col.green);
+        if (ttl) {
+            const m = await ctx.send({ embeds:[e] });
+            await new Promise(res => setTimeout(res, ttl));
+            await m.delete();
+        } else {
+            return await ctx.send({ embeds:[e] });
+        }
+    }
+
+    client.error = async (msg, ctx, ttl) => {
+        if (ctx.channel) ctx = ctx.channel;
+        const e = client.embed()
+            .setDescription(msg)
+            .setColor(client.const.col.red);
+        if (ttl) {
+            const m = await ctx.send({ embeds:[e] });
+            await new Promise(res => setTimeout(res, ttl));
+            await m.delete();
+        } else {
+            return await ctx.send({ embeds:[e] });
+        }
+    }
 }
