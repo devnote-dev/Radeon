@@ -52,11 +52,11 @@ function newAutomod(id) {
         overrides:{
             bypassUsers: new Map(),
             bypassRoles: new Map(),
-            ignoredLogChannels: new Map(),
-            ignoredAutomodChannels: new Map(),
-            ignoredAutomodRoles: new Map(),
-            ignoredCmdChannels: new Map(),
-            ignoredCommands: new Map()
+            ignoredLogChannels: [],
+            ignoredAutomodChannels: [],
+            ignoredAutomodRoles: [],
+            ignoredCmdChannels: [],
+            ignoredCommands: []
         },
         rulesets:{
             invites: 'w;w;m',
