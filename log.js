@@ -47,7 +47,7 @@ function error(err, path, user) {
         path = path.split('/').pop();
     }
     let fmt = `${RED}ERROR${RESET} | ${err.name}\nPath: ${path}\nUser: ${user || 'internal'}\nMessage: ${err.stack}\n`;
-    return log(SMALL +'\n'+ fmt);
+    return log(fmt);
 }
 
 module.exports = {
