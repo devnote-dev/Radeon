@@ -151,6 +151,7 @@ function _runCooldown(client, message, command) {
 }
 
 function _checkRunPerms(member, cmd) {
-    if (member.permissions.has(cmd.perms.bits)) return;
-    return `**Error:** You are missing ${humanize(cmd.perms.bits)} permissions for this command!`;
+    if (cmd.perms?.bits) cmd = cmd.perms.bits;
+    if (member.permissions.has(cmd)) return;
+    return `**Error:** You are missing ${humanize(cmd)} permissions for this command!`;
 }
