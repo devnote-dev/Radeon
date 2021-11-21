@@ -31,7 +31,7 @@ function resolve(entity, type, ctx) {
     switch (type) {
         case 'role':
             return ctx.roles.cache.get(entity) ||
-                ctx.roles.resolve(entity);
+                ctx.roles.cache.find(r => r.name.includes(entity))
         case 'channel':
             return ctx.channels.cache.get(entity);
         case 'member':
