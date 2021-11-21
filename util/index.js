@@ -25,6 +25,21 @@ function humanize(resolvable) {
     return res.join(', ');
 }
 
+function resolve(entity, type, ctx) {
+    if (/\d{17,}/g.test(entity)) entity = entity.replace(/[^\d]+/g, '');
+
+    switch (type) {
+        case 'role':
+            return ctx.roles.cache.get(entity) ||
+                ctx.roles.resolve(entity);
+        case 'channel':
+            return ctx.channels.cache.get(entity);
+        case 'member':
+            return ctx.members.resolve(entity);
+    }
+}
+
 module.exports = {
-    humanize
+    humanize,
+    resolve
 }
