@@ -26,6 +26,7 @@ module.exports = async (member, automod) => {
 
     if (automod.names.zalgo) cleaned = clean(cleaned);
 
+    cleaned = cleaned.trim();
     if (!cleaned.length) cleaned = 'pingable username';
     await member.setNickname(cleaned).catch(noop);
 }
