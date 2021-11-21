@@ -17,7 +17,9 @@ module.exports = async (client, message) => {
     if (!message) return;
     if (message.author.bot) return;
 
-    const { cmd, args } = _parseArgs(message.content, prefix, client.user.id);
+    let db;
+    if (message.guild) db = await client.db('guild').get(message.guild.id);
+    const { cmd, args } = _parseArgs(message.content, db?.prefix || prefix, client.user.id);
     if (!cmd) return;
     const command = client.commands.get(cmd) || client.commands.get(client.aliases.get(cmd));
     if (!command) return; // TODO: process automod {}
@@ -101,6 +103,7 @@ module.exports = async (client, message) => {
 
     try {
         await command.run(client, message, ctx, checkInRun ? _checkRunPerms : null);
+        if (db.deleteAfterExec) await message.delete().catch(noop);
     } catch (err) {
         log.error(err, message, message.author.id);
         return message.reply(
