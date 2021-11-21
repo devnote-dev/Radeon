@@ -21,7 +21,7 @@ module.exports = {
 
         if (!args.length) {
             const { modLogs } = await client.db('automod').get(message.guild.id);
-            const role = resolve(modLogs.muteRole, 'role', message.guild);
+            const role = modLogs.muteRole && resolve(modLogs.muteRole, 'role', message.guild);
             const embed = client.embed()
                 .setTitle('Mute Settings')
                 .setDescription(
@@ -50,7 +50,7 @@ module.exports = {
             if (!args.raw[1]) return client.error(this, message);
             const role = resolve(args.raw[1], 'role', message.guild);
             if (!role) return client.error('Role not found.', message);
-            await db.update(
+            await client.db('automod').update(
                 message.guild.id,
                 { modLogs:{ muteRole: role.id }}
             );
@@ -71,8 +71,7 @@ module.exports = {
         } else if (sub === 'setup') {
             if (err = check(message.guild.me, 268435456n)) return message.reply(err.replace('You are', 'I am'));
 
-            let role = message.guild.roles.cache
-                .find(r => r.name.toLowerCase().includes('mute'));
+            let role = message.guild.roles.cache.find(r => r.name.toLowerCase().includes('mute'));
             if (!role) {
                 role = await message.guild.roles.create({
                     name: 'Muted',
