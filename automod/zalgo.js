@@ -26,13 +26,13 @@
 function expose(string) {
     return string
         .replace(/[a-zA-Z0-9\s]+/gmi, '')
-        .replace(/[!\s\?\$\^\\\/\*\.\(\)\[\]\{\}#&%$£@:;|¦"'`^+-¬<>,]+/g, '');
+        .replace(/[!\s\?\$\^\\\/\*\.\(\)\[\]\{\}#&%$£€@:;|¦"'`^+-¬<>,_]+/g, '');
 }
 
 function clean(string) {
     return string
         .replace(/[^a-zA-Z0-9\s]+/gmi, '')
-        .replace(/[^!\s\?\$\^\\\/\*\.\(\)\[\]\{\}#&%$£@:;|¦"'`^+-¬<>,]+]/g, '');
+        .replace(/[^!\s\?\$\^\\\/\*\.\(\)\[\]\{\}#&%$£€@:;|¦"'`^+-¬<>,_]+]/g, '');
 }
 
 module.exports = {
