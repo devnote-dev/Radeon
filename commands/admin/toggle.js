@@ -20,8 +20,8 @@ module.exports = {
             if (!args.lower[1]) return client.error('Missing command or category.', message);
             let cat, cmd;
             if (args.lower[2]) {
-                cat = args.lower[2];
-                cmd = args.lower[1];
+                cat = args.lower[1];
+                cmd = args.lower[2];
             } else {
                 cmd = args.lower[1];
             }
