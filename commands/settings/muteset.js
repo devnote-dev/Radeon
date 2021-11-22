@@ -37,22 +37,19 @@ module.exports = {
         if (sub === 'reset') {
             await client.db('automod').update(
                 message.guild.id,
-                {
-                    modLogs:{
-                        muteRole: '',
-                        muteReason: true
-                    }
-                }
+                { modLogs:{ muteRole: '', muteReason: true }}
             );
             return client.check('Successfully reset mute settings!', message);
 
         } else if (sub === 'role') {
             if (!args.raw[1]) return client.error(this, message);
             const role = resolve(args.raw[1], 'role', message.guild);
-            if (!role) return client.error('Role not found.', message);
-            await client.db('automod').update(
+            if (!role) return client.error('Role not found. Make sure the role name is case-sensitive.', message);
+            const db = client.db('automod');
+            const { modLogs } = await db.get(message.guild.id);
+            await db.update(
                 message.guild.id,
-                { modLogs:{ muteRole: role.id }}
+                { modLogs:{ muteRole: role.id, muteReason: modLogs.muteReason }}
             );
             return client.check(`Successfully updated the mute role to ${role}!`, message);
 
@@ -61,7 +58,7 @@ module.exports = {
             const { modLogs } = await db.get(message.guild.id);
             await db.update(
                 message.guild.id,
-                { modLogs:{ muteReason: !modLogs.muteReason }}
+                { modLogs:{ muteRole: modLogs.muteRole, muteReason: !modLogs.muteReason }}
             );
             return client.check(
                 `Successfully ${modLogs.muteReason ? 'disabled' : 'enabled'} required mute reason check!`,
@@ -85,11 +82,11 @@ module.exports = {
             }
             await client.db('automod').update(
                 message.guild.id,
-                { modLogs:{ muteRole: role.id }}
+                { modLogs:{ muteRole: role.id, muteReason: true }}
             );
             return client.check(`Successfully set the mute role to ${role}!`, message);
         } else {
-            return client.error('Unknown subcommand. See `help muteset` for info.', message);
+            return client.error('Unknown subcommand. See `help muteset` for more information.', message);
         }
     }
 }
