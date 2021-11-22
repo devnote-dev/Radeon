@@ -38,8 +38,12 @@ const Automod = Schema({
     spam:                       Boolean,
     floods:                     Boolean,
     zalgo:                      Boolean,
-    minAge:                     Number,
+    minAge:{
+        active:                 Boolean,
+        limit:                  Number
+    },
     names:{
+        active:                 Boolean,
         hoisted:                Boolean,
         zalgo:                  Boolean,
         filter:                 Boolean

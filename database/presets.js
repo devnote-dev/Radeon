@@ -33,8 +33,13 @@ function newAutomod(id) {
         links: false,
         spam: false,
         floods: false,
-        minAge: false,
+        zalgo: false,
+        minAge:{
+            active: false,
+            limit: 0
+        },
         names:{
+            active: false,
             hoisted: false,
             zalgo: false,
             filter: false
@@ -48,7 +53,6 @@ function newAutomod(id) {
             active: false,
             list: []
         },
-        zalgo: false,
         overrides:{
             bypassUsers: new Map(),
             bypassRoles: new Map(),
