@@ -31,8 +31,8 @@ class DBManager {
     async get(id) {
         if (typeof id !== 'string') throw new TypeError('Guild ID must be a string.');
         try {
-            if (this._conn == DB.settings) return await this._conn.findOne({ client: id });
-            return await this._conn.findOne({ guildID: id });
+            if (this._conn == DB.settings) return await this._conn.findOne({ clientId: id });
+            return await this._conn.findOne({ guildId: id });
         } catch {
             return null;
         }
@@ -56,7 +56,7 @@ class DBManager {
         if (typeof id !== 'string') throw new TypeError('Guild ID must be a string.');
         if (typeof data !== 'object') throw new TypeError('Database data must be an object.');
         const d = await this._conn.findOneAndUpdate(
-            { guildID: id },
+            { guildId: id },
             { $set: data },
             { new: true }
         );
@@ -67,7 +67,7 @@ class DBManager {
         if (typeof id !== 'string') throw new TypeError('Guild ID must be a string.');
         if (typeof data !== 'object') throw new TypeError('Database data must be an object.');
         const d = await this._conn.findOneAndUpdate(
-            { guildID: id },
+            { guildId: id },
             { $push: data },
             { new: true }
         );
@@ -78,7 +78,7 @@ class DBManager {
         if (typeof id !== 'string') throw new TypeError('Guild ID must be a string.');
         if (typeof data !== 'object') throw new TypeError('Database data must be an object.');
         const d = await this._conn.findOneAndUpdate(
-            { guildID: id },
+            { guildId: id },
             { $pull: data },
             { new: true }
         );
@@ -87,7 +87,7 @@ class DBManager {
 
     async delete(id, result=false) {
         if (typeof id !== 'string') throw new TypeError('Guild ID must be a string.');
-        const d = await this._conn.findOneAndDelete({ guildID: id });
+        const d = await this._conn.findOneAndDelete({ guildId: id });
         return result ? d : null;
     }
 }
