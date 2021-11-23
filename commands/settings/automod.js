@@ -3,6 +3,7 @@
  * @copyright 2021 Radeon Development
  */ 
 
+const { resolve } = require('../../util');
 const {
     MessageEmbed,
     MessageActionRow,
@@ -19,10 +20,12 @@ module.exports = {
     perms:{ bit: 32n },
 
     async run(client, message, args) {
+        const { guild, channel } = message;
+
         if (!args.length) {
-            const automod = await client.db('automod').get(message.guild.id);
-            const channel = message.guild.channels.cache.get(automod.channel)?.toString();
-            const everyone = message.guild.roles.cache.get(automod.everyoneRole)?.toString();
+            const automod = await client.db('automod').get(guild.id);
+            const channel = guild.channels.cache.get(automod.channel)?.toString();
+            const everyone = guild.roles.cache.get(automod.everyoneRole)?.toString();
             const embed = new MessageEmbed()
                 .setTitle('Automod Settings')
                 .setDescription(
@@ -43,7 +46,66 @@ module.exports = {
                     { name: 'Filter', value: getState(automod.filter.active), inline: true }
                 ])
                 .setColor(client.const.col.def);
-            return message.channel.send({ embeds:[embed] });
+            return channel.send({ embeds:[embed] });
+        }
+
+        const sub = args.lower[1], op1 = args.lower[2];
+
+        if (sub === 'channel') {
+            if (!op1) {
+                await client.db('automod').update(guild.id, { channel: '' });
+                return client.check('Successfully reset the automod log channel!', channel);
+            }
+            let chan = resolve(op1, 'channel', guild);
+            if (!chan) return client.error('Channel not found.', channel);
+            if (chan.type !== 'GUILD_TEXT') return client.error('Channel is not a default text channel.', channel);
+            if (!chan.permissionsFor(guild.me).has(536870912n))
+                return client.error('I don\'t have webhook permissions for that channel.', channel);
+            await client.db('automod').update(guild.id, { channel: chan.id });
+            return client.check(`Successfully set the automod log channel to ${chan}!`, channel);
+
+        } else if (sub === 'role') {
+            if (!op1) {
+                await client.db('automod').update(guild.id, { everyoneRole: guild.id });
+                return client.check('Successfully reset the member role!', channel);
+            }
+            let role = resolve(op1, 'role', guild);
+            if (!role) return client.error('Role not found.', channel);
+            await client.db('automod').update(guild.id, { everyoneRole: role.id });
+            return client.check(`Successfully set the member role to ${role}!`, channel);
+
+        } else if (sub === 'toggle') {
+            if (!op1) return client.error(
+                'No module specified;\n'+
+                ['automod', 'invites', 'links', 'spam', 'floods', 'zalgo',
+                'age', 'usernames', 'mentions', 'filter'].join(', '),
+                channel
+            );
+            switch (op1) {
+                case 'all':{
+                    const db = client.db('automod');
+                    const val = !db.active;
+                    await db.update(
+                        guild.id,
+                        {
+                            active: val,
+                            invites: val,
+                            links: val,
+                            spam: val,
+                            floods: val,
+                            zalgo: val,
+                            minAge:{ active: val },
+                            names:{ active: val },
+                            mentions:{ active: val },
+                            filter:{ active: val }
+                        }
+                    );
+                    return client.check(`Successfully ${val ? 'disabled' : 'enabled'} all automod settings!`, channel);
+                }
+                case 'automod':{
+                    // TODO: need a more efficient method for this...
+                }
+            }
         }
     }
 }
