@@ -46,7 +46,7 @@ function newAutomod(id) {
         },
         mentions:{
             active: false,
-            limit: false,
+            limit: 5,
             unique: false
         },
         filter:{
