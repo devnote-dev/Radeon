@@ -15,8 +15,8 @@ module.exports = {
     tag: 'Manage server automod config',
     description: 'Manages the server automod configuration.',
     usage: 'automod channel <Channel:Mention/ID>\nautomod channel reset\n'+
-        'automod role <Role:Name/Mention/ID>\nautomod role reset\nautomod toggle <automod|Module|all>\n'+
-        'automod mentions <Limit:Number>\nautomod names',
+        'automod role <Role:Name/Mention/ID>\nautomod role reset\n'+
+        'automod toggle <all|automod|Module>\nautomod mentions\nautomod names',
     guildOnly: true,
     perms:{ bit: 32n },
 
@@ -148,6 +148,72 @@ module.exports = {
                     await db.update(guild.id, { [option]: !frozen[option] });
                     return client.check(`Successfully ${frozen[option] ? 'disabled' : 'enabled' } the ${option} module!`, channel);
                 }
+            }
+
+        } else if (sub === 'mentions') {
+            if (!option) {
+                const { mentions } = await client.db('automod').get(guild.id);
+                const embed = new MessageEmbed()
+                    .setTitle('Automod: Mentions Control')
+                    .addFields([
+                        { name: 'Enabled', value: mentions.active.toString(), inline: true },
+                        { name: 'Limit', value: mentions.limit.toString(), inline: true },
+                        { name: 'Unique', value: mentions.unique.toString(), inline: true }
+                    ])
+                    .setColor(client.const.col.def);
+                return channel.send({ embeds:[embed] });
+            }
+
+            if (option === 'reset') {
+                await client.db('automod').update(
+                    guild.id,
+                    {
+                        mentions:{
+                            limit: 5,
+                            unique: false
+                        }
+                    }
+                );
+                return client.check('Successfully reset the mention module!', channel);
+
+            } else if (option === 'unique') {
+                const db = client.db('automod');
+                const frozen = await db.get(guild.id);
+                await db.update(
+                    guild.id,
+                    {
+                        mentions:{
+                            limit: frozen.mentions.limit,
+                            unique: !frozen.mentions.unique
+                        }
+                    }
+                );
+                return client.check(
+                    `Successfully ${frozen.mentions.unique ? 'disabled' : 'enabled'} `+
+                    'unique filtering for mentions module!',
+                    channel,
+                );
+
+            } else {
+                if (/[^\d]+/g.test(option)) return client.error(
+                    'Unknown subcommand option. See `help automod` for more information.',
+                    channel
+                );
+                const num = parseInt(option);
+                if (isNaN(num)) return client.error('Invalid number for mention limit.', channel);
+                if (num < 1 || num > 50) return client.error('Mention limit must be between 1 and 50.', channel);
+                const db = client.db('automod');
+                const frozen = await db.get(guild.id);
+                await db.update(
+                    guild.id,
+                    {
+                        mentions:{
+                            limit: num,
+                            unique: frozen.mentions.unique
+                        }
+                    }
+                );
+                return client.check(`Successfully set the mention limit to ${num}!`, channel);
             }
         }
     }
