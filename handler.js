@@ -47,11 +47,15 @@ module.exports = (client) => {
 
     client.error = async (msg, ctx, ttl) => {
         if (ctx.channel) ctx = ctx.channel;
-        if (typeof msg === 'object') msg = `Insufficient Arguments\n\`\`\`\n${msg.usage}\n\`\`\``;
-        if (msg.includes('||')) msg.replace('||', '```');
-        const e = client.embed()
-            .setDescription(msg)
-            .setColor(client.const.col.red);
+        const e = client.embed().setTitle('Error');
+        if (Array.isArray(msg)) {
+            e.setTitle(msg[0]);
+            msg = msg[1];
+        } else if (typeof msg === 'object') {
+            msg = `\`\`\`\n${msg.usage}\n\`\`\``;
+        }
+        if (msg.includes('||')) msg = msg.replaceAll('||', '```');
+        e.setDescription(msg).setColor(client.const.col.red);
         if (ttl) {
             const m = await ctx.send({ embeds:[e] });
             await new Promise(res => setTimeout(res, ttl));
