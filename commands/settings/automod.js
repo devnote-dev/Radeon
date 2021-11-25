@@ -24,7 +24,7 @@ module.exports = {
 
         if (!args.length) {
             const automod = await client.db('automod').get(guild.id);
-            const channel = guild.channels.cache.get(automod.channel)?.toString();
+            const chan = guild.channels.cache.get(automod.channel)?.toString();
             const everyone = guild.roles.cache.get(automod.everyoneRole)?.toString();
             const embed = new MessageEmbed()
                 .setTitle('Automod Settings')
@@ -33,7 +33,7 @@ module.exports = {
                     'See \`help automod\` on how to edit these settings.'
                 )
                 .addFields([
-                    { name: 'Log Channel', value: channel || 'None Set', inline: true },
+                    { name: 'Log Channel', value: chan || 'None Set', inline: true },
                     { name: 'Member Role', value: everyone, inline: true },
                     { name: 'Invites', value: getState(automod.invites), inline: true },
                     { name: 'Danger Links', value: getState(automod.links), inline: true },
@@ -49,7 +49,7 @@ module.exports = {
             return channel.send({ embeds:[embed] });
         }
 
-        const sub = args.lower[1], op1 = args.lower[2];
+        const sub = args.lower[0], op1 = args.lower[1];
 
         if (sub === 'channel') {
             if (!op1) {
@@ -76,9 +76,9 @@ module.exports = {
 
         } else if (sub === 'toggle') {
             if (!op1) return client.error(
-                'No module specified;\n'+
-                ['automod', 'invites', 'links', 'spam', 'floods', 'zalgo',
-                'age', 'usernames', 'mentions', 'filter'].join(', '),
+                'No module specified:\n`'+
+                ['all', 'automod', 'invites', 'links', 'spam', 'floods', 'zalgo',
+                'age', 'usernames', 'mentions', 'filter'].join('`, `') +'`',
                 channel
             );
             switch (op1) {
@@ -100,7 +100,7 @@ module.exports = {
                             filter:{ active: val }
                         }
                     );
-                    return client.check(`Successfully ${val ? 'disabled' : 'enabled'} all automod settings!`, channel);
+                    return client.check(`Successfully ${val ? 'enabled' : 'disabled'} all automod settings!`, channel);
                 }
                 case 'automod':{
                     // TODO: need a more efficient method for this...
