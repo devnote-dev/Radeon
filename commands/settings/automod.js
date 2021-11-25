@@ -14,8 +14,9 @@ module.exports = {
     name: 'automod',
     tag: 'Manage server automod config',
     description: 'Manages the server automod configuration.',
-    usage: 'automod channel [Channel:Mention/ID]\nautomod role [Role:Name/Mention/ID]\n'+
-        'automod toggle <Module|all|automod>\nautomod mentions [Limit:Number]\nautomod names',
+    usage: 'automod channel <Channel:Mention/ID>\nautomod channel reset\n'+
+        'automod role <Role:Name/Mention/ID>\nautomod role reset\nautomod toggle <automod|Module|all>\n'+
+        'automod mentions <Limit:Number>\nautomod names',
     guildOnly: true,
     perms:{ bit: 32n },
 
@@ -49,14 +50,14 @@ module.exports = {
             return channel.send({ embeds:[embed] });
         }
 
-        const sub = args.lower[0], op1 = args.lower[1];
+        const sub = args.lower[0], option = args.lower[1];
 
         if (sub === 'channel') {
-            if (!op1) {
+            if (!option) {
                 await client.db('automod').update(guild.id, { channel: '' });
                 return client.check('Successfully reset the automod log channel!', channel);
             }
-            let chan = resolve(op1, 'channel', guild);
+            let chan = resolve(option, 'channel', guild);
             if (!chan) return client.error('Channel not found.', channel);
             if (chan.type !== 'GUILD_TEXT') return client.error('Channel is not a default text channel.', channel);
             if (!chan.permissionsFor(guild.me).has(536870912n))
@@ -65,26 +66,34 @@ module.exports = {
             return client.check(`Successfully set the automod log channel to ${chan}!`, channel);
 
         } else if (sub === 'role') {
-            if (!op1) {
+            if (!option) {
                 await client.db('automod').update(guild.id, { everyoneRole: guild.id });
                 return client.check('Successfully reset the member role!', channel);
             }
-            let role = resolve(op1, 'role', guild);
+            let role = resolve(option, 'role', guild);
             if (!role) return client.error('Role not found.', channel);
             await client.db('automod').update(guild.id, { everyoneRole: role.id });
             return client.check(`Successfully set the member role to ${role}!`, channel);
 
         } else if (sub === 'toggle') {
-            if (!op1) return client.error(
+            if (!option) return client.error(
                 'No module specified:\n`'+
                 ['all', 'automod', 'invites', 'links', 'spam', 'floods', 'zalgo',
                 'age', 'usernames', 'mentions', 'filter'].join('`, `') +'`',
                 channel
             );
-            switch (op1) {
+            if (!['all', 'automod', 'invites', 'links', 'spam', 'floods', 'zalgo',
+                'age', 'usernames', 'mentions', 'filter'].includes(option))
+                    return client.error(
+                        'Invalid subcommand specified. See `help automod` for more information',
+                        channel
+                    );
+
+            const db = client.db('automod');
+            const frozen = await db.get(guild.id);
+            switch (option) {
                 case 'all':{
-                    const db = client.db('automod');
-                    const val = !db.active;
+                    const val = !frozen.active;
                     await db.update(
                         guild.id,
                         {
@@ -103,7 +112,25 @@ module.exports = {
                     return client.check(`Successfully ${val ? 'enabled' : 'disabled'} all automod settings!`, channel);
                 }
                 case 'automod':{
-                    // TODO: need a more efficient method for this...
+                    await db.update(guild.id, { active: !frozen.active });
+                    return client.check(`Successfully ${frozen.active ? 'disabled' : 'enabled'} the automod system!`, channel);
+                }
+                case 'age':{
+                    await db.update(guild.id, { minAge:{ active: !frozen.minAge.active }});
+                    return client.check(`Successfully ${frozen.minAge.active ? 'disabled' : 'enabled'} the age gate module!`, channel);
+                }
+                case 'usernames':{
+                    await db.update(guild.id, { names:{ active: !frozen.names.active }});
+                    return client.check(`Successfully ${frozen.names.active ? 'disabled' : 'enabled'} the usernames module!`, channel);
+                }
+                case 'mentions':
+                case 'filter':{
+                    await db.update(guild.id, { [option]:{ active: !frozen[option].active }});
+                    return client.check(`Successfully ${frozen[option].active ? 'disabled' : 'enabled'} the ${option} module!`, channel);
+                }
+                default:{
+                    await db.update(guild.id, { [option]: !frozen[option] });
+                    return client.check(`Successfully ${frozen[option] ? 'disabled' : 'enabled' } the ${option} module!`, channel);
                 }
             }
         }
