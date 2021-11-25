@@ -53,7 +53,14 @@ module.exports = {
         const sub = args.lower[0], option = args.lower[1];
 
         if (sub === 'channel') {
-            if (!option) {
+            if (!option) return client.error(
+                [
+                    'Insufficient Arguments',
+                    '||automod channel <Channel:Mention/ID>\nautomod channel reset||'
+                ],
+                channel
+            );
+            if (option === 'reset') {
                 await client.db('automod').update(guild.id, { channel: '' });
                 return client.check('Successfully reset the automod log channel!', channel);
             }
@@ -66,7 +73,14 @@ module.exports = {
             return client.check(`Successfully set the automod log channel to ${chan}!`, channel);
 
         } else if (sub === 'role') {
-            if (!option) {
+            if (!option) return client.error(
+                [
+                    'Insufficient Arguments',
+                    '||automod role <Role:Name/Mention/ID>\nautomod role reset||'
+                ],
+                channel
+            );
+            if (option === 'reset') {
                 await client.db('automod').update(guild.id, { everyoneRole: guild.id });
                 return client.check('Successfully reset the member role!', channel);
             }
@@ -77,9 +91,11 @@ module.exports = {
 
         } else if (sub === 'toggle') {
             if (!option) return client.error(
-                'No module specified:\n`'+
-                ['all', 'automod', 'invites', 'links', 'spam', 'floods', 'zalgo',
-                'age', 'usernames', 'mentions', 'filter'].join('`, `') +'`',
+                [
+                    'Error: No module specified',
+                    '||all, automod, invites, links, spam, floods, zalgo, age, '+
+                    'usernames, mentions, filter||'
+                ],
                 channel
             );
             if (!['all', 'automod', 'invites', 'links', 'spam', 'floods', 'zalgo',
