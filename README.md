@@ -4,7 +4,7 @@
 Radeon is a multi-functional moderation bot with an anti-raid system! While still a small bot, it has a powerful and up-to-date moderation system with active development on the anti-raid system. Any and all support is appreciated!
 
 ## Contributing
-If you want to contribute via suggestions, join Radeon's [**Support Server**](https://discord.gg/xcZwGhSy4G) to make one there or open an issue named "suggestion: \<name-here>" in this Github (without the `<>`).
+If you want to contribute via suggestions, join Radeon's [**support server**](https://discord.com/invite/xcZwGhSy4G) to make one there or open an issue named "suggestion: \<name-here>" in this Github (without the `<>`).
 
 Contributions via pull-requests should be made to the **dev** branch, not the main branch. This is so that we can test the code first before pushing, and makes reverting files easier. :)
 
@@ -15,7 +15,7 @@ We **do not** currently support self-hsoted instances. Please do not contact a m
 ```json
 {
     "prefix":"BOT_PREFIX",
-    "token":"BOT_TOKEN_HERE",
+    "token":"BOT_TOKEN",
     "owners":[
         "OWNER_IDS",
         "..."
@@ -36,10 +36,10 @@ We **do not** currently support self-hsoted instances. Please do not contact a m
 ```
 
 ## Maintainers
-* Devnote-dev - Owner
-* tryharddeveloper - Owner
-* Crenshaw - Contributor
-* SpeckyYT - Contributor
+* [devnote-dev](https://github.com/devnote-dev) - Owner
+* [tryharddeveloper](https://github.com/tryharddeveloper) - Owner
+* [Crenshaw](https://github.com/Crenshaw1312) - Contributor
+* [SpeckyYT](https://github.com/SpeckyYT) - Contributor
 
 This repository is licensed under the GNU AGPL v3 License.
 
