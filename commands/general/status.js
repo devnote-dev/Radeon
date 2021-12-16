@@ -6,7 +6,7 @@
  */
 
 const { version } = require('../../package.json');
-const { botOwners } = require('../../config.json');
+const { owners } = require('../../config.json');
 const { version: djsv, MessageEmbed } = require('discord.js');
 
 module.exports = {
@@ -19,7 +19,7 @@ module.exports = {
         const embed = new MessageEmbed()
             .setTitle('Radeon Status')
             .setThumbnail(client.user.displayAvatarURL())
-            .addField('Owners', '<@'+ botOwners.join('>\n<@') +'>', true)
+            .addField('Owners', '<@'+ owners.join('>\n<@') +'>', true)
             .addField('Version', version, true)
             .addField('Library Version', djsv, true)
             .addField('Node Version', process.version, true)

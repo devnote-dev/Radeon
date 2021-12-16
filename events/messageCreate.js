@@ -6,7 +6,7 @@
  */
 
 const log = require('../log');
-const { prefix, botOwners, botAdmins } = require('../config.json');
+const { prefix, owners, admins } = require('../config.json');
 const { humanize } = require('../util');
 const { parseAll, parseWithContext } = require('../util/flags');
 
@@ -43,7 +43,7 @@ module.exports = async (client, message) => {
         if (command.guildOnly) return message.reply('**Error:** This command is for servers only.');
 
         if (type = command.ownerOnly) {
-            if (!botOwners.includes(message.author.id)) {
+            if (!owners.includes(message.author.id)) {
                 if (type === 2) return;
                 return message.reply('**Error:** This command is for bot owners only.');
             }
@@ -51,8 +51,8 @@ module.exports = async (client, message) => {
 
         if (type = command.modOnly) {
             if (
-                !botAdmins.includes(message.author.id) &&
-                !botOwners.includes(message.author.id)
+                !admins.includes(message.author.id) &&
+                !owners.includes(message.author.id)
             ) {
                 if (type === 2) return;
                 return message.reply('**Error:** This command is for bot staff only.');
@@ -73,7 +73,7 @@ module.exports = async (client, message) => {
     }
 
     if (type = command.ownerOnly) {
-        if (!botOwners.includes(message.author.id)) {
+        if (!owners.includes(message.author.id)) {
             if (type === 2) return;
             return message.reply('**Error:** This command is for bot owners only.');
         }
@@ -81,8 +81,8 @@ module.exports = async (client, message) => {
 
     if (type = command.modOnly) {
         if (
-            !botAdmins.includes(message.author.id) &&
-            !botOwners.includes(message.author.id)
+            !admins.includes(message.author.id) &&
+            !owners.includes(message.author.id)
         ) {
             if (type === 2) return;
             return message.reply('**Error:** This command is for bot staff only.');

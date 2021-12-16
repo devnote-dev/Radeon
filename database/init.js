@@ -4,7 +4,7 @@
  */
 
 const log = require('../log');
-const { MongoPath } = require('../config.json');
+const { mongo_path } = require('../config.json');
 const mongoose = require('mongoose');
 
 module.exports = () => {
@@ -17,7 +17,7 @@ module.exports = () => {
         family: 4
     }
 
-    mongoose.connect(MongoPath, options);
+    mongoose.connect(mongo_path, options);
     mongoose.Promise = Promise;
 
     mongoose.connection.on('connect', () => log.info('Connected to database'));
