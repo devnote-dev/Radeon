@@ -9,7 +9,7 @@ module.exports = (client, shard, _) => {
     if (chan = client.channels.cache.get(logs.event)) {
         chan.send({
             embeds:[{
-                description: `${client.const.evt.ready} Connected to shard ${shard} of ${client.shard.count}`,
+                description: `${client.const.evt.ready} Connected to Shard ${shard} of ${client.shard.count}`,
                 color: client.const.col.green
             }]
         }).catch(()=>{});
