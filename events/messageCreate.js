@@ -7,6 +7,7 @@
 
 const log = require('../log');
 const { prefix, owners, admins } = require('../config.json');
+const automod = require('../automod');
 const { humanize } = require('../util');
 const { parseAll, parseWithContext } = require('../util/flags');
 
@@ -22,7 +23,17 @@ module.exports = async (client, message) => {
     const { cmd, args } = _parseArgs(message.content, db?.prefix || prefix, client.user.id);
     if (!cmd) return;
     const command = client.commands.get(cmd) || client.commands.get(client.aliases.get(cmd));
-    if (!command) return; // TODO: process automod {}
+    if (!command) {
+        const db = await client.db('automod').get(message.guild.id);
+        if (!db.active) return;
+        if (
+            db.invites ||
+            db.mentions.active ||
+            db.floods
+        ) await automod.checkContent(client, message, db);
+        if (db.zalgo) {} // TODO: add to checkContent?
+        return;
+    }
 
     const ctx = {
         length: args.length,
