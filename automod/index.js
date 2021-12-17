@@ -29,5 +29,6 @@ function AmodEmbed(msg, ctx) {
 
 module.exports = {
     ActionEmbed,
-    AmodEmbed
+    AmodEmbed,
+    checkContent: require('./content')
 }
