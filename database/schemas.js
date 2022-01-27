@@ -8,12 +8,17 @@ const { Schema, model } = require('mongoose');
 
 const Guild = Schema({
     guildId:{
-        type:        String,
-        required:    true
+        type:               String,
+        required:           true
     },
-    prefix:          String,
-    deleteAfterExec: Boolean,
-    actionLog:       String
+    prefix:                 String,
+    deleteAfterExec:        Boolean,
+    actionLog:              String,
+    bypassUsers:            Map,
+    bypassRoles:            Map,
+    ignoredLogChannels:     [String],
+    ignoredCommandChannels: [String],
+    ignoredCommands:        [String]
 });
 
 const Automod = Schema({
@@ -58,13 +63,9 @@ const Automod = Schema({
         list:                   [String]
     },
     overrides:{
-        bypassUsers:            Map,
-        bypassRoles:            Map,
-        ignoredLogChannels:     [String],
-        ignoredAutomodChannels: [String],
-        ignoredAutomodRoles:    [String],
-        ignoredCmdChannels:     [String],
-        ignoredCommands:        [String]
+        ignoredChannels:        [String],
+        ignoredRoles:           [String],
+        ignoredUsers:           [String]
     },
     rulesets:{
         invites:                String,
