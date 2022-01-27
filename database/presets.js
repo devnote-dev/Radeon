@@ -10,7 +10,12 @@ function newGuild(id) {
         guildId: id,
         prefix,
         deleteAfterExec: false,
-        actionLog: ''
+        actionLog: '',
+        bypassUsers: new Map(),
+        bypassRoles: new Map(),
+        ignoredLogChannels: [],
+        ignoredCommandChannels: [],
+        ignoredCommands: []
     }
 }
 
@@ -54,13 +59,9 @@ function newAutomod(id) {
             list: []
         },
         overrides:{
-            bypassUsers: new Map(),
-            bypassRoles: new Map(),
-            ignoredLogChannels: [],
-            ignoredAutomodChannels: [],
-            ignoredAutomodRoles: [],
-            ignoredCmdChannels: [],
-            ignoredCommands: []
+            ignoredChannels: [],
+            ignoredRoles: [],
+            ignoredUsers: []
         },
         rulesets:{
             invites: 'w;w;m',
