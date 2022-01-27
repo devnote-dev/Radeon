@@ -4,11 +4,7 @@
  */ 
 
 const { resolve } = require('../../util');
-const {
-    MessageEmbed,
-    MessageActionRow,
-    MessageButton
-} = require('discord.js');
+const { MessageEmbed } = require('discord.js');
 
 module.exports = {
     name: 'automod',
@@ -110,21 +106,17 @@ module.exports = {
             switch (option) {
                 case 'all':{
                     const val = !frozen.active;
-                    await db.update(
-                        guild.id,
-                        {
-                            active: val,
-                            invites: val,
-                            links: val,
-                            spam: val,
-                            floods: val,
-                            zalgo: val,
-                            minAge:{ active: val },
-                            names:{ active: val },
-                            mentions:{ active: val },
-                            filter:{ active: val }
-                        }
-                    );
+                    frozen.active = val;
+                    frozen.invites = val;
+                    frozen.links = val;
+                    frozen.spam = val;
+                    frozen.floods = val;
+                    frozen.zalgo = val;
+                    frozen.minAge.active = val;
+                    frozen.names.active = val;
+                    frozen.mentions.active = val;
+                    frozen.filter.active = val;
+                    await db.update(guild.id, frozen);
                     return client.check(`Successfully ${val ? 'enabled' : 'disabled'} all automod settings!`, channel);
                 }
                 case 'automod':{
@@ -132,11 +124,13 @@ module.exports = {
                     return client.check(`Successfully ${frozen.active ? 'disabled' : 'enabled'} the automod system!`, channel);
                 }
                 case 'age':{
-                    await db.update(guild.id, { minAge:{ active: !frozen.minAge.active }});
-                    return client.check(`Successfully ${frozen.minAge.active ? 'disabled' : 'enabled'} the age gate module!`, channel);
+                    frozen.minAge.active = !frozen.minAge.active;
+                    await db.update(guild.id, frozen);
+                    return client.check(`Successfully ${frozen.minAge.active ? 'enabled' : 'disabled'} the age gate module!`, channel);
                 }
                 case 'usernames':{
-                    await db.update(guild.id, { names:{ active: !frozen.names.active }});
+                    frozen.names.active = !frozen.names.active;
+                    await db.update(guild.id, frozen);
                     return client.check(`Successfully ${frozen.names.active ? 'disabled' : 'enabled'} the usernames module!`, channel);
                 }
                 case 'mentions':
@@ -215,6 +209,9 @@ module.exports = {
                 );
                 return client.check(`Successfully set the mention limit to ${num}!`, channel);
             }
+
+        } else {
+            return client.error('Unknown subcommand option. See `help automod` for more information.', channel);
         }
     }
 }
