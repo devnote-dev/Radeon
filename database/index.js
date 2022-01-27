@@ -1,27 +1,30 @@
 /**
  * @author Devonte <https://github.com/devnote-dev>
- * @copyright 2021 Radeon Development
+ * @copyright 2021-2022 Radeon Development
  */
 
-const { Guild, Automod, Schedules, Warns, Settings } = require('./schemas');
+const {
+    Guild,
+    Automod,
+    UserRecord,
+    Schedules,
+    Warns,
+    Settings
+} = require('./schemas');
 
 const DB = {
     guild: Guild,
     warns: Warns,
     automod: Automod,
+    record: UserRecord,
     settings: Settings,
     schedules: Schedules
 }
 
-function Database(type) {
+function database(type) {
     if (type in DB) return new DBManager(DB[type]);
     throw new Error('Unknown Database Type.');
 }
-
-/**
- * @author Devonte <https://github.com/devnote-dev>
- * @copyright 2021 Radeon Development
- */
 
 class DBManager {
     constructor(connector) {
@@ -92,4 +95,4 @@ class DBManager {
     }
 }
 
-module.exports = Database;
+module.exports = database;

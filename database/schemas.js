@@ -1,7 +1,7 @@
 /**
  * @author Tryharddeveloper <https://github.com/tryharddeveloper>
  * @author Devonte <https://github.com/devnote-dev>
- * @copyright 2021 Radeon Development
+ * @copyright 2021-2022 Radeon Development
  */
 
 const { Schema, model } = require('mongoose');
@@ -23,77 +23,87 @@ const Guild = Schema({
 
 const Automod = Schema({
     guildId:{
-        type:                   String,
-        required:               true
+        type:            String,
+        required:        true
     },
-    active:                     Boolean,
-    channel:                    String,
-    everyoneRole:               String,
+    active:              Boolean,
+    channel:             String,
+    everyoneRole:        String,
     modLogs:{
-        channel:                String,
-        muteRole:               String,
-        muteReason:             Boolean,
-        kicks:                  Boolean,
-        kickReason:             Boolean,
-        bans:                   Boolean,
-        banReason:              Boolean
+        channel:         String,
+        muteRole:        String,
+        muteReason:      Boolean,
+        kicks:           Boolean,
+        kickReason:      Boolean,
+        bans:            Boolean,
+        banReason:       Boolean
     },
-    invites:                    Boolean,
-    links:                      Boolean,
-    spam:                       Boolean,
-    floods:                     Boolean,
-    zalgo:                      Boolean,
+    invites:             Boolean,
+    links:               Boolean,
+    spam:                Boolean,
+    floods:              Boolean,
+    zalgo:               Boolean,
     minAge:{
-        active:                 Boolean,
-        limit:                  Number
+        active:          Boolean,
+        limit:           Number
     },
     names:{
-        active:                 Boolean,
-        hoisted:                Boolean,
-        zalgo:                  Boolean,
-        filter:                 Boolean
+        active:          Boolean,
+        hoisted:         Boolean,
+        zalgo:           Boolean,
+        filter:          Boolean
     },
     mentions:{
-        active:                 Boolean,
-        limit:                  Number,
-        unique:                 Boolean
+        active:          Boolean,
+        limit:           Number,
+        unique:          Boolean
     },
     filter:{
-        active:                 Boolean,
-        list:                   [String]
+        active:          Boolean,
+        list:            [String]
     },
     overrides:{
-        ignoredChannels:        [String],
-        ignoredRoles:           [String],
-        ignoredUsers:           [String]
+        ignoredChannels: [String],
+        ignoredRoles:    [String],
+        ignoredUsers:    [String]
     },
     rulesets:{
-        invites:                String,
-        links:                  String,
-        spam:                   String,
-        floods:                 String,
-        names:                  String,
-        mentions:               String,
-        filter:                 String,
-        zalgo:                  String
+        invites:         String,
+        links:           String,
+        spam:            String,
+        floods:          String,
+        names:           String,
+        mentions:        String,
+        filter:          String,
+        zalgo:           String
     }
+});
+
+const UserRecord = Schema({
+    userId:{
+        type:     String,
+        required: true
+    },
+    guilds:       Map,
+    violations:   Map,
+    flagged:      Boolean
 });
 
 const Schedules = Schema({
     guildId:{
-        type: String,
+        type:     String,
         required: true
     },
-    muted: Map,
-    bans: Map
+    muted:        Map,
+    bans:         Map
 });
 
 const Warns = Schema({
     guildId:{
-        type: String,
+        type:     String,
         required: true
     },
-    list: Map
+    list:         Map
 });
 
 const Settings = Schema({
@@ -109,9 +119,10 @@ const Settings = Schema({
 });
 
 module.exports = {
-    Guild: model('Guild', Guild),
-    Automod: model('Automod', Automod),
-    Schedules: model('Schedules', Schedules),
-    Warns: model('Warns', Warns),
-    Settings: model('Settings', Settings)
+    Guild:      model('Guild', Guild),
+    Automod:    model('Automod', Automod),
+    UserRecord: model('UserRecord', UserRecord),
+    Schedules:  model('Schedules', Schedules),
+    Warns:      model('Warns', Warns),
+    Settings:   model('Settings', Settings)
 }

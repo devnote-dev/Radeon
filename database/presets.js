@@ -1,6 +1,6 @@
 /**
  * @author Devonte <https://github.com/devnote-dev>
- * @copyright 2021 Radeon Development
+ * @copyright 2021-2022 Radeon Development
  */
 
 const { prefix } = require('../config.json');
@@ -76,6 +76,15 @@ function newAutomod(id) {
     }
 }
 
+function newUserRecord(user) {
+    return {
+        userId: user.id,
+        guilds: new Map(),
+        violations: new Map(),
+        flagged: false
+    }
+}
+
 function newSchedules(id) {
     return {
         guildId: id,
@@ -106,6 +115,7 @@ module.exports = {
     newGuild,
     newAutomod,
     newWarns,
+    newUserRecord,
     newSchedules,
     newSettings
 }
