@@ -27,6 +27,8 @@ module.exports = async (client, _old, _new) => {
         (db.names.hoisted || db.names.zalgo || db.names.filter)
     ) {
         if (_new.permissions.has(8n)) return;
+        if (db.overrides.ignoredUsers.includes(_new.id)) return;
+        if (db.overrides.ignoredRoles.some(r => _new.roles.cache.has(r))) return;
         if (db.names.filter) return; // TODO
         if (db.names.hoisted) return await cleanName(_new, db);
         if (db.names.zalgo) return await _new.setNickname(zalgo.clean(_new.displayName)).catch(noop);
