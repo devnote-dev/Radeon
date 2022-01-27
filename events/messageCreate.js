@@ -83,6 +83,8 @@ module.exports = async (client, message) => {
         }
     }
 
+    if (!message.guild.me.permissions.has(1982n)) return;
+
     if (type = command.ownerOnly) {
         if (!owners.includes(message.author.id)) {
             if (type === 2) return;
