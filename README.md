@@ -9,7 +9,7 @@ If you want to contribute via suggestions, join Radeon's [**support server**](ht
 Contributions via pull-requests should be made to the **dev** branch, not the main branch. This is so that we can test the code first before pushing, and makes reverting files easier. :)
 
 ## Self-Hosting
-We **do not** currently support self-hsoted instances. Please do not contact a maintainer requesting support for it. If you have experience and want to self-host, you are free to do so.
+We **do not** currently support self-hosted instances. Please do not contact a maintainer requesting support for it. If you have experience and want to self-host, you are free to do so.
 
 **Config File Format:**
 ```json
