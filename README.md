@@ -1,7 +1,7 @@
 <p align="center"><img src="https://cdn.discordapp.com/avatars/762359941121048616/5095536e2741937b837d40ac369a4a7b.png"></p>
 <h1 align="center">Radeon Development</h1>
 
-Radeon is a multi-functional moderation bot with an anti-raid system! While still a small bot, it has a powerful and up-to-date moderation system with active development on the anti-raid system. Any and all support is appreciated!
+Radeon is a global automod and violations manager! Moderation and automod violations can be managed through an easy-to-use set of commands, as well as keep raiders and other bad users out of your server.
 
 ## Contributing
 If you want to contribute via suggestions, join Radeon's [**support server**](https://discord.com/invite/xcZwGhSy4G) to make one there or open an issue named "suggestion: \<name-here>" in this Github (without the `<>`).
