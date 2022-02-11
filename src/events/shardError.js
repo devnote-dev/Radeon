@@ -3,18 +3,21 @@
  * @copyright Radeon Development 2021
  */
 
-
 const { MessageEmbed } = require('discord.js');
-const { logShard, logError } = require('../dist/console');
+const { logs } = require('../../config.json');
 
-exports.run = async (client, error, shard) => {
-    logShard(client, 'error', shard);
-    logError(error, __filename);
-    const c = client.channels.cache.get(client.config.logs.event);
+module.exports = (client, error, shard) => {
+    client.logger.shard(shard, 'shard errored:');
+    client.logger.error(err);
+    const c = client.channels.cache.get(logs.event);
     if (!c) return;
+
     const e = new MessageEmbed()
-    .setTitle('Radeon')
-    .setDescription(`Shard ${shard} / ${client.shard.count} - Error\n${error.message}`)
-    .setColor('DARK_RED');
-    c.send(e).catch(()=>{});
+        .setDescription(
+            `<:dnd_status:882270447201316905> Shard ${shard} /`+
+            ` ${client.shard.count} - Error\n\n${error.message}`
+        )
+        .setColor(10038562);
+
+    return c.send({ embeds:[e] }).catch(()=>{});
 }

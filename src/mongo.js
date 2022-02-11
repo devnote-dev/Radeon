@@ -1,30 +1,26 @@
 /**
  * @author Tryharddeveloper <https://github.com/tryharddeveloper>
- * @copyright Radeon Development 2021
+ * @author Devonte <https://github.com/devnote-dev>
+ * @copyright Radeon Development 2021-2022
  */
 
-
 const mongoose = require('mongoose');
-const { MongoPath } = require('../config.json');
-const { logDB } = require('./dist/console');
+const { mongo_path } = require('../config.json');
 
-module.exports = {
-    init: () => {
-        const dbOptions = {
-            useNewUrlParser: true,
-            useUnifiedTopology: true,
-            autoIndex: false,
-            poolSize: 5,
-            connectTimeoutMS: 10000,
-            family:4
-        };
+module.exports = async ({ logger }) => {
+    mongoose.connect(mongo_path, {
+        useUnifiedTopology: true,
+        connectTimeoutMS: 10000,
+        useNewUrlParser: true,
+        autoIndex: false,
+        poolSize: 5,
+        family: 4
+    });
 
-        mongoose.connect(MongoPath, dbOptions);
-        mongoose.set('useFindAndModify', false);
-        mongoose.Promise = global.Promise;
+    mongoose.set('useFindAndModify', false);
+    mongoose.connection.on('connected', () => logger.info('connected to database'));
+    mongoose.connection.on('err', err => log.db('error', logger.error(err)));
+    mongoose.connection.on('disconnected', () => logger.warn('disconnected from database'));
 
-        mongoose.connection.on('connected', () => logDB('connected'));
-        mongoose.connection.on('err', err => logDB('error', err));
-        mongoose.connection.on('disconnected', () => logDB('disconnected'));
-    }
+    Promise.resolve();
 }
